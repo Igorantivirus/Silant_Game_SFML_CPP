@@ -270,7 +270,7 @@ private:
 
 	sf::Vector2f aspiratPos{};
 
-	sf::FloatRect barierBox = {0, 0, 16, 6};
+	sf::FloatRect barierBox = {0, 0, 15, 6};
 
 	float speed = .25f;
 	float sliding = .1f;

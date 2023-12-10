@@ -57,6 +57,10 @@ private:
 			silant.SetFootCenterPosition(x, y);
 			silant.SetAspirCenterFootPos(x, y);
 		}
+		if (keyBoard.IsPressed(sf::Keyboard::K))
+		{
+			render.BlackWindow();
+		}
 	}
 
 	void TicksUpdate()
@@ -84,7 +88,7 @@ public:
 	void Run()
 	{
 		//MainMenu() TODO
-		MainGame game(render, keyboard, Location::Default, 4);
+		MainGame game(render, keyboard, Location::Default, 5);
 		game.Run();
 	}
 

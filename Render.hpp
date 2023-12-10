@@ -25,7 +25,7 @@ public:
 	void GameMapDraw(const GameMap& map, const Player& player)
 	{
 		window.clear();
-		view.setCenter(player.GetFootCenterPosition());
+		view.setCenter(player.GetCenterPosition());
 		map.Draw(window);
 		player.Draw(window);
 		FinalizeRender();
@@ -53,6 +53,25 @@ public:
 	void CloseWindow()
 	{
 		window.close();
+	}
+
+	void BlackWindow()
+	{
+		sf::Clock clock;
+
+		sf::RectangleShape rect;
+		rect.setSize({ toFloat(window.getSize().x),toFloat( window.getSize().y) });
+		rect.setFillColor(sf::Color::Transparent);
+		rect.setPosition(window.mapPixelToCoords({0,0}));
+
+		while (clock.getElapsedTime().asSeconds() < 1)
+		{
+			PollEvent();
+			rect.setFillColor({0,0,0,toUInt8(clock.getElapsedTime().asSeconds() * 51.f)});
+			window.draw(rect);
+			window.display();
+		}
+		
 	}
 
 private:

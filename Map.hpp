@@ -221,20 +221,8 @@ public:
 		LoadTexture(loc, pr);
 
 		int count;
-		read >> count;
-		sf::FloatRect prRect;
 
-		cols.Clear();
-
-		for (int i = 0, x1, x2, y1, y2; i < count; ++i)
-		{
-			read >> x1 >> y1 >> x2 >> y2;
-			prRect.left = x1 * PIXELS_IN_BLOCK;
-			prRect.top = y1 * PIXELS_IN_BLOCK;
-			prRect.width = (x2 - x1 + 1) * PIXELS_IN_BLOCK;
-			prRect.height = (y2 - y1 + 1) * PIXELS_IN_BLOCK;
-			cols.Add(prRect);
-		}
+		FillColision(read);
 
 		read >> count;
 		
@@ -286,6 +274,25 @@ private:
 		std::string file = "Textures\\" + name;
 		texture.loadFromFile(file);
 		sprite.setTexture(texture);
+	}
+
+	void FillColision(std::ifstream& read)
+	{
+		int count;
+		read >> count;
+		cols.Clear();
+		sf::FloatRect prRect;
+		std::string pr;
+		for (float i = 0, x1, x2, y1, y2; i < count; ++i)
+		{
+			read >> x1 >> y1 >> x2 >> y2;
+			prRect.left = x1 * PIXELS_IN_BLOCK;
+			prRect.top = y1 * PIXELS_IN_BLOCK;
+			prRect.width = (x2 - x1 + 1) * PIXELS_IN_BLOCK;
+			prRect.height = (y2 - y1 + 1) * PIXELS_IN_BLOCK;
+			cols.Add(prRect);
+			getline(read, pr);
+		}
 	}
 
 };
