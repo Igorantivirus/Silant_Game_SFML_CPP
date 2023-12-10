@@ -12,6 +12,8 @@ public:
 		render{ render }, keyBoard{ keyboard }
 	{
 		map.LoadFromFile(loc, room);
+		silant.SetFootCenterPosition(7 * PIXELS_IN_BLOCK, 7 * PIXELS_IN_BLOCK);
+		silant.StopRun();
 	}
 
 	void Run()
@@ -34,21 +36,36 @@ private:
 
 	int ticks = 0;
 
+	void ProvGoRoom()
+	{
+		size_t pos;
+		if (map.InOpenDoor(silant.GetBarierBox(), pos))
+		{
+			render.BlackWindow();
+			auto pr = map.GetDootAt(pos);
+			map.LoadFromFile(pr.GetNextLock(), pr.GetNextNomer());
+			silant.SetFootCenterPosition(pr.GetNextPos());
+			silant.StopRun();
+		}
+			
+	}
+
 	void GetEvent()
 	{
 		render.PollEvent();
+		bool sucs = false;
 		if (keyBoard.IsUp())
 			if (!map.InBocks(silant.GetBarierBoxAspir() - sf::Vector2f{0.f, silant.GetSpeed()}))
-				silant.Up();
+				(sucs = true), silant.Up();
 		if (keyBoard.IsLeft())
 			if (!map.InBocks(silant.GetBarierBoxAspir() - sf::Vector2f{silant.GetSpeed(), 0.f}))
-				silant.Left();
+				(sucs = true), silant.Left();
 		if (keyBoard.IsDown())
 			if (!map.InBocks(silant.GetBarierBoxAspir() + sf::Vector2f{0.f, silant.GetSpeed()}))
-				silant.Down();
+				(sucs = true), silant.Down();
 		if (keyBoard.IsRight())
 			if (!map.InBocks(silant.GetBarierBoxAspir() + sf::Vector2f{silant.GetSpeed(), 0.f}))
-				silant.Right();
+				(sucs = true), silant.Right();
 		if (keyBoard.IsPressed(sf::Keyboard::Space))
 		{
 			float x,  y;
@@ -61,6 +78,10 @@ private:
 		{
 			render.BlackWindow();
 		}
+
+		if (sucs)
+			ProvGoRoom();
+
 	}
 
 	void TicksUpdate()
@@ -88,7 +109,7 @@ public:
 	void Run()
 	{
 		//MainMenu() TODO
-		MainGame game(render, keyboard, Location::Default, 5);
+		MainGame game(render, keyboard, Location::Default, 4);
 		game.Run();
 	}
 

@@ -120,6 +120,106 @@ private:
 
 };
 
+class DoorObj
+{
+public:
+	DoorObj() {}
+	DoorObj(const sf::Texture& texture, const sf::IntRect& irect) : sprite{texture, irect} {}
+
+	bool Intersection(const sf::FloatRect& nrect) const
+	{
+		return rect.intersects(nrect);
+	}
+	bool Contain(const sf::Vector2f& pos) const
+	{
+		return rect.contains(pos);
+	}
+
+	bool IsLock() const
+	{
+		return lock;
+	}
+	void Close() {}
+	void Open() {}
+
+	#pragma region Get Set
+
+	Location GetNextLock() const
+	{
+		return nextLock;
+	}
+	void SetNextLock(Location loc)
+	{
+		nextLock = loc;
+	}
+
+	sf::Vector2f GetNextPos() const
+	{
+		return newxPos;
+	}
+	void SetNextPos(const sf::Vector2f& pos)
+	{
+		newxPos = pos;
+	}
+
+	sf::FloatRect GetBarierRect() const
+	{
+		return rect;
+	}
+	void SetBarierRect(const sf::FloatRect& nr)
+	{
+		rect = nr;
+	}
+
+	int GetNextNomer() const
+	{
+		return nextNomer;
+	}
+	void SetNextNomer(int n)
+	{
+		nextNomer = 0;
+	}
+
+	#pragma endregion
+
+	void Draw(sf::RenderWindow& window)
+	{
+		window.draw(sprite);
+	}
+
+	friend std::ifstream& operator>>(std::ifstream& fin, DoorObj& dobj)
+	{
+		float x, y;
+		fin >> x >> y;
+		dobj.sprite.setPosition(x * PIXELS_IN_BLOCK,y * PIXELS_IN_BLOCK);
+		dobj.rect.left = x * PIXELS_IN_BLOCK;
+		dobj.rect.top = y * PIXELS_IN_BLOCK;
+
+		fin >> x >> y;
+		dobj.rect.width = x * PIXELS_IN_BLOCK;
+		dobj.rect.height = y * PIXELS_IN_BLOCK;
+		int pr;
+		fin >> pr;
+		dobj.nextLock = static_cast<Location>(pr);
+		fin >> pr;
+		dobj.nextNomer = pr;
+		fin >> x >> y;
+		dobj.newxPos = { x * PIXELS_IN_BLOCK, y * PIXELS_IN_BLOCK };
+		return fin;
+	}
+
+private:
+	sf::Sprite sprite;
+
+	bool lock = false;
+	sf::FloatRect rect{};
+
+	Location nextLock = Location::Default;
+	int nextNomer{};
+	sf::Vector2f newxPos{};
+
+};
+
 class CollisionMap
 {
 public:
@@ -222,11 +322,9 @@ public:
 
 		int count;
 
-		FillColision(read);
+		LoadColision(read);
 
-		read >> count;
-		
-		for(int i = 0; i < count; ++i){}
+		LoadDoors(read);
 
 		read >> count;
 
@@ -237,24 +335,43 @@ public:
 
 	bool InBocks(const sf::Vector2f& pos) const
 	{
-		return cols.Contain(pos);
+		return cols.Contain(pos) || InLockDoors(pos);
 	}
 	bool InBocks(const sf::Vector2i& pos) const
 	{
-		return cols.Contain(pos);
+		return cols.Contain(pos) || InLockDoors({toFloat(pos.x), toFloat(pos.y)});
 	}
 	bool InBocks(float x, float y) const
 	{
-		return cols.Contain(x, y);
+		return cols.Contain(x, y) || InLockDoors({x, y});
 	}
 	bool InBocks(int x, int y) const
 	{
-		return cols.Contain(x, y);
+		return cols.Contain(x, y) || InLockDoors({toFloat(x), toFloat(y)});
 	}
 
 	bool InBocks(const sf::FloatRect& rect) const
 	{
-		return cols.Intersection(rect);
+		return cols.Intersection(rect) || InLockDoors(rect);
+	}
+
+	bool InOpenDoor(const sf::FloatRect& rect, size_t& pos)
+	{
+		pos = -1;
+		for (size_t i = 0; i < doors.size(); ++i)
+			if (!doors[i].IsLock() && doors[i].Intersection(rect))
+			{
+				pos = i;
+				return true;
+			}
+		return false;
+	}
+
+	const DoorObj& GetDootAt(size_t i)
+	{
+		if (i >= doors.size())
+			return DoorObj();
+		return doors[i];
 	}
 
 	void Draw(sf::RenderWindow& window) const
@@ -264,6 +381,7 @@ public:
 
 private:
 	std::vector<Object> objs;
+	std::vector<DoorObj> doors;
 	CollisionMap cols;
 
 	sf::Texture texture;
@@ -273,10 +391,12 @@ private:
 	{
 		std::string file = "Textures\\" + name;
 		texture.loadFromFile(file);
+		sf::IntRect pr = { 0, 0, toInt(texture.getSize().x), toInt(texture.getSize().y) };
+		sprite.setTextureRect(pr);
 		sprite.setTexture(texture);
 	}
 
-	void FillColision(std::ifstream& read)
+	void LoadColision(std::ifstream& read)
 	{
 		int count;
 		read >> count;
@@ -294,5 +414,35 @@ private:
 			getline(read, pr);
 		}
 	}
+
+	void LoadDoors(std::ifstream& read)
+	{
+		int count;
+		std::string pr;
+		read >> count;
+		doors.clear();
+		for (int i = 0; i < count; ++i)
+		{
+			doors.push_back({});
+			read >> doors[i];
+			std::getline(read, pr);
+		}
+	}
+
+	bool InLockDoors(const sf::FloatRect& rect) const
+	{
+		for (const auto& i : doors)
+			if (i.IsLock() && i.Intersection(rect))
+				return true;
+			return false;
+	}
+	bool InLockDoors(const sf::Vector2f& pos) const
+	{
+		for (const auto& i : doors)
+			if (i.IsLock() && i.Contain(pos))
+				return true;
+		return false;
+	}
+
 
 };
