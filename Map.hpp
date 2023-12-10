@@ -169,19 +169,19 @@ public:
 		cols.clear();
 	}
 
-	bool Contain(const sf::Vector2f& pos)
+	bool Contain(const sf::Vector2f& pos) const
 	{
 		return Contain(toInt(pos.x), toInt(pos.y));
 	}
-	bool Contain(const sf::Vector2i& pos)
+	bool Contain(const sf::Vector2i& pos) const
 	{
 		return Contain(pos.x, pos.y);
 	}
-	bool Contain(int x, int y)
+	bool Contain(int x, int y) const
 	{
 		return Contain(toFloat(x), toFloat(y));
 	}
-	bool Contain(float x, float y)
+	bool Contain(float x, float y) const
 	{
 		for (const auto& i : cols)
 			if (i.contains(x, y))
@@ -189,7 +189,7 @@ public:
 		return false;
 	}
 
-	bool Intersection(const sf::FloatRect& rect)
+	bool Intersection(const sf::FloatRect& rect) const
 	{
 		for (const auto& i : cols)
 			if (i.intersects(rect))
@@ -231,8 +231,8 @@ public:
 			read >> x1 >> y1 >> x2 >> y2;
 			prRect.left = x1 * PIXELS_IN_BLOCK;
 			prRect.top = y1 * PIXELS_IN_BLOCK;
-			prRect.width = (x2 - x1) * PIXELS_IN_BLOCK;
-			prRect.height = (y2 - y1) * PIXELS_IN_BLOCK;
+			prRect.width = (x2 - x1 + 1) * PIXELS_IN_BLOCK;
+			prRect.height = (y2 - y1 + 1) * PIXELS_IN_BLOCK;
 			cols.Add(prRect);
 		}
 
@@ -247,29 +247,29 @@ public:
 		read.close();
 	}
 
-	bool InBocks(const sf::Vector2f& pos)
+	bool InBocks(const sf::Vector2f& pos) const
 	{
 		return cols.Contain(pos);
 	}
-	bool InBocks(const sf::Vector2i& pos)
+	bool InBocks(const sf::Vector2i& pos) const
 	{
 		return cols.Contain(pos);
 	}
-	bool InBocks(float x, float y)
+	bool InBocks(float x, float y) const
 	{
 		return cols.Contain(x, y);
 	}
-	bool InBocks(int x, int y)
+	bool InBocks(int x, int y) const
 	{
 		return cols.Contain(x, y);
 	}
 
-	bool InBocks(const sf::FloatRect& rect)
+	bool InBocks(const sf::FloatRect& rect) const
 	{
 		return cols.Intersection(rect);
 	}
 
-	void Draw(sf::RenderWindow& window)
+	void Draw(sf::RenderWindow& window) const
 	{
 		window.draw(sprite);
 	}

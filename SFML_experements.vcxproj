@@ -23,22 +23,23 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="openal32.dll" />
-    <None Include="sfml-audio-2.dll" />
-    <None Include="sfml-audio-d-2.dll" />
-    <None Include="sfml-graphics-2.dll" />
-    <None Include="sfml-graphics-d-2.dll" />
-    <None Include="sfml-network-2.dll" />
-    <None Include="sfml-network-d-2.dll" />
-    <None Include="sfml-system-2.dll" />
-    <None Include="sfml-system-d-2.dll" />
-    <None Include="sfml-window-2.dll" />
-    <None Include="sfml-window-d-2.dll" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Enums.hpp" />
     <ClInclude Include="Helper.hpp" />
+    <ClInclude Include="KeyBoard.hpp" />
     <ClInclude Include="Map.hpp" />
     <ClInclude Include="Player.hpp" />
+    <ClInclude Include="Render.hpp" />
+    <ClInclude Include="SilantGame.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Rooms\info.txt" />
+    <Text Include="Rooms\room0.txt" />
+    <Text Include="Rooms\room1.txt" />
+    <Text Include="Rooms\room2.txt" />
+    <Text Include="Rooms\room3.txt" />
+    <Text Include="Rooms\room4.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

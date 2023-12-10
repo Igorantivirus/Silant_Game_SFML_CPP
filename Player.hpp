@@ -234,7 +234,7 @@ public:
 		SetPose(pos);
 	}
 
-	void Draw(sf::RenderWindow& window)
+	void Draw(sf::RenderWindow& window) const
 	{
 		window.draw(sprite);
 	}
@@ -272,7 +272,7 @@ private:
 
 	sf::FloatRect barierBox = {0, 0, 16, 6};
 
-	float speed = 1.f;
+	float speed = .25f;
 	float sliding = .1f;
 
 	Rotation rotation = Rotation::Up;
