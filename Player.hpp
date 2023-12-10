@@ -46,6 +46,16 @@ public:
 			speed = val;
 	}
 
+	float GetSeeding() const
+	{
+		return sliding;
+	}
+	void SetSleeding(float v)
+	{
+		if (v < 1 || v > 0)
+			sliding = v;
+	}
+
 	Rotation GetRotation() const
 	{
 		return rotation;
@@ -254,8 +264,6 @@ public:
 			SetPose(4);
 	}
 
-	constexpr static float sliding = .1f;
-
 private:
 	sf::Texture animTexture;
 	sf::Sprite sprite;
@@ -265,6 +273,7 @@ private:
 	sf::FloatRect barierBox = {0, 0, 16, 6};
 
 	float speed = 1.f;
+	float sliding = .1f;
 
 	Rotation rotation = Rotation::Up;
 	short pos = 1;
