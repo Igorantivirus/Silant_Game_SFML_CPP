@@ -109,7 +109,7 @@ public:
 	void Run()
 	{
 		//MainMenu() TODO
-		MainGame game(render, keyboard, Location::Default, 4);
+		MainGame game(render, keyboard, Location::Default, 1);
 		game.Run();
 	}
 
