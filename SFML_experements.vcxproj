@@ -32,6 +32,7 @@
     <ClInclude Include="Player.hpp" />
     <ClInclude Include="Render.hpp" />
     <ClInclude Include="SilantGame.hpp" />
+    <ClInclude Include="DIalogeWindow.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Rooms\info.txt" />

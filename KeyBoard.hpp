@@ -30,29 +30,37 @@ public:
 
 	#pragma region GetSettings
 
-	const sf::Keyboard::Key Up()
+	const sf::Keyboard::Key Up() const
 	{
 		return up;
 	}
-	const sf::Keyboard::Key Down()
+	const sf::Keyboard::Key Down() const
 	{
 		return down;
 	}
-	const sf::Keyboard::Key Left()
+	const sf::Keyboard::Key Left() const
 	{
 		return left;
 	}
-	const sf::Keyboard::Key Right()
+	const sf::Keyboard::Key Right() const
 	{
 		return right;
 	}
-	const sf::Keyboard::Key Pause()
+	const sf::Keyboard::Key Pause() const
 	{
 		return pause;
 	}
-	const sf::Keyboard::Key Inventory()
+	const sf::Keyboard::Key Inventory() const
 	{
 		return inventory;
+	}
+	const sf::Keyboard::Key Next() const
+	{
+		return next;
+	}
+	const sf::Keyboard::Key Back() const
+	{
+		return back;
 	}
 
 	#pragma endregion
@@ -101,6 +109,20 @@ public:
 		inventory = key;
 		return true;
 	}
+	bool SetNext(const sf::Keyboard::Key key)
+	{
+		if (HaveDuplecate(key) || next == key)
+			return false;
+		next = key;
+		return true;
+	}
+	bool SetBack(const sf::Keyboard::Key key)
+	{
+		if (HaveDuplecate(key) || back == key)
+			return false;
+		back = key;
+		return true;
+	}
 
 	#pragma endregion
 
@@ -136,6 +158,14 @@ public:
 	{
 		return sf::Keyboard::isKeyPressed(inventory);
 	}
+	bool IsNext()
+	{
+		return sf::Keyboard::isKeyPressed(next);
+	}
+	bool IsBack()
+	{
+		return sf::Keyboard::isKeyPressed(back);
+	}
 
 	#pragma endregion
 
@@ -144,6 +174,9 @@ private:
 	sf::Keyboard::Key down = sf::Keyboard::S;
 	sf::Keyboard::Key left = sf::Keyboard::A;
 	sf::Keyboard::Key right = sf::Keyboard::D;
+
+	sf::Keyboard::Key next = sf::Keyboard::Enter;
+	sf::Keyboard::Key back = sf::Keyboard::RShift;
 
 	sf::Keyboard::Key inventory = sf::Keyboard::I;
 	sf::Keyboard::Key pause = sf::Keyboard::Escape;

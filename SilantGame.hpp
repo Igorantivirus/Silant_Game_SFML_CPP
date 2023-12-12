@@ -4,12 +4,13 @@
 #include"Player.hpp"
 #include"Map.hpp"
 #include"KeyBoard.hpp"
+#include"DIalogeWindow.hpp"
 
 class MainGame
 {
 public:
 	MainGame(Render& render, KeyBoard& keyboard, Location loc, int room) :
-		render{ render }, keyBoard{ keyboard }
+		render{ render }, keyBoard{ keyboard }, dialoge{ render, keyboard }
 	{
 		map.LoadFromFile(loc, room);
 		silant.SetFootCenterPosition(7 * PIXELS_IN_BLOCK, 7 * PIXELS_IN_BLOCK);
@@ -27,14 +28,46 @@ public:
 	}
 
 
-private:
+private://параметры
 	Render& render;
 	KeyBoard& keyBoard;
+	DialogeWindow dialoge;
 
 	GameMap map;
 	Player silant{ "Sprites\\Player.png", sf::IntRect{0, 0, 16, 34} };
 
 	int ticks = 0;
+
+private://методы
+
+	void DialogeWindow(const sf::String& txt = "")
+	{
+		std::cout << "tut\n";
+		sf::Sprite sprite;// {dialoge, StaticFabricRect::RectDialogeWindow()};
+		//sprite.setTexture(dialoge);
+		//sprite.setTextureRect(StaticFabricRect::RectDialogeWindow());
+
+
+		auto pos = render.GetCenterPos();
+		/*pos.x -= sprite.getTextureRect().width / 2.f;
+		pos.y += render.GetSize().y / 2.f - sprite.getTextureRect().height;*/
+		sprite.setPosition((float)pos.x, (float)pos.y);
+
+		render.DrawSprite(sprite);
+
+		std::cout << sprite.getPosition() << '\n';
+		std::cout << silant.GetCenterPosition() << '\n';
+
+		sf::Clock clock;
+		while (clock.getElapsedTime().asSeconds() < 1)
+		{
+			render.DrawSprite(sprite);
+			/*render.PollEvent();
+			render.PrintText("negr", sprite);*/
+		}
+
+
+	}
 
 	void ProvGoRoom()
 	{
@@ -76,7 +109,7 @@ private:
 		}
 		if (keyBoard.IsPressed(sf::Keyboard::K))
 		{
-			render.BlackWindow();
+			dialoge.DrawString("negr");
 		}
 
 		if (sucs)
