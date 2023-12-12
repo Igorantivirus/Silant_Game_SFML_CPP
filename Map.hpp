@@ -11,16 +11,27 @@
 
 #define PIXELS_IN_BLOCK 16
 
+#define OBJECTTEXTURS_PATH "Sprites\\Objects.png"
+#define OBJECTTEXTURS_INFO "Sprites\\objectsinfo.txt"
+
 class Object
 {
 public:
-	Object() {}
+	Object()
+	{
+		sprite.setTexture(objTexture);
+	}
 	Object(const sf::Texture& texture, const sf::IntRect& newRect) :
 		sprite{ texture, newRect }, rectBlock{newRect}
 	{}
 	Object(const Object& other) = default;
 
 	#pragma region Get Set
+
+	unsigned GetID() const
+	{
+		return ID;
+	}
 
 	void SetTexture(const sf::Texture& texture, const sf::IntRect& newRect)
 	{
@@ -37,11 +48,11 @@ public:
 		sprite.setTextureRect(newRect);
 	}
 
-	sf::IntRect GetStopRect()
+	sf::FloatRect GetStopRect()
 	{
 		return rectBlock;
 	}
-	void SetStopRect(const sf::IntRect& rect)
+	void SetStopRect(const sf::FloatRect& rect)
 	{
 		rectBlock = rect;
 	}
@@ -64,6 +75,10 @@ public:
 		return sprite.getPosition() + sf::Vector2f{
 			toFloat(sprite.getTextureRect().width), toFloat(sprite.getTextureRect().height)
 		};
+	}
+	sf::Vector2f GetCenterBarierBoxPosition() const
+	{
+		return sf::Vector2f{rectBlock.left + rectBlock.width / 2.f, rectBlock.top + rectBlock.height / 2.f};
 	}
 
 	void SetPos(const sf::Vector2f& npos)
@@ -106,19 +121,77 @@ public:
 
 	#pragma endregion
 
-	void Draw(sf::RenderWindow& window)
+	void Draw(sf::RenderWindow& window) const
 	{
 		window.draw(sprite);
 	}
 
+	bool Intersecting(const sf::FloatRect& rect) const
+	{
+		return rectBlock.intersects(rect);
+	}
+	bool Contains(const sf::Vector2f& pos) const
+	{
+		return rectBlock.contains(pos);
+	}
+
+	static void InitializedTexture()
+	{
+		objTexture.loadFromFile(OBJECTTEXTURS_PATH);
+	}
+
+	friend std::ifstream& operator>>(std::ifstream& fin, Object& obj)
+	{
+		fin >> obj.ID >> obj.rectBlock.left >> obj.rectBlock.top;
+		obj.rectBlock.left *= PIXELS_IN_BLOCK;
+		obj.rectBlock.top *= PIXELS_IN_BLOCK;
+		obj.FillObjFromFile(obj.ID);
+		(void)fin.get(); (void)fin.get();
+		char pr;
+		obj.text.clear();
+		do
+		{
+			pr = fin.get();
+			obj.text += pr;
+		} while (pr != '|' && pr != '\n');
+		return fin;
+	}
+
 private:
+	unsigned ID{};
+
 	sf::Sprite sprite;
 
-	sf::IntRect rectBlock;
+	sf::FloatRect rectBlock;
 
 	bool ghostly = false;
 
+	sf::String text;
+
+	void FillObjFromFile(unsigned newID)
+	{
+		std::ifstream read(OBJECTTEXTURS_INFO);
+
+		std::string pr;
+		for (unsigned i = 0u; i < newID; ++i)
+			std::getline(read, pr);
+		sf::IntRect prr;
+		read >> ID >> prr.left >> prr.top >> prr.width >> prr.height;
+		sprite.setTextureRect(prr);
+
+		read >> rectBlock.width >> rectBlock.height;
+		sf::Vector2f prp;
+		read >> prp.x >> prp.y;
+		sprite.setPosition(rectBlock.left - prp.x, rectBlock.top - prp.y);
+
+		read.close();
+	}
+
+private:
+	static sf::Texture objTexture;
+
 };
+sf::Texture Object::objTexture{};
 
 class DoorObj
 {
@@ -304,7 +377,10 @@ private:
 class GameMap
 {
 public:
-	GameMap() {}
+	GameMap()
+	{
+		Object::InitializedTexture();
+	}
 
 	void LoadFromFile(Location loc, int num)
 	{
@@ -323,36 +399,32 @@ public:
 		int count;
 
 		LoadColision(read);
-
 		LoadDoors(read);
-
-		read >> count;
-
-		for(int i = 0; i < count; ++i){}
+		LoadObjects(read);
 
 		read.close();
 	}
 
 	bool InBocks(const sf::Vector2f& pos) const
 	{
-		return cols.Contain(pos) || InLockDoors(pos);
+		return cols.Contain(pos) || InLockDoors(pos) || InObjs( pos);
 	}
 	bool InBocks(const sf::Vector2i& pos) const
 	{
-		return cols.Contain(pos) || InLockDoors({toFloat(pos.x), toFloat(pos.y)});
+		return cols.Contain(pos) || InLockDoors({toFloat(pos.x), toFloat(pos.y)}) || InObjs({ toFloat(pos.x),toFloat(pos.y) });
 	}
 	bool InBocks(float x, float y) const
 	{
-		return cols.Contain(x, y) || InLockDoors({x, y});
+		return cols.Contain(x, y) || InLockDoors({x, y}) || InObjs({ x, y });
 	}
 	bool InBocks(int x, int y) const
 	{
-		return cols.Contain(x, y) || InLockDoors({toFloat(x), toFloat(y)});
+		return cols.Contain(x, y) || InLockDoors({ toFloat(x), toFloat(y) }) || InObjs({toFloat(x),toFloat(y)});
 	}
 
 	bool InBocks(const sf::FloatRect& rect) const
 	{
-		return cols.Intersection(rect) || InLockDoors(rect);
+		return cols.Intersection(rect) || InLockDoors(rect) || InObjs(rect);
 	}
 
 	bool InOpenDoor(const sf::FloatRect& rect, size_t& pos)
@@ -367,11 +439,16 @@ public:
 		return false;
 	}
 
-	const DoorObj& GetDootAt(size_t i)
+	const DoorObj& GetDoorAt(size_t i)
 	{
 		if (i >= doors.size())
 			return DoorObj();
 		return doors[i];
+	}
+
+	const std::vector<Object>& GetObjs() const
+	{
+		return objs;
 	}
 
 	void Draw(sf::RenderWindow& window) const
@@ -429,6 +506,21 @@ private:
 		}
 	}
 
+	void LoadObjects(std::ifstream& read)
+	{
+		int count;
+		read >> count;
+		objs.clear();
+		objs.reserve(count);
+		std::string pr;
+		for (int i = 0; i < count; ++i)
+		{
+			objs.push_back({});
+			read >> objs[i];
+			std::getline(read, pr);
+		}
+	}
+
 	bool InLockDoors(const sf::FloatRect& rect) const
 	{
 		for (const auto& i : doors)
@@ -440,6 +532,21 @@ private:
 	{
 		for (const auto& i : doors)
 			if (i.IsLock() && i.Contain(pos))
+				return true;
+		return false;
+	}
+
+	bool InObjs(const sf::FloatRect& rect) const
+	{
+		for (const auto& i : objs)
+			if (i.Intersecting(rect))
+				return true;
+		return false;
+	}
+	bool InObjs(const sf::Vector2f& pos) const
+	{
+		for (const auto& i : objs)
+			if (i.Contains(pos))
 				return true;
 		return false;
 	}

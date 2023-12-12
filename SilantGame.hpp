@@ -42,7 +42,7 @@ private:
 		if (map.InOpenDoor(silant.GetBarierBox(), pos))
 		{
 			render.BlackWindow();
-			auto pr = map.GetDootAt(pos);
+			auto pr = map.GetDoorAt(pos);
 			map.LoadFromFile(pr.GetNextLock(), pr.GetNextNomer());
 			silant.SetFootCenterPosition(pr.GetNextPos());
 			silant.StopRun();

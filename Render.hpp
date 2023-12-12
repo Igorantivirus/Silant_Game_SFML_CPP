@@ -9,7 +9,7 @@ class Render
 {
 public:
 	Render() :
-		window{ sf::VideoMode::getDesktopMode(), L"Силант симулятор" }, view{ window.getDefaultView() }
+		window{ sf::VideoMode::getDesktopMode(), L"Бородатый мужик гуляет по театру" }, view{ window.getDefaultView() }
 	{}
 
 	void Zoom(float val)
@@ -27,7 +27,18 @@ public:
 		window.clear();
 		view.setCenter(player.GetCenterPosition());
 		map.Draw(window);
+
+		auto pr = map.GetObjs();
+		for (const auto& i : pr)
+			if (i.GetCenterBarierBoxPosition().y < player.GetAspirCenterFootPos().y)
+				i.Draw(window);
+
 		player.Draw(window);
+
+		for (const auto& i : pr)
+			if (i.GetCenterBarierBoxPosition().y > player.GetAspirCenterFootPos().y)
+				i.Draw(window);
+
 		FinalizeRender();
 	}
 
