@@ -154,15 +154,13 @@ public:
 		(void)fin.get(); (void)fin.get();
 		int pr = 0;
 		obj.text.clear();
+		std::cout << "new txt\n";
 		while ((pr = fin.get()) != '|' && pr != '\n')
 		{
-			obj.text += (wchar_t)pr;
+			if (pr == 208 || pr == 209)
+				continue;
+			obj.text += ToUInt32(pr);
 		}
-		//do
-		//{
-		//	pr = fin.get();
-		//	obj.text += (wchar_t)pr;
-		//} while (pr != '|' && pr != '\n');
 		return fin;
 	}
 

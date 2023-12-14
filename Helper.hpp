@@ -9,6 +9,19 @@
 #define toUInt(a) static_cast<unsigned int>(a)
 #define toUInt8(a) static_cast<unsigned char>(a)
 
+sf::Uint32 ToUInt32(int c)
+{
+	if (c >= 144 && c <= 191)
+		return c + 896;
+	if (c >= 128 && c <= 143)
+		return c + 960;
+	if (c == 129)
+		return 1105;
+	if (c == 145)
+		return 1025;
+	return c;
+}
+
 template<typename type>
 std::ostream& operator<<(std::ostream& out, const sf::Rect<type> val)
 {

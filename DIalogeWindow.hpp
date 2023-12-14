@@ -42,15 +42,7 @@ public:
 
 		if (textLabel.getGlobalBounds().width >= textRect.width)
 		{
-			auto pr = textLabel.getString();
-
-			for(size_t i = pr.getSize(); i > 0; --i)
-				if (pr[i - 1] == ' ')
-				{
-					pr[i - 1] = '\n';
-					break;
-				}
-			textLabel.setString(pr);
+			ShiftLeft();
 		}
 		if (textLabel.getGlobalBounds().height >= textRect.height)
 		{
@@ -71,7 +63,6 @@ public:
 		waitNext = false;
 		textLabel.setString("");
 	}
-
 
 	void FinalizeDialoge()
 	{
@@ -115,5 +106,62 @@ private:
 	size_t ind = 0;
 
 	bool waitNext = false;
+
+	void ShiftLeft()
+	{
+		auto pr = textLabel.getString();
+		bool find = false;
+
+		for (size_t i = pr.getSize(); i > 0; --i)
+		{
+			if (pr[i - 1] == ' ')
+			{
+				pr[i - 1] = '\n';
+				find = true;
+				break;
+			}
+			else if (pr[i - 1] == ',' || pr[i - 1] == '.' || pr[i - 1] == '!' || pr[i - 1] == '?')
+			{
+				pr.insert(i, '\n');
+				find = true;
+				break;
+			}
+		}
+		
+		if (!find)
+			pr.insert(pr.getSize() - 2, '\n');
+		
+		textLabel.setString(pr);
+	}
+
+	void ShiftDown()
+	{
+		auto pr = textLabel.getString();
+		bool find = false;
+		auto oldInd = ind;
+
+		for (size_t i = pr.getSize(); i > 0; --i, --ind)
+		{
+			if (pr[i - 1] == ' ')
+			{
+				pr.erase(i - 1, pr.getSize() - i + 1);
+				find = true;
+				break;
+			}
+			else if (pr[i - 1] == ',' || pr[i - 1] == '.' || pr[i - 1] == '!' || pr[i - 1] == '?')
+			{
+				if(i != pr.getSize())
+					pr.erase(i, pr.getSize() - i + 1);
+				find = true;
+				break;
+			}
+		}
+		if (!find)
+		{
+			ind = oldInd - 1;
+			pr.erase(pr.getSize() - 1);
+		}
+		textLabel.setString(pr);
+	}
 
 };
