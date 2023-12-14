@@ -4,6 +4,7 @@
 #include"Player.hpp"
 #include"Map.hpp"
 #include"KeyBoard.hpp"
+#include"DIalogeWindow.hpp"
 
 class MainGame
 {
@@ -20,21 +21,40 @@ public:
 	{
 		while (render.IsOpen() && !keyBoard.IsPause())
 		{
+			DrawAll();
 			GetEvent();
 			TicksUpdate();
-			render.GameMapDraw(map, silant);
 		}
 	}
 
 
-private:
+private://параметры
 	Render& render;
 	KeyBoard& keyBoard;
+	DialogeWindow dialoge;
 
 	GameMap map;
 	Player silant{ "Sprites\\Player.png", sf::IntRect{0, 0, 16, 34} };
 
 	int ticks = 0;
+	bool inDialoge = false;
+
+private://методы
+
+	void DrawAll()
+	{
+		render.Clear();
+
+		render.GameMapDraw(map, silant);
+
+		if (inDialoge)
+		{
+
+			render.DrawDialoge(dialoge);
+		}
+
+		render.FinalizeRender();
+	}
 
 	void ProvGoRoom()
 	{
@@ -54,18 +74,60 @@ private:
 	{
 		render.PollEvent();
 		bool sucs = false;
-		if (keyBoard.IsUp())
-			if (!map.InBocks(silant.GetBarierBoxAspir() - sf::Vector2f{0.f, silant.GetSpeed()}))
-				(sucs = true), silant.Up();
-		if (keyBoard.IsLeft())
-			if (!map.InBocks(silant.GetBarierBoxAspir() - sf::Vector2f{silant.GetSpeed(), 0.f}))
-				(sucs = true), silant.Left();
-		if (keyBoard.IsDown())
-			if (!map.InBocks(silant.GetBarierBoxAspir() + sf::Vector2f{0.f, silant.GetSpeed()}))
-				(sucs = true), silant.Down();
-		if (keyBoard.IsRight())
-			if (!map.InBocks(silant.GetBarierBoxAspir() + sf::Vector2f{silant.GetSpeed(), 0.f}))
-				(sucs = true), silant.Right();
+		if (!inDialoge)
+		{
+			if (keyBoard.IsUp())
+			{
+				silant.SetRotation(Rotation::Up);
+				if (!map.InBocks(silant.GetBarierBoxAspir() - sf::Vector2f{0.f, silant.GetSpeed()}))
+					(sucs = true), silant.Up();
+			}
+			if (keyBoard.IsLeft())
+			{
+				silant.SetRotation(Rotation::Left);
+				if (!map.InBocks(silant.GetBarierBoxAspir() - sf::Vector2f{silant.GetSpeed(), 0.f}))
+					(sucs = true), silant.Left();
+			}
+			if (keyBoard.IsDown())
+			{
+				silant.SetRotation(Rotation::Down);
+				if (!map.InBocks(silant.GetBarierBoxAspir() + sf::Vector2f{0.f, silant.GetSpeed()}))
+					(sucs = true), silant.Down();
+			}
+			if (keyBoard.IsRight())
+			{
+				silant.SetRotation(Rotation::Right);
+				if (!map.InBocks(silant.GetBarierBoxAspir() + sf::Vector2f{silant.GetSpeed(), 0.f}))
+					(sucs = true), silant.Right();
+			}
+			if (keyBoard.IsNext())
+			{
+				sf::String txt;
+				if (map.HaveIntersectionWithObjs(silant.GetViewPosition(), txt) && !txt.isEmpty())
+				{
+					dialoge.SetText(txt);
+					inDialoge = true;
+				}
+			}
+		}
+		else
+		{
+			if (keyBoard.IsBack())
+				dialoge.FinalizeDialoge();
+			if (keyBoard.IsNext())
+			{
+				if (dialoge.IsFullEnter())
+				{
+					inDialoge = false;
+					silant.OppositeRotation();
+					return;
+				}
+				else if (dialoge.IsWaiting())
+					dialoge.NextSlide();
+			}
+		}
+
+
 		if (keyBoard.IsPressed(sf::Keyboard::Space))
 		{
 			float x,  y;
@@ -76,11 +138,14 @@ private:
 		}
 		if (keyBoard.IsPressed(sf::Keyboard::K))
 		{
-			render.BlackWindow();
+
 		}
 
 		if (sucs)
 			ProvGoRoom();
+
+		if (keyBoard.IsPressed(sf::Keyboard::F11))
+			render.SetFullScreen(!render.IsFullScreen());
 
 	}
 
@@ -88,9 +153,15 @@ private:
 	{
 		silant.UpdatePosition();
 		if (ticks % 100 == 0)
-		{
 			silant.UpdateAnum();
+
+		if (inDialoge)
+		{
+			dialoge.SetPositionAtWindow(sf::Vector2f{render.GetCenterX(), render.GetCenterY() + render.GetSize().y / 2.f});
+			if(ticks % 10 == 0)
+				dialoge.Update();
 		}
+
 		if (ticks > 1000000)
 			ticks = 0;
 		ticks++;
@@ -109,7 +180,7 @@ public:
 	void Run()
 	{
 		//MainMenu() TODO
-		MainGame game(render, keyboard, Location::Default, 1);
+		MainGame game(render, keyboard, Location::Default, 2);
 		game.Run();
 	}
 

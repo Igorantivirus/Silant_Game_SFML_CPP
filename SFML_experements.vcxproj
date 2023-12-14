@@ -25,6 +25,7 @@
     <None Include="openal32.dll" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DIalogeWindow.hpp" />
     <ClInclude Include="Enums.hpp" />
     <ClInclude Include="Helper.hpp" />
     <ClInclude Include="KeyBoard.hpp" />

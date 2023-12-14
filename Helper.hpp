@@ -6,6 +6,7 @@
 
 #define toFloat(a) static_cast<float>(a)
 #define toInt(a) static_cast<int>(a)
+#define toUInt(a) static_cast<unsigned int>(a)
 #define toUInt8(a) static_cast<unsigned char>(a)
 
 template<typename type>

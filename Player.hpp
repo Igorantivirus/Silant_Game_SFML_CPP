@@ -64,10 +64,53 @@ public:
 	{
 		rotation = val;
 	}
+	void OppositeRotation()
+	{
+		switch (rotation)
+		{
+		case Rotation::Up:
+			rotation = Rotation::Down;
+			break;
+		case Rotation::Down:
+			rotation = Rotation::Up;
+			break;
+		case Rotation::Right:
+			rotation = Rotation::Left;
+			break;
+		case Rotation::Left:
+			rotation = Rotation::Right;
+			break;
+		default:
+			break;
+		}
+	}
 
 	#pragma region Position
 
 	#pragma region RealPos
+
+	sf::Vector2f GetViewPosition() const
+	{
+		sf::Vector2f pos = { barierBox.left + barierBox.width / 2.f, barierBox.top + barierBox.height / 2.f };
+		switch (rotation)
+		{
+		case Rotation::Up:
+			pos.y -= barierBox.height / 2.f + 1.f;
+			break;
+		case Rotation::Down:
+			pos.y += barierBox.height / 2.f + 1.f;
+			break;
+		case Rotation::Right:
+			pos.x += barierBox.width / 2.f + 1;
+			break;
+		case Rotation::Left:
+			pos.x -= barierBox.width / 2.f + 1;
+			break;
+		default:
+			break;
+		}
+		return pos;
+	}
 
 	sf::Vector2f GetFootCenterPosition() const
 	{
@@ -234,10 +277,7 @@ public:
 		SetPose(pos);
 	}
 
-	void Draw(sf::RenderWindow& window) const
-	{
-		window.draw(sprite);
-	}
+	#pragma region Going
 
 	void Up()
 	{
@@ -262,6 +302,13 @@ public:
 		rotation = Rotation::Right;
 		if (pos < 4)
 			SetPose(4);
+	}
+
+	#pragma endregion
+
+	void Draw(sf::RenderWindow& window) const
+	{
+		window.draw(sprite);
 	}
 
 private:

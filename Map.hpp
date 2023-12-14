@@ -28,6 +28,11 @@ public:
 
 	#pragma region Get Set
 
+	const sf::String& GetText() const
+	{
+		return text;
+	}
+
 	unsigned GetID() const
 	{
 		return ID;
@@ -147,13 +152,17 @@ public:
 		obj.rectBlock.top *= PIXELS_IN_BLOCK;
 		obj.FillObjFromFile(obj.ID);
 		(void)fin.get(); (void)fin.get();
-		char pr;
+		int pr = 0;
 		obj.text.clear();
-		do
+		while ((pr = fin.get()) != '|' && pr != '\n')
 		{
-			pr = fin.get();
-			obj.text += pr;
-		} while (pr != '|' && pr != '\n');
+			obj.text += (wchar_t)pr;
+		}
+		//do
+		//{
+		//	pr = fin.get();
+		//	obj.text += (wchar_t)pr;
+		//} while (pr != '|' && pr != '\n');
 		return fin;
 	}
 
@@ -425,6 +434,17 @@ public:
 	bool InBocks(const sf::FloatRect& rect) const
 	{
 		return cols.Intersection(rect) || InLockDoors(rect) || InObjs(rect);
+	}
+
+	bool HaveIntersectionWithObjs(const sf::Vector2f pos, sf::String& str) const
+	{
+		for (const auto& i : objs)
+			if (i.Contains(pos))
+			{
+				str = i.GetText();
+				return true;
+			}
+		return false;
 	}
 
 	bool InOpenDoor(const sf::FloatRect& rect, size_t& pos)
