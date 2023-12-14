@@ -47,14 +47,7 @@ public:
 		if (textLabel.getGlobalBounds().height >= textRect.height)
 		{
 			waitNext = true;
-			auto pr2 = textLabel.getString();
-			for (size_t i = pr2.getSize(); i > 0; --i, --ind)
-				if (pr2[i - 1] == ' ')
-				{
-					pr2.erase(i - 1, pr2.getSize() - i + 1);
-					break;
-				}
-			textLabel.setString(pr2);
+			ShiftDown();
 		}
 
 	}

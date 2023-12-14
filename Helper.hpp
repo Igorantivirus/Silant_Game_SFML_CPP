@@ -15,10 +15,10 @@ sf::Uint32 ToUInt32(int c)
 		return c + 896;
 	if (c >= 128 && c <= 143)
 		return c + 960;
-	if (c == 129)
-		return 1105;
-	if (c == 145)
-		return 1025;
+	//if (c == 129)
+	//	return 1105;
+	//if (c == 145)
+	//	return 1025;
 	return c;
 }
 

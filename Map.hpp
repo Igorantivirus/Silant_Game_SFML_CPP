@@ -150,11 +150,18 @@ public:
 		fin >> obj.ID >> obj.rectBlock.left >> obj.rectBlock.top;
 		obj.rectBlock.left *= PIXELS_IN_BLOCK;
 		obj.rectBlock.top *= PIXELS_IN_BLOCK;
-		obj.FillObjFromFile(obj.ID);
+		if (obj.ID == 0)
+		{
+			fin >> obj.rectBlock.width >> obj.rectBlock.height;
+			obj.rectBlock.width *= PIXELS_IN_BLOCK;
+			obj.rectBlock.height *= PIXELS_IN_BLOCK;
+			obj.NullObj();
+		}
+		else
+			obj.FillObjFromFile(obj.ID);
 		(void)fin.get(); (void)fin.get();
 		int pr = 0;
 		obj.text.clear();
-		std::cout << "new txt\n";
 		while ((pr = fin.get()) != '|' && pr != '\n')
 		{
 			if (pr == 208 || pr == 209)
@@ -177,6 +184,8 @@ private:
 
 	void FillObjFromFile(unsigned newID)
 	{
+		if (newID == 0)
+			return NullObj();
 		std::ifstream read(OBJECTTEXTURS_INFO);
 
 		std::string pr;
@@ -192,6 +201,13 @@ private:
 		sprite.setPosition(rectBlock.left - prp.x, rectBlock.top - prp.y);
 
 		read.close();
+	}
+
+	void NullObj()
+	{
+		sprite.setTextureRect({});
+		sprite.setPosition(rectBlock.left, rectBlock.top);
+		ghostly = true;
 	}
 
 private:
