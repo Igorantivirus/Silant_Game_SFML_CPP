@@ -19,9 +19,9 @@ public:
 		font.loadFromFile(FONT_PATH);
 
 		gameFont.loadFromFile(FONT_PATH);
-		textLabel.setFont(gameFont);
-		textLabel.setFillColor(sf::Color::Black);
 		textLabel.setCharacterSize(10);
+		textLabel.setFillColor(sf::Color::Black);
+		textLabel.setFont(gameFont);
 	}
 
 	void SetText(const sf::String& txt)
