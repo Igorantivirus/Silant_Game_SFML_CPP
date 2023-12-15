@@ -36,7 +36,13 @@ public:
 		if (waitNext)
 			return;
 		if (ind < str.getSize())
-			textLabel.setString(textLabel.getString() + str[ind++]);
+		{
+			auto pr = str[ind++];
+			if (pr == '\t')
+				waitNext = true;
+			else
+				textLabel.setString(textLabel.getString() + pr);
+		}
 
 
 
@@ -49,7 +55,7 @@ public:
 			waitNext = true;
 			ShiftDown();
 		}
-
+		
 	}
 	void NextSlide()
 	{

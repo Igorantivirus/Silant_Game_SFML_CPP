@@ -319,7 +319,7 @@ private:
 
 	sf::FloatRect barierBox = {0, 0, 15, 6};
 
-	float speed = .25f;
+	float speed = .2f;
 	float sliding = .1f;
 
 	Rotation rotation = Rotation::Up;

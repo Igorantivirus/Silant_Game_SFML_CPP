@@ -180,7 +180,7 @@ public:
 	void Run()
 	{
 		//MainMenu() TODO
-		MainGame game(render, keyboard, Location::Default, 2);
+		MainGame game(render, keyboard, Location::Default, 5);
 		game.Run();
 	}
 
