@@ -37,7 +37,6 @@ private://параметры
 	Player silant{ "Sprites\\Player.png", sf::IntRect{0, 0, 16, 34} };
 
 	int ticks = 0;
-	bool inDialoge = false;
 
 private://методы
 
@@ -47,11 +46,8 @@ private://методы
 
 		render.GameMapDraw(map, silant);
 
-		if (inDialoge)
-		{
-
+		if (dialoge.IsAvtive())
 			render.DrawDialoge(dialoge);
-		}
 
 		render.FinalizeRender();
 	}
@@ -73,9 +69,13 @@ private://методы
 	void GetEvent()
 	{
 		render.PollEvent();
-		bool sucs = false;
-		if (!inDialoge)
+
+
+		if(dialoge.IsAvtive())
+			dialoge.GetEvent(keyBoard);
+		else
 		{
+			bool sucs = false;
 			if (keyBoard.IsUp())
 			{
 				silant.SetRotation(Rotation::Up);
@@ -100,53 +100,26 @@ private://методы
 				if (!map.InBocks(silant.GetBarierBoxAspir() + sf::Vector2f{silant.GetSpeed(), 0.f}))
 					(sucs = true), silant.Right();
 			}
+
 			if (keyBoard.IsNext())
 			{
 				sf::String txt;
 				if (map.HaveIntersectionWithObjs(silant.GetViewPosition(), txt) && !txt.isEmpty())
-				{
-					dialoge.SetText(txt);
-					inDialoge = true;
-				}
+					dialoge.Run(txt);
 			}
+			if (sucs)
+				ProvGoRoom();
 		}
-		else
-		{
-			if (keyBoard.IsBack())
-				dialoge.FinalizeDialoge();
-			if (keyBoard.IsNext())
-			{
-				if (dialoge.IsFullEnter())
-				{
-					inDialoge = false;
-					silant.OppositeRotation();
-					return;
-				}
-				else if (dialoge.IsWaiting())
-					dialoge.NextSlide();
-			}
-		}
-
-
 		if (keyBoard.IsPressed(sf::Keyboard::Space))
 		{
 			float x,  y;
-			x = toFloat(rand() % 200);
-			y = toFloat(rand() % 200);
+			x = toFloat(rand() % 500 - 100);
+			y = toFloat(rand() % 500 - 100);
 			silant.SetFootCenterPosition(x, y);
 			silant.SetAspirCenterFootPos(x, y);
 		}
-		if (keyBoard.IsPressed(sf::Keyboard::K))
-		{
-
-		}
-
-		if (sucs)
-			ProvGoRoom();
-
 		if (keyBoard.IsPressed(sf::Keyboard::F11))
 			render.SetFullScreen(!render.IsFullScreen());
-
 	}
 
 	void TicksUpdate()
@@ -155,7 +128,7 @@ private://методы
 		if (ticks % 100 == 0)
 			silant.UpdateAnum();
 
-		if (inDialoge)
+		if (dialoge.IsAvtive())
 		{
 			dialoge.SetPositionAtWindow(sf::Vector2f{render.GetCenterX(), render.GetCenterY() + render.GetSize().y / 2.f});
 			if(ticks % 10 == 0)

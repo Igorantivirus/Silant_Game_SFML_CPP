@@ -3,6 +3,7 @@
 #include<SFML\Graphics.hpp>
 
 #include"Render.hpp"
+#include"KeyBoard.hpp"
 
 #define DIALOGE_PATH "Sprites\\Text.png"
 #define FONT_PATH "constan.ttf"
@@ -24,12 +25,32 @@ public:
 		textLabel.setFont(gameFont);
 	}
 
-	void SetText(const sf::String& txt)
+	void Run(const sf::String& txt)
 	{
+		isActive = true;
 		str = txt;
 		ind = 0;
 		textLabel.setString("");
 	}
+
+	#pragma region Bool methods
+
+	bool IsAvtive() const
+	{
+		return isActive;
+	}
+	bool IsFullEnter() const
+	{
+		return ind >= str.getSize();
+	}
+	bool IsWaiting() const
+	{
+		return waitNext;
+	}
+
+	#pragma endregion
+
+	#pragma region Update
 
 	void Update()
 	{
@@ -69,15 +90,6 @@ public:
 			Update();
 	}
 
-	bool IsFullEnter() const
-	{
-		return ind >= str.getSize();
-	}
-	bool IsWaiting() const
-	{
-		return waitNext;
-	}
-
 	void SetPositionAtWindow(sf::Vector2f posCenter)
 	{
 		posCenter.x -= sprite.getTextureRect().width / 2.f;
@@ -85,6 +97,27 @@ public:
 
 		sprite.setPosition(posCenter);
 		textLabel.setPosition(sprite.getPosition() + sf::Vector2f{10, 10});
+	}
+
+	#pragma endregion
+
+	void GetEvent(const KeyBoard& keyBoard)
+	{
+		if (!isActive)
+			return;
+		if (keyBoard.IsBack())
+			FinalizeDialoge();
+		if (keyBoard.IsNext())
+		{
+			if (IsFullEnter())
+			{
+				isActive = false;
+				//silant.OppositeRotation();
+				return;
+			}
+			else if (IsWaiting())
+				NextSlide();
+		}
 	}
 
 	void Draw(sf::RenderWindow& window) const
@@ -105,6 +138,7 @@ private:
 	size_t ind = 0;
 
 	bool waitNext = false;
+	bool isActive = false;
 
 	void ShiftLeft()
 	{

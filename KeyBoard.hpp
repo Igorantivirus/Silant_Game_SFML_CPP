@@ -126,43 +126,43 @@ public:
 
 	#pragma endregion
 
+	#pragma region ButtonsPressed
+
 	bool IsPressed(const sf::Keyboard::Key key) const
 	{
 		return sf::Keyboard::isKeyPressed(key);
 	}
 
-	#pragma region ButtonsPressed
-
-	bool IsUp()
+	bool IsUp() const
 	{
 		return sf::Keyboard::isKeyPressed(up);
 	}
-	bool IsDown()
+	bool IsDown() const
 	{
 		return sf::Keyboard::isKeyPressed(down);
 	}
-	bool IsLeft()
+	bool IsLeft() const
 	{
 		return sf::Keyboard::isKeyPressed(left);
 	}
-	bool IsRight()
+	bool IsRight() const
 	{
 		return sf::Keyboard::isKeyPressed(right);
 	}
 
-	bool IsPause()
+	bool IsPause() const
 	{
 		return sf::Keyboard::isKeyPressed(pause);
 	}
-	bool IsInventory()
+	bool IsInventory() const
 	{
 		return sf::Keyboard::isKeyPressed(inventory);
 	}
-	bool IsNext()
+	bool IsNext() const
 	{
 		return sf::Keyboard::isKeyPressed(next);
 	}
-	bool IsBack()
+	bool IsBack() const
 	{
 		return sf::Keyboard::isKeyPressed(back);
 	}
