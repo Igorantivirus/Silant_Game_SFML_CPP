@@ -22,9 +22,6 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="openal32.dll" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="DIalogeWindow.hpp" />
     <ClInclude Include="Enums.hpp" />
     <ClInclude Include="Helper.hpp" />
@@ -33,14 +30,6 @@
     <ClInclude Include="Player.hpp" />
     <ClInclude Include="Render.hpp" />
     <ClInclude Include="SilantGame.hpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="Rooms\info.txt" />
-    <Text Include="Rooms\room0.txt" />
-    <Text Include="Rooms\room1.txt" />
-    <Text Include="Rooms\room2.txt" />
-    <Text Include="Rooms\room3.txt" />
-    <Text Include="Rooms\room4.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

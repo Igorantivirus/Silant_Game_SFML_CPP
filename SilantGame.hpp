@@ -37,6 +37,7 @@ private://параметры
 	Player silant{ "Sprites\\Player.png", sf::IntRect{0, 0, 16, 34} };
 
 	int ticks = 0;
+	sf::Clock clock;
 
 private://методы
 
@@ -71,8 +72,11 @@ private://методы
 		render.PollEvent();
 
 
-		if(dialoge.IsAvtive())
-			dialoge.GetEvent(keyBoard);
+		if (dialoge.IsAvtive())
+		{
+			if(GoodTime())
+				dialoge.GetEvent(keyBoard);
+		}
 		else
 		{
 			bool sucs = false;
@@ -101,7 +105,7 @@ private://методы
 					(sucs = true), silant.Right();
 			}
 
-			if (keyBoard.IsNext())
+			if (keyBoard.IsNext() && GoodTime())
 			{
 				sf::String txt;
 				if (map.HaveIntersectionWithObjs(silant.GetViewPosition(), txt) && !txt.isEmpty())
@@ -138,6 +142,13 @@ private://методы
 		if (ticks > 1000000)
 			ticks = 0;
 		ticks++;
+	}
+
+	bool GoodTime()
+	{
+		if (clock.getElapsedTime().asMilliseconds() > 100)
+			return clock.restart(), true;
+		return false;
 	}
 
 };

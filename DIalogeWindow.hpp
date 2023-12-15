@@ -110,11 +110,7 @@ public:
 		if (keyBoard.IsNext())
 		{
 			if (IsFullEnter())
-			{
 				isActive = false;
-				//silant.OppositeRotation();
-				return;
-			}
 			else if (IsWaiting())
 				NextSlide();
 		}
@@ -160,7 +156,6 @@ private:
 				break;
 			}
 		}
-		
 		if (!find)
 			pr.insert(pr.getSize() - 2, '\n');
 		
