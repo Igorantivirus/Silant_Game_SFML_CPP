@@ -25,6 +25,7 @@
     <ClInclude Include="DIalogeWindow.hpp" />
     <ClInclude Include="Enums.hpp" />
     <ClInclude Include="Helper.hpp" />
+    <ClInclude Include="Inventory.hpp" />
     <ClInclude Include="KeyBoard.hpp" />
     <ClInclude Include="Map.hpp" />
     <ClInclude Include="Player.hpp" />

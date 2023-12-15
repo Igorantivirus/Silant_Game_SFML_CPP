@@ -1,8 +1,9 @@
 #pragma once
 
 #include<iostream>
+#include<fstream>
 
-//#include<SFML/>
+#include<SFML/Graphics.hpp>
 
 #define toFloat(a) static_cast<float>(a)
 #define toInt(a) static_cast<int>(a)
@@ -48,4 +49,19 @@ sf::Rect<type> operator-(const sf::Rect<type>& left, const sf::Vector2<type> rig
 	res.left -= right.x;
 	res.top -= right.y;
 	return res;
+}
+
+void getlineToSpecialSymbol(std::ifstream& read, sf::String& str)
+{
+	str.clear();
+	if (!read.is_open())
+		return;
+	int pr;
+	do
+	{
+		pr = read.get();
+		if (pr == 208 || pr == 209)
+			continue;
+		str += ToUInt32(pr);
+	} while (pr != '|' && pr != '\n' && !read.eof());
 }

@@ -1,12 +1,38 @@
 #pragma once
 
+#include<vector>
+
 #include<SFML/Graphics.hpp>
 
 #include"Enums.hpp"
 #include"Helper.hpp"
+#include"Inventory.hpp"
 
 class Player
 {
+public:
+	struct PersonInfo
+	{
+		Inventory inventory;
+		int hp = 0;
+		int boroda = 0;
+		int money = 0;
+		int defence = 0;
+		int armor = 0;
+
+		PersonInfo& operator=(const PersonInfo& other)
+		{
+			if (this == &other)
+				return *this;
+			hp = other.hp;
+			boroda = other.boroda;
+			money = other.money;
+			defence = other.defence;
+			armor = other.armor;
+			inventory = other.inventory;
+			return *this;
+		}
+	};
 public:
 	Player(){}
 	Player(const sf::String& fileName, const sf::IntRect& rect)
@@ -17,6 +43,11 @@ public:
 	}
 
 	#pragma region SetGet
+
+	const PersonInfo& GetInfo() const
+	{
+		return info;
+	}
 
 	bool SetTexture(const sf::String file, const sf::IntRect& rect)
 	{
@@ -240,6 +271,8 @@ public:
 
 	#pragma endregion
 
+	#pragma region Update
+
 	void UpdatePosition()
 	{
 		sprite.move((aspiratPos - sprite.getPosition()) * sliding);
@@ -277,6 +310,8 @@ public:
 		SetPose(pos);
 	}
 
+	#pragma endregion
+
 	#pragma region Going
 
 	void Up()
@@ -312,6 +347,8 @@ public:
 	}
 
 private:
+	PersonInfo info;
+
 	sf::Texture animTexture;
 	sf::Sprite sprite;
 

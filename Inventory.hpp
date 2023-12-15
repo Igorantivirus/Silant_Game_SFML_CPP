@@ -1,8 +1,14 @@
 #pragma once
 
 #include<vector>
+#include<fstream>
+#include<string>
 
 #include<SFML\Graphics.hpp>
+
+#include"Helper.hpp"
+
+#define ITEMS_INFO_PATH "Sprites\\items.txt"
 
 class Item
 {
@@ -75,6 +81,13 @@ public:
 		return arrmorPls;
 	}
 
+	friend std::ifstream& operator>>(std::ifstream& fin, Item& i)
+	{
+		fin >> i.ID;
+		i.LoadAtID(i.ID);
+		return fin;
+	}
+
 private:
 	unsigned short ID = 0;
 	Type type = Type::None;
@@ -88,6 +101,34 @@ private:
 	sf::String useInf;
 	sf::String seeInf;
 	sf::String brkInf;
+
+	void LoadAtID(unsigned short newID)
+	{
+		if (newID == 0)
+		{
+			ID = 0;
+			name = seeInf = useInf = brkInf = "";
+			healthPls = borodaPls = damagePls = arrmorPls = 0;
+			return;
+		}
+		std::ifstream read(ITEMS_INFO_PATH);
+
+		std::string pr;
+		for (unsigned short i = 0; i < newID; ++i)
+			std::getline(read, pr);
+		read >> ID;
+		read.get(); read.get();
+
+		getlineToSpecialSymbol(read, name);
+		getlineToSpecialSymbol(read, seeInf);
+		getlineToSpecialSymbol(read, useInf);
+		getlineToSpecialSymbol(read, brkInf);
+		int t;
+		read >> t >> healthPls >> borodaPls >> damagePls >> arrmorPls;
+		type = static_cast<Type>(t);
+
+		read.close();
+	}
 };
 
 class Inventory
@@ -101,6 +142,8 @@ public:
 	
 	
 	}
+
+	#pragma region Array methods
 
 	unsigned char MaxElement() const
 	{
@@ -131,6 +174,10 @@ public:
 			return;
 		items.erase(items.begin() + ind, items.begin() + ind + 1);
 	}
+
+	#pragma endregion
+
+	#pragma region Use See Break
 
 	sf::String TrashAt(unsigned char ind)
 	{
@@ -166,6 +213,19 @@ public:
 		if (ind >= items.size())
 			return "";
 		return items[ind].GetSee();
+	}
+
+	#pragma endregion
+
+	Inventory& operator=(const Inventory& other)
+	{
+		if (this == &other)
+			return *this;
+		maxItems = other.maxItems;
+		items = other.items;
+		currentArmor = other.currentArmor;
+		currentWeapon = other.currentWeapon;
+		return *this;
 	}
 
 private:

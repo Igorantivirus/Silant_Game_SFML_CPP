@@ -79,6 +79,7 @@ private://методы
 		}
 		else
 		{
+			#pragma region WASD
 			bool sucs = false;
 			if (keyBoard.IsUp())
 			{
@@ -104,7 +105,7 @@ private://методы
 				if (!map.InBocks(silant.GetBarierBoxAspir() + sf::Vector2f{silant.GetSpeed(), 0.f}))
 					(sucs = true), silant.Right();
 			}
-
+			#pragma endregion
 			if (keyBoard.IsNext() && GoodTime())
 			{
 				sf::String txt;

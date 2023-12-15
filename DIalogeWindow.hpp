@@ -4,6 +4,7 @@
 
 #include"Render.hpp"
 #include"KeyBoard.hpp"
+#include"Player.hpp"
 
 #define DIALOGE_PATH "Sprites\\Text.png"
 #define FONT_PATH "constan.ttf"
