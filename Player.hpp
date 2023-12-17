@@ -54,6 +54,9 @@ public:
 		itm.LoadAtID(4);
 		info.inventory.Add(itm);
 
+		itm.LoadAtID(5);
+		info.inventory.Add(itm);
+
 	}
 
 	#pragma region SetGet

@@ -153,7 +153,6 @@ private://методы
 		}
 		else if (invent.IsActive())
 		{
-			invent.SetPositionAtWindow(render.GetCenterPos());
 			if (invent.IsWait())
 			{
 				dialoge.Run(invent.GetWaitStr());
@@ -161,6 +160,7 @@ private://методы
 			}
 			else if (ticks % 10 == 0)
 				invent.Update();
+			invent.SetPositionAtWindow(render.GetCenterPos());
 		}
 
 		if (ticks > 1000000)

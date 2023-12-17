@@ -10,6 +10,14 @@
 #define toUInt(a) static_cast<unsigned int>(a)
 #define toUInt8(a) static_cast<unsigned char>(a)
 
+sf::Text& FillText(sf::Text& text, const sf::Font& font, const sf::Color& color, float scaleX, float scaleY)
+{
+	text.setFont(font);
+	text.setFillColor(color);
+	text.setScale(scaleX, scaleY);
+	return text;
+}
+
 sf::Uint32 ToUInt32(int c)
 {
 	if (c >= 144 && c <= 191)

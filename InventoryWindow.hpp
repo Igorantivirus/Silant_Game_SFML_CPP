@@ -54,6 +54,14 @@ private:
 			centerPos.y += 55 + caret * 7;
 			return centerPos;
 		}
+		static sf::Vector2f GetArmorPosArCenter(sf::Vector2f centerPos)
+		{
+			return centerPos + sf::Vector2f{-15, 15};
+		}
+		static sf::Vector2f GetWeaponPosArCenter(const sf::Vector2f& centerPos)
+		{
+			return centerPos + sf::Vector2f{-15, -15};
+		}
 	};
 public:
 	InventoryWindow(PersonInfo& info) : info{ info }
@@ -74,18 +82,11 @@ public:
 			texts[i].setScale(0.25, 0.25);
 		}
 
-		hp.setFont(font);
-		boroda.setFont(font);
-		money.setFont(font);
-
-		hp.setFillColor(sf::Color::Black);
-		boroda.setFillColor(sf::Color::Black);
-		money.setFillColor(sf::Color::Black);
-
-		hp.setScale(0.25, 0.25);
-		boroda.setScale(0.25, 0.25);
-		money.setScale(0.25, 0.25);
-
+		FillText(hp, font, sf::Color::Black, 0.25, 0.25);
+		FillText(boroda, font, sf::Color::Black, 0.25, 0.25);
+		FillText(money, font, sf::Color::Black, 0.25, 0.25);
+		FillText(armor, font, sf::Color::Black, 0.25, 0.25);
+		FillText(weapon, font, sf::Color::Black, 0.25, 0.25);
 	}
 
 	bool IsActive() const
@@ -124,6 +125,9 @@ public:
 		hp.setString(std::to_string(info.hp));
 		boroda.setString(std::to_string(info.boroda));
 		money.setString(std::to_string(info.money));
+
+		armor.setString(info.inventory.GetArmor().GenNane());
+		weapon.setString(info.inventory.GetWeapon().GenNane());
 	}
 
 	void GetEvent(const KeyBoard& keyboard)
@@ -179,6 +183,8 @@ public:
 		window.draw(hp);
 		window.draw(boroda);
 		window.draw(money);
+		window.draw(armor);
+		window.draw(weapon);
 	}
 
 private:
@@ -201,6 +207,9 @@ private:
 	sf::Text hp;
 	sf::Text boroda;
 	sf::Text money;
+
+	sf::Text armor;
+	sf::Text weapon;
 
 	#pragma endregion
 
@@ -243,11 +252,13 @@ private:
 		hp.setPosition(FloatRectFabrick::GetHPPosAtCenter(center));
 		boroda.setPosition(FloatRectFabrick::GetBorodaPosAtCenter(center));
 		money.setPosition(FloatRectFabrick::GetMoneyPosAtCenter(center));
+
+		armor.setPosition(FloatRectFabrick::GetArmorPosArCenter(center));
+		weapon.setPosition(FloatRectFabrick::GetWeaponPosArCenter(center));
 	}
 
 	void Use()
 	{
-		std::cout << useCaret << '\n';
 		if (useCaret == 0)
 			waitStr = info.inventory.UseAt(caret, info.hp, info.boroda, info.defence, info.armor);
 		else if (useCaret == 2)
