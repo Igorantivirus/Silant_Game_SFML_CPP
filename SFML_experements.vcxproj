@@ -29,6 +29,7 @@
     <ClInclude Include="Map.hpp" />
     <ClInclude Include="Player.hpp" />
     <ClInclude Include="Render.hpp" />
+    <ClInclude Include="SettingsWindow.hpp" />
     <ClInclude Include="SilantGame.hpp" />
     <ClInclude Include="WindowDialog\DialogeMutiWindow.hpp" />
     <ClInclude Include="WindowDialog\DIalogeWindow.hpp" />

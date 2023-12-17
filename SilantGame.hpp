@@ -5,6 +5,7 @@
 #include"Map.hpp"
 #include"KeyBoard.hpp"
 #include"WindowDialog/DialogeMutiWindow.hpp"
+#include"SettingsWindow.hpp"
 
 class MainGame
 {
@@ -38,7 +39,6 @@ private://параметры
 	Player silant{ "Sprites\\Player.png", sf::IntRect{0, 0, 16, 34} };
 
 	int ticks = 0;
-	sf::Clock clock;
 
 private://методы
 
@@ -74,8 +74,7 @@ private://методы
 
 		if (dielogeM.IsActive())
 		{
-			if(GoodTime())
-				dielogeM.GetEvent(keyBoard);
+			dielogeM.GetEvent(keyBoard);
 		}
 		else
 		{
@@ -106,13 +105,13 @@ private://методы
 					(sucs = true), silant.Right();
 			}
 			#pragma endregion
-			if (keyBoard.IsNext() && GoodTime())
+			if (keyBoard.IsNextClick())
 			{
 				sf::String txt;
 				if (map.HaveIntersectionWithObjs(silant.GetViewPosition(), txt) && !txt.isEmpty())
 					dielogeM.RunDialoge(txt);
 			}
-			else if (keyBoard.IsInventory() && GoodTime())
+			else if (keyBoard.IsInventoryClick())
 				dielogeM.RunInventory();
 			if (sucs)
 				ProvGoRoom();
@@ -125,7 +124,7 @@ private://методы
 			silant.SetFootCenterPosition(x, y);
 			silant.SetAspirCenterFootPos(x, y);
 		}
-		if (keyBoard.IsPressed(sf::Keyboard::F11))
+		if (keyBoard.IsFullScreenClick())
 			render.SetFullScreen(!render.IsFullScreen());
 	}
 
@@ -145,14 +144,6 @@ private://методы
 			ticks = 0;
 		ticks++;
 	}
-
-	bool GoodTime()
-	{
-		if (clock.getElapsedTime().asMilliseconds() > 100)
-			return clock.restart(), true;
-		return false;
-	}
-
 };
 
 class Game
@@ -166,6 +157,10 @@ public:
 	void Run()
 	{
 		//MainMenu() TODO
+
+		/*SettingsMenu menu(keyboard, render);
+		menu.Run();*/
+
 		MainGame game(render, keyboard, Location::Default, 5);
 		game.Run();
 	}

@@ -101,33 +101,33 @@ public:
 
 	void GetEvent(const KeyBoard& keyboard)
 	{
-		if (keyboard.IsInventory())
+		if (keyboard.IsInventoryClick())
 			Stop();
 		bool update = false;
 
 		if (!isUse)
 		{
-			if (keyboard.IsUp())
+			if (keyboard.IsUpClick())
 				--caret, (update = true);
-			if (keyboard.IsDown())
+			if (keyboard.IsDownClick())
 				++caret, (update = true);
-			if (keyboard.IsLeft())
+			if (keyboard.IsLeftClick())
 				caret -= 5, (update = true);
-			if (keyboard.IsRight())
+			if (keyboard.IsRightClick())
 				caret += 5, (update = true);
 
-			if (keyboard.IsNext() && caret < info.inventory.GetSize())
+			if (keyboard.IsNextClick() && caret < info.inventory.GetSize())
 				isUse = true;
 		}
 		else
 		{
-			if (keyboard.IsDown())
+			if (keyboard.IsDownClick())
 				++useCaret, (update = true);
-			if (keyboard.IsUp())
+			if (keyboard.IsUpClick())
 				--useCaret, (update = true);
-			if (keyboard.IsNext())
+			if (keyboard.IsNextClick())
 				Use();
-			else if (keyboard.IsBack())
+			else if (keyboard.IsBackClick())
 				isUse = false;
 		}
 		if (update)

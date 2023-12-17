@@ -74,3 +74,12 @@ void getlineToSpecialSymbol(std::ifstream& read, sf::String& str)
 	} while (pr != '|' && pr != '\n' && !read.eof());
 	str.erase(str.getSize() - 1);
 }
+
+std::ifstream& operator>>(std::ifstream& fin, sf::Keyboard::Key& key)
+{
+	int pr;
+	fin >> pr;
+	std::string prs;
+	std::getline(fin, prs);
+	return fin;
+}

@@ -58,8 +58,6 @@ public:
 				textLabel.setString(textLabel.getString() + pr);
 		}
 
-
-
 		if (textLabel.getGlobalBounds().width >= textRect.width)
 		{
 			ShiftLeft();
@@ -98,13 +96,13 @@ public:
 	{
 		if (!isActive)
 			return;
-		if (keyBoard.IsBack())
+		if (keyBoard.IsBackClick())
 			FinalizeDialoge();
-		if (keyBoard.IsNext())
+		if (keyBoard.IsNextClick())
 		{
 			if (IsFullEnter())
 				isActive = false;
-			else if (IsWaiting() && keyBoard.IsNext())
+			else if (IsWaiting())
 				NextSlide();
 		}
 	}

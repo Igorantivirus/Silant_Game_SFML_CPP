@@ -4,6 +4,80 @@
 
 #include<SFML\Window\Keyboard.hpp>
 
+#define SETTINGS_FILE "settings.txt"
+
+class Key
+{
+public:
+	Key() {}
+	Key(const sf::Keyboard::Key& k) : key{ k } {}
+
+	Key& operator=(const Key& key)
+	{
+		if (this == &key)
+			return *this;
+		this->key = key.key;
+		wasPressed = key.wasPressed;
+		return *this;
+	}
+	Key& operator=(const sf::Keyboard::Key& keyb)
+	{
+		key = keyb;
+		wasPressed = false;
+		return *this;
+	}
+
+	bool operator==(const Key& key) const
+	{
+		return key.key == this->key;
+	}
+	bool operator==(const sf::Keyboard::Key& keyb) const
+	{
+		return key == keyb;
+	}
+
+	friend std::istream& operator>>(std::istream& fin, Key& k)
+	{
+		int pr;
+		fin >> pr;
+		k.key = static_cast<sf::Keyboard::Key>(pr);
+		std::string prs;
+		std::getline(fin, prs);
+		return fin;
+	}
+	friend std::ostream& operator<<(std::ostream& fout, const Key& k)
+	{
+		fout << static_cast<int>(k.key);
+		return fout;
+	}
+
+	bool IsClicked() const
+	{
+		if (sf::Keyboard::isKeyPressed(key))
+			return (wasPressed = true), false;
+		else
+			return wasPressed ? (wasPressed = false), true : (wasPressed = false);
+	}
+
+	bool IsPressed() const
+	{
+		return sf::Keyboard::isKeyPressed(key);
+	}
+
+	sf::Keyboard::Key GetKey() const
+	{
+		return key;
+	}
+	void SetKey(const sf::Keyboard::Key& k)
+	{
+		key = k;
+	}
+
+private:
+	sf::Keyboard::Key key = sf::Keyboard::Num0;
+	mutable bool wasPressed = false;
+};
+
 class KeyBoard
 {
 public:
@@ -11,10 +85,43 @@ public:
 	{
 		LoadFromFile();
 	}
+	~KeyBoard()
+	{
+		SaveSettings();
+	}
 	
-	void LoadFromFile() {}
+	void LoadFromFile()
+	{
+		std::ifstream read(SETTINGS_FILE);
 
-	void SaveSettings() {}
+		read			>>
+			up			>>
+			down		>>
+			left		>>
+			right		>>
+			next		>>
+			back		>>
+			inventory	>>
+			pause		>>
+			fullScreen;
+		read.close();
+	}
+
+	void SaveSettings() const
+	{
+		std::ofstream write(SETTINGS_FILE);
+		write <<
+			up			<< " up\n"			<<
+			down		<< " down\n"		<<
+			left		<< " left\n"		<<
+			right		<< " right\n"		<<
+			next		<< " next\n"		<<
+			back		<< " back\n"		<<
+			inventory	<< " inventory\n"	<<
+			pause		<< " pause\n"		<<
+			fullScreen	<< " fullscreen\n";
+		write.close();
+	}
 
 	KeyBoard& operator=(const KeyBoard& other)
 	{
@@ -30,35 +137,41 @@ public:
 
 	#pragma region GetSettings
 
-	const sf::Keyboard::Key Up() const
+	const Key& Up() const
 	{
 		return up;
 	}
-	const sf::Keyboard::Key Down() const
+	const Key& Down() const
 	{
 		return down;
 	}
-	const sf::Keyboard::Key Left() const
+	const Key& Left() const
 	{
 		return left;
 	}
-	const sf::Keyboard::Key Right() const
+	const Key& Right() const
 	{
 		return right;
 	}
-	const sf::Keyboard::Key Pause() const
+
+	const Key& Pause() const
 	{
 		return pause;
 	}
-	const sf::Keyboard::Key Inventory() const
+	const Key& Inventory() const
 	{
 		return inventory;
 	}
-	const sf::Keyboard::Key Next() const
+	const Key& FullScreen() const
+	{
+		return fullScreen;
+	}
+
+	const Key& Next() const
 	{
 		return next;
 	}
-	const sf::Keyboard::Key Back() const
+	const Key& Back() const
 	{
 		return back;
 	}
@@ -95,6 +208,7 @@ public:
 		right = key;
 		return true;
 	}
+
 	bool SetPause(const sf::Keyboard::Key key)
 	{
 		if (HaveDuplecate(key) || pause == key)
@@ -109,6 +223,14 @@ public:
 		inventory = key;
 		return true;
 	}
+	bool SetFullScreen(const sf::Keyboard::Key key)
+	{
+		if (HaveDuplecate(key) || fullScreen == key)
+			return false;
+		fullScreen = key;
+		return true;
+	}
+
 	bool SetNext(const sf::Keyboard::Key key)
 	{
 		if (HaveDuplecate(key) || next == key)
@@ -135,60 +257,109 @@ public:
 
 	bool IsUp() const
 	{
-		return sf::Keyboard::isKeyPressed(up);
+		return up.IsPressed();
 	}
 	bool IsDown() const
 	{
-		return sf::Keyboard::isKeyPressed(down);
+		return down.IsPressed();
 	}
 	bool IsLeft() const
 	{
-		return sf::Keyboard::isKeyPressed(left);
+		return left.IsPressed();
 	}
 	bool IsRight() const
 	{
-		return sf::Keyboard::isKeyPressed(right);
+		return right.IsPressed();
 	}
 
 	bool IsPause() const
 	{
-		return sf::Keyboard::isKeyPressed(pause);
+		return pause.IsPressed();
 	}
 	bool IsInventory() const
 	{
-		return sf::Keyboard::isKeyPressed(inventory);
+		return inventory.IsPressed();
 	}
+	bool IsFullScreen() const
+	{
+		return fullScreen.IsPressed();
+	}
+
 	bool IsNext() const
 	{
-		return sf::Keyboard::isKeyPressed(next);
+		return next.IsPressed();
 	}
 	bool IsBack() const
 	{
-		return sf::Keyboard::isKeyPressed(back);
+		return back.IsPressed();
+	}
+
+	#pragma endregion
+
+	#pragma region ButtonsClicked
+
+	bool IsUpClick() const
+	{
+		return up.IsClicked();
+	}
+	bool IsDownClick() const
+	{
+		return down.IsClicked();
+	}
+	bool IsLeftClick() const
+	{
+		return left.IsClicked();
+	}
+	bool IsRightClick() const
+	{
+		return right.IsClicked();
+	}
+
+	bool IsNextClick() const
+	{
+		return next.IsClicked();
+	}
+	bool IsBackClick() const
+	{
+		return back.IsClicked();
+	}
+
+	bool IsInventoryClick() const
+	{
+		return inventory.IsClicked();
+	}
+	bool IsFullScreenClick() const
+	{
+		return fullScreen.IsClicked();
+	}
+	bool IsPauseClick() const
+	{
+		return pause.IsClicked();
 	}
 
 	#pragma endregion
 
 private:
-	sf::Keyboard::Key up = sf::Keyboard::W;
-	sf::Keyboard::Key down = sf::Keyboard::S;
-	sf::Keyboard::Key left = sf::Keyboard::A;
-	sf::Keyboard::Key right = sf::Keyboard::D;
-
-	sf::Keyboard::Key next = sf::Keyboard::Enter;
-	sf::Keyboard::Key back = sf::Keyboard::RShift;
-
-	sf::Keyboard::Key inventory = sf::Keyboard::RControl;
-	sf::Keyboard::Key pause = sf::Keyboard::Escape;
+	Key up = sf::Keyboard::W;
+	Key down = sf::Keyboard::S;
+	Key left = sf::Keyboard::A;
+	Key right = sf::Keyboard::D;
+	
+	Key next = sf::Keyboard::Enter;
+	Key back = sf::Keyboard::RShift;
+	
+	Key inventory = sf::Keyboard::RControl;
+	Key pause = sf::Keyboard::Escape;
+	Key fullScreen = sf::Keyboard::F11;
 
 	bool HaveDuplecate(const sf::Keyboard::Key key) const
 	{
-		if (key == up || key == down || key == right || key == left)
+		if (up == key || down == key || right == key || left == key)
 			return true;
-		if (key == pause || key == inventory)
+		if (pause == key || inventory == key || fullScreen == key)
 			return true;
-
-
+		if (next == key || back == key)
+			return true;
 		return false;
 	}
 

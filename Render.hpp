@@ -126,9 +126,9 @@ public:
 
 	#pragma region Standart Window Methods
 
-	void Clear()
+	void Clear(const sf::Color& color = sf::Color{0,0,0,255})
 	{
-		window.clear();
+		window.clear(color);
 	}
 
 	void FinalizeRender()
@@ -168,6 +168,11 @@ public:
 		else
 			window.create(sf::VideoMode(window.getSize().x, window.getSize().y), L"Бородатый мужик гуляет по театру", sf::Style::Default);
 		fullScreen = vs;
+	}
+
+	void SetDefaultCenterPos()
+	{
+		view.setCenter(GetSize().x / 2.f, GetSize().y / 2.f);
 	}
 
 	#pragma endregion
