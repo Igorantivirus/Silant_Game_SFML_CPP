@@ -38,6 +38,25 @@ public:
 		brkInf{other.brkInf}
 	{}
 
+	Item& operator=(const Item& other)
+	{
+		if (this == &other)
+			return *this;
+		ID = other.ID;
+		type = other.type;
+		name = other.name;
+
+		borodaPls = other.borodaPls;
+		healthPls = other.healthPls;
+		damagePls = other.damagePls;
+		arrmorPls = other.arrmorPls;
+
+		useInf = other.useInf;
+		seeInf = other.seeInf;
+		brkInf = other.brkInf;
+		return *this;
+	}
+
 	unsigned short GetID() const
 	{
 		return ID;
@@ -88,20 +107,6 @@ public:
 		return fin;
 	}
 
-private:
-	unsigned short ID = 0;
-	Type type = Type::None;
-	sf::String name = L"Èìÿ";
-
-	int borodaPls = 0;
-	int healthPls = 0;
-	int damagePls = 0;
-	int arrmorPls = 0;
-
-	sf::String useInf;
-	sf::String seeInf;
-	sf::String brkInf;
-
 	void LoadAtID(unsigned short newID)
 	{
 		if (newID == 0)
@@ -123,12 +128,28 @@ private:
 		getlineToSpecialSymbol(read, seeInf);
 		getlineToSpecialSymbol(read, useInf);
 		getlineToSpecialSymbol(read, brkInf);
+
 		int t;
 		read >> t >> healthPls >> borodaPls >> damagePls >> arrmorPls;
 		type = static_cast<Type>(t);
 
 		read.close();
 	}
+
+private:
+	unsigned short ID = 0;
+	Type type = Type::None;
+	sf::String name;
+
+	int borodaPls = 0;
+	int healthPls = 0;
+	int damagePls = 0;
+	int arrmorPls = 0;
+
+	sf::String useInf;
+	sf::String seeInf;
+	sf::String brkInf;
+
 };
 
 class Inventory
@@ -136,11 +157,15 @@ class Inventory
 public:
 	Inventory(unsigned char maxSize = 10) : maxItems{ maxSize }
 	{
-		Add(Item());
-		Add(Item());
-		Add(Item());
-	
-	
+	}
+
+	const Item& GetArmor() const
+	{
+		return currentArmor;
+	}
+	const Item& GetWeapon() const
+	{
+		return currentWeapon;
 	}
 
 	#pragma region Array methods
@@ -200,9 +225,18 @@ public:
 		armor += items[ind].GetArrmorPlus();
 
 		if (items[ind].GetType() == Item::Type::Armor)
+		{
 			std::swap(currentArmor, items[ind]);
+			if (items[ind].GenNane().isEmpty())
+				items.erase(items.begin() + ind, items.begin() + ind + 1);
+		}
 		else if (items[ind].GetType() == Item::Type::Weapon)
+		{
 			std::swap(currentWeapon, items[ind]);
+			std::swap(currentArmor, items[ind]);
+			if (items[ind].GenNane().isEmpty())
+				items.erase(items.begin() + ind, items.begin() + ind + 1);
+		}
 		else
 			items.erase(items.begin() + ind, items.begin() + ind + 1);
 		return res;

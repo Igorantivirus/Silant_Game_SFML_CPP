@@ -8,31 +8,31 @@
 #include"Helper.hpp"
 #include"Inventory.hpp"
 
+struct PersonInfo
+{
+	Inventory inventory;
+	int hp = 100;
+	int boroda = 10;
+	int money = -1000;
+	int defence = 0;
+	int armor = 0;
+
+	PersonInfo& operator=(const PersonInfo& other)
+	{
+		if (this == &other)
+			return *this;
+		hp = other.hp;
+		boroda = other.boroda;
+		money = other.money;
+		defence = other.defence;
+		armor = other.armor;
+		inventory = other.inventory;
+		return *this;
+	}
+};
+
 class Player
 {
-public:
-	struct PersonInfo
-	{
-		Inventory inventory;
-		int hp = 0;
-		int boroda = 0;
-		int money = 0;
-		int defence = 0;
-		int armor = 0;
-
-		PersonInfo& operator=(const PersonInfo& other)
-		{
-			if (this == &other)
-				return *this;
-			hp = other.hp;
-			boroda = other.boroda;
-			money = other.money;
-			defence = other.defence;
-			armor = other.armor;
-			inventory = other.inventory;
-			return *this;
-		}
-	};
 public:
 	Player(){}
 	Player(const sf::String& fileName, const sf::IntRect& rect)
@@ -40,11 +40,32 @@ public:
 		animTexture.loadFromFile(fileName);
 		sprite.setTexture(animTexture);
 		sprite.setTextureRect(rect);
+
+		Item itm;
+		itm.LoadAtID(1);
+		info.inventory.Add(itm);
+
+		itm.LoadAtID(2);
+		info.inventory.Add(itm);
+
+		itm.LoadAtID(3);
+		info.inventory.Add(itm);
+
+		itm.LoadAtID(4);
+		info.inventory.Add(itm);
+
+		itm.LoadAtID(5);
+		info.inventory.Add(itm);
+
 	}
 
 	#pragma region SetGet
 
 	const PersonInfo& GetInfo() const
+	{
+		return info;
+	}
+	PersonInfo& GetInfoLink()
 	{
 		return info;
 	}

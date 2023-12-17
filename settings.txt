@@ -1,0 +1,9 @@
+22 up
+18 down
+0 left
+3 right
+58 next
+42 back
+41 inventory
+36 pause
+95 fullscreen

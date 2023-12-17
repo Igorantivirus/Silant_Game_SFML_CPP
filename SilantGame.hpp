@@ -4,13 +4,14 @@
 #include"Player.hpp"
 #include"Map.hpp"
 #include"KeyBoard.hpp"
-#include"DIalogeWindow.hpp"
+#include"WindowDialog/DialogeMutiWindow.hpp"
+#include"SettingsWindow.hpp"
 
 class MainGame
 {
 public:
 	MainGame(Render& render, KeyBoard& keyboard, Location loc, int room) :
-		render{ render }, keyBoard{ keyboard }
+		render{ render }, keyBoard{ keyboard }, dielogeM{silant.GetInfoLink()}
 	{
 		map.LoadFromFile(loc, room);
 		silant.SetFootCenterPosition(7 * PIXELS_IN_BLOCK, 7 * PIXELS_IN_BLOCK);
@@ -31,13 +32,13 @@ public:
 private://параметры
 	Render& render;
 	KeyBoard& keyBoard;
-	DialogeWindow dialoge;
+
+	MultiDialogeWindow dielogeM;
 
 	GameMap map;
 	Player silant{ "Sprites\\Player.png", sf::IntRect{0, 0, 16, 34} };
 
 	int ticks = 0;
-	sf::Clock clock;
 
 private://методы
 
@@ -47,8 +48,8 @@ private://методы
 
 		render.GameMapDraw(map, silant);
 
-		if (dialoge.IsAvtive())
-			render.DrawDialoge(dialoge);
+		if (dielogeM.IsActive())
+			render.DrawMultyWindow(dielogeM);
 
 		render.FinalizeRender();
 	}
@@ -71,11 +72,9 @@ private://методы
 	{
 		render.PollEvent();
 
-
-		if (dialoge.IsAvtive())
+		if (dielogeM.IsActive())
 		{
-			if(GoodTime())
-				dialoge.GetEvent(keyBoard);
+			dielogeM.GetEvent(keyBoard);
 		}
 		else
 		{
@@ -106,12 +105,14 @@ private://методы
 					(sucs = true), silant.Right();
 			}
 			#pragma endregion
-			if (keyBoard.IsNext() && GoodTime())
+			if (keyBoard.IsNextClick())
 			{
 				sf::String txt;
 				if (map.HaveIntersectionWithObjs(silant.GetViewPosition(), txt) && !txt.isEmpty())
-					dialoge.Run(txt);
+					dielogeM.RunDialoge(txt);
 			}
+			else if (keyBoard.IsInventoryClick())
+				dielogeM.RunInventory();
 			if (sucs)
 				ProvGoRoom();
 		}
@@ -123,7 +124,7 @@ private://методы
 			silant.SetFootCenterPosition(x, y);
 			silant.SetAspirCenterFootPos(x, y);
 		}
-		if (keyBoard.IsPressed(sf::Keyboard::F11))
+		if (keyBoard.IsFullScreenClick())
 			render.SetFullScreen(!render.IsFullScreen());
 	}
 
@@ -133,25 +134,16 @@ private://методы
 		if (ticks % 100 == 0)
 			silant.UpdateAnum();
 
-		if (dialoge.IsAvtive())
+		if (dielogeM.IsActive())
 		{
-			dialoge.SetPositionAtWindow(sf::Vector2f{render.GetCenterX(), render.GetCenterY() + render.GetSize().y / 2.f});
+			dielogeM.SetPosAtCenter(render.GetCenterPos(), render.GetSize());
 			if(ticks % 10 == 0)
-				dialoge.Update();
+				dielogeM.Update();
 		}
-
 		if (ticks > 1000000)
 			ticks = 0;
 		ticks++;
 	}
-
-	bool GoodTime()
-	{
-		if (clock.getElapsedTime().asMilliseconds() > 100)
-			return clock.restart(), true;
-		return false;
-	}
-
 };
 
 class Game
@@ -165,6 +157,10 @@ public:
 	void Run()
 	{
 		//MainMenu() TODO
+
+		/*SettingsMenu menu(keyboard, render);
+		menu.Run();*/
+
 		MainGame game(render, keyboard, Location::Default, 5);
 		game.Run();
 	}
