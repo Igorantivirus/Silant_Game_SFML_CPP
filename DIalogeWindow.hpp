@@ -21,7 +21,7 @@ public:
 		font.loadFromFile(FONT_PATH);
 
 		gameFont.loadFromFile(FONT_PATH);
-		textLabel.setCharacterSize(10);
+		textLabel.setScale(0.25, 0.25);
 		textLabel.setFillColor(sf::Color::Black);
 		textLabel.setFont(gameFont);
 	}

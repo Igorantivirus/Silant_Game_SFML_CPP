@@ -178,7 +178,7 @@ private:
 	sf::Keyboard::Key next = sf::Keyboard::Enter;
 	sf::Keyboard::Key back = sf::Keyboard::RShift;
 
-	sf::Keyboard::Key inventory = sf::Keyboard::I;
+	sf::Keyboard::Key inventory = sf::Keyboard::RControl;
 	sf::Keyboard::Key pause = sf::Keyboard::Escape;
 
 	bool HaveDuplecate(const sf::Keyboard::Key key) const

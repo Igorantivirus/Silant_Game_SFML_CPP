@@ -5,12 +5,13 @@
 #include"Map.hpp"
 #include"KeyBoard.hpp"
 #include"DIalogeWindow.hpp"
+#include"InventoryWindow.hpp"
 
 class MainGame
 {
 public:
 	MainGame(Render& render, KeyBoard& keyboard, Location loc, int room) :
-		render{ render }, keyBoard{ keyboard }
+		render{ render }, keyBoard{ keyboard }, invent{silant.GetInfoLink()}
 	{
 		map.LoadFromFile(loc, room);
 		silant.SetFootCenterPosition(7 * PIXELS_IN_BLOCK, 7 * PIXELS_IN_BLOCK);
@@ -31,7 +32,9 @@ public:
 private://параметры
 	Render& render;
 	KeyBoard& keyBoard;
+
 	DialogeWindow dialoge;
+	InventoryWindow invent;
 
 	GameMap map;
 	Player silant{ "Sprites\\Player.png", sf::IntRect{0, 0, 16, 34} };
@@ -49,6 +52,8 @@ private://методы
 
 		if (dialoge.IsAvtive())
 			render.DrawDialoge(dialoge);
+		if (invent.IsActive())
+			render.DrawInventory(invent);
 
 		render.FinalizeRender();
 	}
@@ -76,6 +81,11 @@ private://методы
 		{
 			if(GoodTime())
 				dialoge.GetEvent(keyBoard);
+		}
+		else if (invent.IsActive())
+		{
+			if (GoodTime())
+				invent.GetEvent(keyBoard);
 		}
 		else
 		{
@@ -112,6 +122,8 @@ private://методы
 				if (map.HaveIntersectionWithObjs(silant.GetViewPosition(), txt) && !txt.isEmpty())
 					dialoge.Run(txt);
 			}
+			else if (keyBoard.IsInventory() && GoodTime())
+				invent.Run();
 			if (sucs)
 				ProvGoRoom();
 		}
@@ -138,6 +150,17 @@ private://методы
 			dialoge.SetPositionAtWindow(sf::Vector2f{render.GetCenterX(), render.GetCenterY() + render.GetSize().y / 2.f});
 			if(ticks % 10 == 0)
 				dialoge.Update();
+		}
+		else if (invent.IsActive())
+		{
+			invent.SetPositionAtWindow(render.GetCenterPos());
+			if (invent.IsWait())
+			{
+				dialoge.Run(invent.GetWaitStr());
+				invent.Stop();
+			}
+			else if (ticks % 10 == 0)
+				invent.Update();
 		}
 
 		if (ticks > 1000000)

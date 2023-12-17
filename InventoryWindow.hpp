@@ -29,23 +29,41 @@ private:
 		}
 		static sf::Vector2f GetTextPosAtCenter(sf::Vector2f centerPos, short caret)
 		{
-			centerPos.x += caret < 5 ? -70 : 20;
+			centerPos.x += caret < 5 ? -65 : 20;
 
-			centerPos.y -= 20;
+			centerPos.y -= 25;
 			centerPos.y += caret % 5 * 10;
 
 			return centerPos;
 		}
+		static sf::Vector2f GetHPPosAtCenter(const sf::Vector2f& centerPos)
+		{
+			return centerPos + sf::Vector2f{40.f, -67.f};
+		}
+		static sf::Vector2f GetBorodaPosAtCenter(const sf::Vector2f& centerPos)
+		{
+			return centerPos + sf::Vector2f{40.f, -60.f};
+		}
+		static sf::Vector2f GetMoneyPosAtCenter(const sf::Vector2f& centerPos)
+		{
+			return centerPos + sf::Vector2f{40.f, -52.f};
+		}
+		static sf::Vector2f GetPosCaretUseAtCenter(sf::Vector2f centerPos, short caret)
+		{
+			centerPos.x += 30;
+			centerPos.y += 55 + caret * 7;
+			return centerPos;
+		}
 	};
 public:
-	InventoryWindow(Player& player) : player{ player }
+	InventoryWindow(PersonInfo& info) : info{ info }
 	{
 		texture.loadFromFile(INVENTORY_TEXTURE_PATH);
 		sprite.setTexture(texture);
 		sprite.setScale(0.5f, 0.5f);
 
 		point.setRadius(1);
-		point.setFillColor(sf::Color::Yellow);
+		point.setFillColor(sf::Color::Black);
 
 		font.loadFromFile(FONT_PATH);
 		for (size_t i = 0; i < 10; ++i)
@@ -53,23 +71,42 @@ public:
 			texts.push_back({});
 			texts[i].setFont(font);
 			texts[i].setFillColor(sf::Color::Black);
-			texts[i].setScale(0.25,0.25);
+			texts[i].setScale(0.25, 0.25);
 		}
+
+		hp.setFont(font);
+		boroda.setFont(font);
+		money.setFont(font);
+
+		hp.setFillColor(sf::Color::Black);
+		boroda.setFillColor(sf::Color::Black);
+		money.setFillColor(sf::Color::Black);
+
+		hp.setScale(0.25, 0.25);
+		boroda.setScale(0.25, 0.25);
+		money.setScale(0.25, 0.25);
+
 	}
 
 	bool IsActive() const
 	{
 		return isActive;
 	}
+	bool IsWait() const
+	{
+		return wait;
+	}
+	const sf::String& GetWaitStr() const
+	{
+		return waitStr;
+	}
 
 	void Run()
 	{
 		isActive = true;
-		sf::String pr = "";
-		for (size_t i = 0; i < player.GetInfo().invent.GetSize(); ++i)
-		{
-			texts[i].setString(player.GetInfo().invent.GetAt(i).GenNane());
-		}
+		wait = false;
+		useCaret = 2;
+		Update();
 	}
 
 	void Stop()
@@ -79,8 +116,14 @@ public:
 
 	void Update()
 	{
-	
-	
+		sf::String pr = "";
+		for (size_t i = 0; i < info.inventory.GetSize(); ++i)
+			texts[i].setString(info.inventory.GetAt(i).GenNane());
+		for (size_t i = info.inventory.GetSize(); i < 10; ++i)
+			texts[i].setString("");
+		hp.setString(std::to_string(info.hp));
+		boroda.setString(std::to_string(info.boroda));
+		money.setString(std::to_string(info.money));
 	}
 
 	void GetEvent(const KeyBoard& keyboard)
@@ -89,6 +132,8 @@ public:
 			Stop();
 		bool update = false;
 
+		if (!isUse)
+		{
 			if (keyboard.IsUp())
 				--caret, (update = true);
 			if (keyboard.IsDown())
@@ -98,12 +143,27 @@ public:
 			if (keyboard.IsRight())
 				caret += 5, (update = true);
 
-		if(update)
+			if (keyboard.IsNext() && caret < info.inventory.GetSize())
+				isUse = true;
+		}
+		else
+		{
+			if (keyboard.IsDown())
+				++useCaret, (update = true);
+			if (keyboard.IsUp())
+				--useCaret, (update = true);
+			if (keyboard.IsNext())
+				Use();
+			else if (keyboard.IsBack())
+				isUse = false;
+		}
+		if (update)
 			UpdateCaret();
 	}
 
 	void SetPositionAtWindow(sf::Vector2f posCenter)
 	{
+		SetTextPos(posCenter);
 		posCenter.x -= FloatRectFabrick::RectMenu().width / 2.f;
 		posCenter.y -= FloatRectFabrick::RectMenu().height / 2.f;
 		sprite.setPosition(posCenter);
@@ -116,33 +176,59 @@ public:
 		window.draw(point);
 		for (const auto& i : texts)
 			window.draw(i);
+		window.draw(hp);
+		window.draw(boroda);
+		window.draw(money);
 	}
 
 private:
 
-	Player& player;
+	PersonInfo& info;
 
 	sf::Texture texture;
 	sf::Sprite sprite;
 
 	sf::CircleShape point;
 
+	sf::String waitStr;
+	bool wait = false;
+
+	#pragma region Texts
+
 	sf::Font font;
 	std::vector<sf::Text> texts;
+
+	sf::Text hp;
+	sf::Text boroda;
+	sf::Text money;
+
+	#pragma endregion
 
 	bool isActive = false;
 
 	short caret = 0;
 	bool isUse = false;
+	short useCaret = 0;
 
 	void UpdateCaret()
 	{
-		while (caret < 0)
-			caret += player.GetInfo().invent.MaxElement();
-		while (caret >= player.GetInfo().invent.MaxElement())
-			caret -= player.GetInfo().invent.MaxElement();
-		std::cout << "caret = " << caret << '\n';
-		point.setPosition(FloatRectFabrick::GetPosCaretAtCenter(CenterPos(), caret));
+		if (!isUse)
+		{
+			while (caret < 0)
+				caret += info.inventory.MaxElement();
+			while (caret >= info.inventory.MaxElement())
+				caret -= info.inventory.MaxElement();
+			point.setPosition(FloatRectFabrick::GetPosCaretAtCenter(CenterPos(), caret));
+		}
+		else
+		{
+			if (useCaret < 0)
+				useCaret += 3;
+			if (useCaret >= 3)
+				useCaret -= 3;
+			point.setPosition(FloatRectFabrick::GetPosCaretUseAtCenter(CenterPos(), useCaret));
+
+		}
 	}
 
 	sf::Vector2f CenterPos() const
@@ -154,6 +240,22 @@ private:
 	{
 		for (size_t i = 0; i < texts.size(); ++i)
 			texts[i].setPosition(FloatRectFabrick::GetTextPosAtCenter(center, i));
+		hp.setPosition(FloatRectFabrick::GetHPPosAtCenter(center));
+		boroda.setPosition(FloatRectFabrick::GetBorodaPosAtCenter(center));
+		money.setPosition(FloatRectFabrick::GetMoneyPosAtCenter(center));
+	}
+
+	void Use()
+	{
+		std::cout << useCaret << '\n';
+		if (useCaret == 0)
+			waitStr = info.inventory.UseAt(caret, info.hp, info.boroda, info.defence, info.armor);
+		else if (useCaret == 2)
+			waitStr = info.inventory.SeeAt(caret);
+		else
+			waitStr = info.inventory.TrashAt(caret);
+		wait = true;
+		isUse = false;
 	}
 
 };

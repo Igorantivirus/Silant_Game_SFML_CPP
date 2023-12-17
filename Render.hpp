@@ -5,6 +5,7 @@
 #include"Map.hpp"
 #include"Player.hpp"
 #include"DIalogeWindow.hpp"
+#include"InventoryWindow.hpp"
 
 class Render
 {
@@ -81,6 +82,10 @@ public:
 	void DrawDialoge(const DialogeWindow& dialog)
 	{
 		dialog.Draw(window);
+	}
+	void DrawInventory(const InventoryWindow& invent)
+	{
+		invent.Draw(window);
 	}
 
 	void DrawSprite(const sf::Sprite& sprite)

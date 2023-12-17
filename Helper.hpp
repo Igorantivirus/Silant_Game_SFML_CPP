@@ -64,4 +64,5 @@ void getlineToSpecialSymbol(std::ifstream& read, sf::String& str)
 			continue;
 		str += ToUInt32(pr);
 	} while (pr != '|' && pr != '\n' && !read.eof());
+	str.erase(str.getSize() - 1);
 }

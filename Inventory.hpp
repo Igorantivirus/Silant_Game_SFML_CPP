@@ -88,19 +88,6 @@ public:
 		return fin;
 	}
 
-private:
-	unsigned short ID = 0;
-	Type type = Type::None;
-	sf::String name = L"Èìÿ";
-
-	int borodaPls = 0;
-	int healthPls = 0;
-	int damagePls = 0;
-	int arrmorPls = 0;
-
-	sf::String useInf;
-	sf::String seeInf;
-	sf::String brkInf;
 
 	void LoadAtID(unsigned short newID)
 	{
@@ -123,12 +110,28 @@ private:
 		getlineToSpecialSymbol(read, seeInf);
 		getlineToSpecialSymbol(read, useInf);
 		getlineToSpecialSymbol(read, brkInf);
+
 		int t;
 		read >> t >> healthPls >> borodaPls >> damagePls >> arrmorPls;
 		type = static_cast<Type>(t);
 
 		read.close();
 	}
+
+private:
+	unsigned short ID = 0;
+	Type type = Type::None;
+	sf::String name = L"Èìÿ";
+
+	int borodaPls = 0;
+	int healthPls = 0;
+	int damagePls = 0;
+	int arrmorPls = 0;
+
+	sf::String useInf;
+	sf::String seeInf;
+	sf::String brkInf;
+
 };
 
 class Inventory
@@ -136,11 +139,6 @@ class Inventory
 public:
 	Inventory(unsigned char maxSize = 10) : maxItems{ maxSize }
 	{
-		Add(Item());
-		Add(Item());
-		Add(Item());
-	
-	
 	}
 
 	#pragma region Array methods
