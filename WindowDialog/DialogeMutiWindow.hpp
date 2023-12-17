@@ -3,8 +3,8 @@
 #include"DIalogeWindow.hpp"
 #include"InventoryWindow.hpp"
 
-#define FONT_FILE "constan.ttf"
-#define TEXTURE_PATH "Sprites\\PlayerSprites.png"
+#define FONT_FILE "WindowDialog\\constan.ttf"
+#define TEXTURE_PATH "WindowDialog\\PlayerSprites.png"
 
 class MultiDialogeWindow
 {
@@ -13,7 +13,6 @@ public:
 	{
 		texture.loadFromFile(TEXTURE_PATH);
 		font.loadFromFile(FONT_FILE);
-		text.setFont(font);
 
 		invent.Init(texture, font);
 		dialoge.Init(texture, font);
@@ -81,7 +80,6 @@ private:
 	sf::Texture texture;
 
 	sf::Font font;
-	sf::Text text;
 
 	DialogeWindow dialoge;
 	InventoryWindow invent;

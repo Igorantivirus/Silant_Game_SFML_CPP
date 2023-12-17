@@ -41,16 +41,16 @@
     <ClInclude Include="KeyBoard.hpp">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="DIalogeWindow.hpp">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="Inventory.hpp">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="InventoryWindow.hpp">
+    <ClInclude Include="WindowDialog\DialogeMutiWindow.hpp">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="DialogeMutiWindow.hpp">
+    <ClInclude Include="WindowDialog\DIalogeWindow.hpp">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowDialog\InventoryWindow.hpp">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

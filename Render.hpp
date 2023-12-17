@@ -4,7 +4,7 @@
 
 #include"Map.hpp"
 #include"Player.hpp"
-#include"DialogeMutiWindow.hpp"
+#include"WindowDialog/DialogeMutiWindow.hpp"
 
 class Render
 {

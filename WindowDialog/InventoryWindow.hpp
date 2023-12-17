@@ -6,8 +6,6 @@
 #include"KeyBoard.hpp"
 #include"Player.hpp"
 
-#define INVENTORY_TEXTURE_PATH "Sprites\\Inventory.png"
-
 class InventoryWindow
 {
 private:
@@ -96,7 +94,6 @@ public:
 		wait = false;
 		useCaret = 2;
 	}
-
 	void Stop()
 	{
 		isActive = false;

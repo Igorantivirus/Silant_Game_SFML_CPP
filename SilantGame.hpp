@@ -4,7 +4,7 @@
 #include"Player.hpp"
 #include"Map.hpp"
 #include"KeyBoard.hpp"
-#include"DialogeMutiWindow.hpp"
+#include"WindowDialog/DialogeMutiWindow.hpp"
 
 class MainGame
 {
@@ -137,7 +137,6 @@ private://методы
 
 		if (dielogeM.IsActive())
 		{
-			/*dielogeM.SetPosAtCenter(sf::Vector2f{render.GetCenterX(), render.GetCenterY() + render.GetSize().y / 2.f});*/
 			dielogeM.SetPosAtCenter(render.GetCenterPos(), render.GetSize());
 			if(ticks % 10 == 0)
 				dielogeM.Update();
