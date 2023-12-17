@@ -4,14 +4,13 @@
 #include"Player.hpp"
 #include"Map.hpp"
 #include"KeyBoard.hpp"
-#include"DIalogeWindow.hpp"
-#include"InventoryWindow.hpp"
+#include"DialogeMutiWindow.hpp"
 
 class MainGame
 {
 public:
 	MainGame(Render& render, KeyBoard& keyboard, Location loc, int room) :
-		render{ render }, keyBoard{ keyboard }, invent{silant.GetInfoLink()}
+		render{ render }, keyBoard{ keyboard }, dielogeM{silant.GetInfoLink()}
 	{
 		map.LoadFromFile(loc, room);
 		silant.SetFootCenterPosition(7 * PIXELS_IN_BLOCK, 7 * PIXELS_IN_BLOCK);
@@ -33,8 +32,7 @@ private://параметры
 	Render& render;
 	KeyBoard& keyBoard;
 
-	DialogeWindow dialoge;
-	InventoryWindow invent;
+	MultiDialogeWindow dielogeM;
 
 	GameMap map;
 	Player silant{ "Sprites\\Player.png", sf::IntRect{0, 0, 16, 34} };
@@ -50,10 +48,8 @@ private://методы
 
 		render.GameMapDraw(map, silant);
 
-		if (dialoge.IsAvtive())
-			render.DrawDialoge(dialoge);
-		if (invent.IsActive())
-			render.DrawInventory(invent);
+		if (dielogeM.IsActive())
+			render.DrawMultyWindow(dielogeM);
 
 		render.FinalizeRender();
 	}
@@ -76,16 +72,10 @@ private://методы
 	{
 		render.PollEvent();
 
-
-		if (dialoge.IsAvtive())
+		if (dielogeM.IsActive())
 		{
 			if(GoodTime())
-				dialoge.GetEvent(keyBoard);
-		}
-		else if (invent.IsActive())
-		{
-			if (GoodTime())
-				invent.GetEvent(keyBoard);
+				dielogeM.GetEvent(keyBoard);
 		}
 		else
 		{
@@ -120,10 +110,10 @@ private://методы
 			{
 				sf::String txt;
 				if (map.HaveIntersectionWithObjs(silant.GetViewPosition(), txt) && !txt.isEmpty())
-					dialoge.Run(txt);
+					dielogeM.RunDialoge(txt);
 			}
 			else if (keyBoard.IsInventory() && GoodTime())
-				invent.Run();
+				dielogeM.RunInventory();
 			if (sucs)
 				ProvGoRoom();
 		}
@@ -145,21 +135,12 @@ private://методы
 		if (ticks % 100 == 0)
 			silant.UpdateAnum();
 
-		if (dialoge.IsAvtive())
+		if (dielogeM.IsActive())
 		{
-			dialoge.SetPositionAtWindow(sf::Vector2f{render.GetCenterX(), render.GetCenterY() + render.GetSize().y / 2.f});
+			/*dielogeM.SetPosAtCenter(sf::Vector2f{render.GetCenterX(), render.GetCenterY() + render.GetSize().y / 2.f});*/
+			dielogeM.SetPosAtCenter(render.GetCenterPos(), render.GetSize());
 			if(ticks % 10 == 0)
-				dialoge.Update();
-		}
-		else if (invent.IsActive())
-		{
-			if (invent.IsWait())
-			{
-				dialoge.Run(invent.GetWaitStr());
-				invent.Stop();
-			}
-			else
-				invent.SetPositionAtWindow(render.GetCenterPos());
+				dielogeM.Update();
 		}
 		if (ticks > 1000000)
 			ticks = 0;

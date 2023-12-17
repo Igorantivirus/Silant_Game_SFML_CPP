@@ -64,16 +64,16 @@ private:
 		}
 	};
 public:
-	InventoryWindow(PersonInfo& info) : info{ info }
+	InventoryWindow(PersonInfo& info) : info{ info } {}
+	void Init(const sf::Texture& texture, const sf::Font& font)
 	{
-		texture.loadFromFile(INVENTORY_TEXTURE_PATH);
 		sprite.setTexture(texture);
+		sprite.setTextureRect({ 0,0,300,300 });
 		sprite.setScale(0.5f, 0.5f);
 
 		point.setRadius(1);
 		point.setFillColor(sf::Color::Black);
 
-		font.loadFromFile(FONT_PATH);
 		FillText(txt, font, sf::Color::Black, 0.25f, 0.25f);
 	}
 
@@ -160,12 +160,10 @@ public:
 private:
 	PersonInfo& info;
 
-	sf::Texture texture;
 	sf::Sprite sprite;
 
 	sf::CircleShape point;
 
-	sf::Font font;
 	mutable sf::Text txt;
 
 	sf::String waitStr;

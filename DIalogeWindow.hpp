@@ -6,24 +6,16 @@
 #include"KeyBoard.hpp"
 #include"Player.hpp"
 
-#define DIALOGE_PATH "Sprites\\Text.png"
-#define FONT_PATH "constan.ttf"
-
 class DialogeWindow
 {
 public:
-	DialogeWindow()
+	DialogeWindow() {}
+	void Init(const sf::Texture& dialogeTexture, const sf::Font& font)
 	{
-		dialogeTexture.loadFromFile(DIALOGE_PATH);
 		sprite.setTexture(dialogeTexture);
+		sprite.setTextureRect({ 0, 300, 195, 70 });
 
-		sf::Font font;
-		font.loadFromFile(FONT_PATH);
-
-		gameFont.loadFromFile(FONT_PATH);
-		textLabel.setScale(0.25, 0.25);
-		textLabel.setFillColor(sf::Color::Black);
-		textLabel.setFont(gameFont);
+		FillText(textLabel, font, sf::Color::Black, 0.25f, 0.25f);
 	}
 
 	void Run(const sf::String& txt)
@@ -112,7 +104,7 @@ public:
 		{
 			if (IsFullEnter())
 				isActive = false;
-			else if (IsWaiting())
+			else if (IsWaiting() && keyBoard.IsNext())
 				NextSlide();
 		}
 	}
@@ -124,12 +116,10 @@ public:
 	}
 
 private:
-	sf::Texture dialogeTexture;
 	sf::Sprite sprite;
 
 	sf::FloatRect textRect{0, 0, 175, 50};
 
-	sf::Font gameFont;
 	sf::Text textLabel;
 	sf::String str;
 	size_t ind = 0;
