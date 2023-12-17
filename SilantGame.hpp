@@ -158,11 +158,9 @@ private://методы
 				dialoge.Run(invent.GetWaitStr());
 				invent.Stop();
 			}
-			else if (ticks % 10 == 0)
-				invent.Update();
-			invent.SetPositionAtWindow(render.GetCenterPos());
+			else
+				invent.SetPositionAtWindow(render.GetCenterPos());
 		}
-
 		if (ticks > 1000000)
 			ticks = 0;
 		ticks++;

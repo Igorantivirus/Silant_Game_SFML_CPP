@@ -74,19 +74,7 @@ public:
 		point.setFillColor(sf::Color::Black);
 
 		font.loadFromFile(FONT_PATH);
-		for (size_t i = 0; i < 10; ++i)
-		{
-			texts.push_back({});
-			texts[i].setFont(font);
-			texts[i].setFillColor(sf::Color::Black);
-			texts[i].setScale(0.25, 0.25);
-		}
-
-		FillText(hp, font, sf::Color::Black, 0.25, 0.25);
-		FillText(boroda, font, sf::Color::Black, 0.25, 0.25);
-		FillText(money, font, sf::Color::Black, 0.25, 0.25);
-		FillText(armor, font, sf::Color::Black, 0.25, 0.25);
-		FillText(weapon, font, sf::Color::Black, 0.25, 0.25);
+		FillText(txt, font, sf::Color::Black, 0.25f, 0.25f);
 	}
 
 	bool IsActive() const
@@ -107,27 +95,11 @@ public:
 		isActive = true;
 		wait = false;
 		useCaret = 2;
-		Update();
 	}
 
 	void Stop()
 	{
 		isActive = false;
-	}
-
-	void Update()
-	{
-		sf::String pr = "";
-		for (size_t i = 0; i < info.inventory.GetSize(); ++i)
-			texts[i].setString(info.inventory.GetAt(i).GenNane());
-		for (size_t i = info.inventory.GetSize(); i < 10; ++i)
-			texts[i].setString("");
-		hp.setString(std::to_string(info.hp));
-		boroda.setString(std::to_string(info.boroda));
-		money.setString(std::to_string(info.money));
-
-		armor.setString(info.inventory.GetArmor().GenNane());
-		weapon.setString(info.inventory.GetWeapon().GenNane());
 	}
 
 	void GetEvent(const KeyBoard& keyboard)
@@ -165,12 +137,9 @@ public:
 			UpdateCaret();
 	}
 
-	void SetPositionAtWindow(sf::Vector2f posCenter)
+	void SetPositionAtWindow(const sf::Vector2f& posCenter)
 	{
-		SetTextPos(posCenter);
-		posCenter.x -= FloatRectFabrick::RectMenu().width / 2.f;
-		posCenter.y -= FloatRectFabrick::RectMenu().height / 2.f;
-		sprite.setPosition(posCenter);
+		sprite.setPosition(posCenter - sf::Vector2f{FloatRectFabrick::RectMenu().width / 2.f, FloatRectFabrick::RectMenu().height / 2.f});
 		UpdateCaret();
 	}
 
@@ -178,17 +147,17 @@ public:
 	{
 		window.draw(sprite);
 		window.draw(point);
-		for (const auto& i : texts)
-			window.draw(i);
-		window.draw(hp);
-		window.draw(boroda);
-		window.draw(money);
-		window.draw(armor);
-		window.draw(weapon);
+		for (short i = 0; i < info.inventory.GetSize(); ++i)
+			DrawTxt(window, FloatRectFabrick::GetTextPosAtCenter(CenterPos(), i), info.inventory.GetAt(i).GenNane());
+
+		DrawTxt(window, FloatRectFabrick::GetHPPosAtCenter(CenterPos()), std::to_string(info.hp));
+		DrawTxt(window, FloatRectFabrick::GetBorodaPosAtCenter(CenterPos()), std::to_string(info.boroda));
+		DrawTxt(window, FloatRectFabrick::GetMoneyPosAtCenter(CenterPos()), std::to_string(info.money));
+		DrawTxt(window, FloatRectFabrick::GetArmorPosArCenter(CenterPos()), info.inventory.GetArmor().GenNane());
+		DrawTxt(window, FloatRectFabrick::GetWeaponPosArCenter(CenterPos()), info.inventory.GetWeapon().GenNane());
 	}
 
 private:
-
 	PersonInfo& info;
 
 	sf::Texture texture;
@@ -196,27 +165,16 @@ private:
 
 	sf::CircleShape point;
 
-	sf::String waitStr;
-	bool wait = false;
-
-	#pragma region Texts
-
 	sf::Font font;
-	std::vector<sf::Text> texts;
+	mutable sf::Text txt;
 
-	sf::Text hp;
-	sf::Text boroda;
-	sf::Text money;
+	sf::String waitStr;
 
-	sf::Text armor;
-	sf::Text weapon;
-
-	#pragma endregion
-
-	bool isActive = false;
-
-	short caret = 0;
+	bool wait = false;
 	bool isUse = false;
+	bool isActive = false;
+	
+	short caret = 0;
 	short useCaret = 0;
 
 	void UpdateCaret()
@@ -245,18 +203,6 @@ private:
 		return sprite.getPosition() + sf::Vector2f{FloatRectFabrick::RectMenu().width / 2.f, FloatRectFabrick::RectMenu().height / 2.f};
 	}
 
-	void SetTextPos(const sf::Vector2f center)
-	{
-		for (size_t i = 0; i < texts.size(); ++i)
-			texts[i].setPosition(FloatRectFabrick::GetTextPosAtCenter(center, i));
-		hp.setPosition(FloatRectFabrick::GetHPPosAtCenter(center));
-		boroda.setPosition(FloatRectFabrick::GetBorodaPosAtCenter(center));
-		money.setPosition(FloatRectFabrick::GetMoneyPosAtCenter(center));
-
-		armor.setPosition(FloatRectFabrick::GetArmorPosArCenter(center));
-		weapon.setPosition(FloatRectFabrick::GetWeaponPosArCenter(center));
-	}
-
 	void Use()
 	{
 		if (useCaret == 0)
@@ -267,6 +213,13 @@ private:
 			waitStr = info.inventory.TrashAt(caret);
 		wait = true;
 		isUse = false;
+	}
+
+	void DrawTxt(sf::RenderWindow& window, const sf::Vector2f& pos, const sf::String& str) const
+	{
+		txt.setPosition(pos);
+		txt.setString(str);
+		window.draw(txt);
 	}
 
 };

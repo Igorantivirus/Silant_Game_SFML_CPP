@@ -22,6 +22,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DialogeMutiWindow.hpp" />
     <ClInclude Include="DIalogeWindow.hpp" />
     <ClInclude Include="Enums.hpp" />
     <ClInclude Include="Helper.hpp" />
