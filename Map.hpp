@@ -582,7 +582,11 @@ public:
 				str = i.GetText();
 				return true;
 			}
-		for(const auto& i : iobjs)
+		return false;
+	}
+	bool HaveIntersectionWithIObjs(const sf::Vector2f pos, sf::String& str) const
+	{
+		for (const auto& i : iobjs)
 			if (i.Contain(pos))
 			{
 				str = i.GetText();

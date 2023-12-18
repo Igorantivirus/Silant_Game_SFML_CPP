@@ -110,6 +110,8 @@ private://методы
 				sf::String txt;
 				if (map.HaveIntersectionWithObjs(silant.GetViewPosition(), txt) && !txt.isEmpty())
 					dielogeM.RunDialoge(txt);
+				else if (map.HaveIntersectionWithIObjs(silant.GetViewPosition(), txt) && !txt.isEmpty())
+					dielogeM.RunDialoge(txt);
 			}
 			else if (keyBoard.IsInventoryClick())
 				dielogeM.RunInventory();
