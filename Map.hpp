@@ -16,7 +16,7 @@
 
 class Object
 {
-public:
+public:friend class ItemObj;
 	Object()
 	{
 		sprite.setTexture(objTexture);
@@ -316,6 +316,139 @@ private:
 
 };
 
+class ItemObj
+{
+public:
+	ItemObj()
+	{
+		sprite.setTexture(Object::objTexture);
+	}
+
+	#pragma region Get Set
+
+	unsigned GetIDOfItem() const
+	{
+		return IDItem;
+	}
+	unsigned GetId() const
+	{
+		return ID;
+	}
+
+	const sf::FloatRect& GetRect() const
+	{
+		return rectBlock;
+	}
+
+	sf::Vector2f GetCenterBarierBoxPosition() const
+	{
+		return sf::Vector2f{rectBlock.left + rectBlock.width / 2.f, rectBlock.top + rectBlock.height / 2.f};
+	}
+
+	const sf::String& GetText() const
+	{
+		return txt;
+	}
+
+	void SetPos(const sf::Vector2f& pos)
+	{
+		sprite.setPosition(pos);
+	}
+
+	#pragma endregion
+
+	void Draw(sf::RenderWindow& window) const
+	{
+		window.draw(sprite);
+	}
+
+	friend std::ifstream& operator>>(std::ifstream& fin, ItemObj& iobj)
+	{
+		fin >> iobj.IDItem;
+		fin >> iobj.ID >> iobj.rectBlock.left >> iobj.rectBlock.top;
+		iobj.rectBlock.left *= PIXELS_IN_BLOCK;
+		iobj.rectBlock.top *= PIXELS_IN_BLOCK;
+		if (iobj.ID == 0)
+		{
+			fin >> iobj.rectBlock.width >> iobj.rectBlock.height;
+			iobj.rectBlock.width *= PIXELS_IN_BLOCK;
+			iobj.rectBlock.height *= PIXELS_IN_BLOCK;
+			iobj.NullObj();
+		}
+		else
+			iobj.FillObjFromFile(iobj.ID);
+		(void)fin.get(); (void)fin.get();
+		int pr = 0;
+		iobj.txt.clear();
+		while ((pr = fin.get()) != '|' && pr != '\n')
+		{
+			if (pr == 208 || pr == 209)
+				continue;
+			iobj.txt += ToUInt32(pr);
+		}
+		return fin;
+	}
+
+	static bool IsNullInData(unsigned lineNomer, std::string file = "gamedata.txt")
+	{
+		std::ifstream read(file);
+
+		for (unsigned i = 0; i < lineNomer; ++i)
+			std::getline(read, file);
+
+		int val;
+		read >> val;
+
+		read.close();
+		return val == 0;
+	}
+
+	bool Intersecting(const sf::FloatRect& rect) const
+	{
+		return rectBlock.intersects(rect);
+	}
+	bool Contain(const sf::Vector2f& pos) const
+	{
+		return rectBlock.contains(pos);
+	}
+
+private:
+	unsigned IDItem = 0;
+	unsigned ID = 0;
+	sf::Sprite sprite;
+	sf::FloatRect rectBlock;
+
+	sf::String txt;
+
+
+	void FillObjFromFile(unsigned newID)
+	{
+		if (newID == 0)
+			return NullObj();
+		std::ifstream read(OBJECTTEXTURS_INFO);
+
+		std::string pr;
+		for (unsigned i = 0u; i < newID; ++i)
+			std::getline(read, pr);
+		sf::IntRect prr;
+		read >> ID >> prr.left >> prr.top >> prr.width >> prr.height;
+		sprite.setTextureRect(prr);
+
+		read >> rectBlock.width >> rectBlock.height;
+		sf::Vector2f prp;
+		read >> prp.x >> prp.y;
+		sprite.setPosition(rectBlock.left - prp.x, rectBlock.top - prp.y);
+
+		read.close();
+	}
+	void NullObj()
+	{
+		sprite.setTextureRect({});
+		sprite.setPosition(rectBlock.left, rectBlock.top);
+	}
+
+};
+
 class CollisionMap
 {
 public:
@@ -424,36 +557,33 @@ public:
 		LoadColision(read);
 		LoadDoors(read);
 		LoadObjects(read);
+		LoadItemObjects(read);
 
 		read.close();
 	}
 
+	#pragma region bool methods
+
 	bool InBocks(const sf::Vector2f& pos) const
 	{
-		return cols.Contain(pos) || InLockDoors(pos) || InObjs( pos);
-	}
-	bool InBocks(const sf::Vector2i& pos) const
-	{
-		return cols.Contain(pos) || InLockDoors({toFloat(pos.x), toFloat(pos.y)}) || InObjs({ toFloat(pos.x),toFloat(pos.y) });
-	}
-	bool InBocks(float x, float y) const
-	{
-		return cols.Contain(x, y) || InLockDoors({x, y}) || InObjs({ x, y });
-	}
-	bool InBocks(int x, int y) const
-	{
-		return cols.Contain(x, y) || InLockDoors({ toFloat(x), toFloat(y) }) || InObjs({toFloat(x),toFloat(y)});
+		return cols.Contain(pos) || InLockDoors(pos) || InObjs( pos) || InIObjs(pos);
 	}
 
 	bool InBocks(const sf::FloatRect& rect) const
 	{
-		return cols.Intersection(rect) || InLockDoors(rect) || InObjs(rect);
+		return cols.Intersection(rect) || InLockDoors(rect) || InObjs(rect) || InIObjs(rect);
 	}
 
 	bool HaveIntersectionWithObjs(const sf::Vector2f pos, sf::String& str) const
 	{
 		for (const auto& i : objs)
 			if (i.Contains(pos))
+			{
+				str = i.GetText();
+				return true;
+			}
+		for(const auto& i : iobjs)
+			if (i.Contain(pos))
 			{
 				str = i.GetText();
 				return true;
@@ -473,6 +603,8 @@ public:
 		return false;
 	}
 
+	#pragma endregion
+
 	const DoorObj& GetDoorAt(size_t i)
 	{
 		if (i >= doors.size())
@@ -484,6 +616,10 @@ public:
 	{
 		return objs;
 	}
+	const std::vector<ItemObj>& GetIObjs() const
+	{
+		return iobjs;
+	}
 
 	void Draw(sf::RenderWindow& window) const
 	{
@@ -492,6 +628,7 @@ public:
 
 private:
 	std::vector<Object> objs;
+	std::vector<ItemObj> iobjs;
 	std::vector<DoorObj> doors;
 	CollisionMap cols;
 
@@ -555,6 +692,27 @@ private:
 		}
 	}
 
+	void LoadItemObjects(std::ifstream& read)
+	{
+		if (!read.is_open() || read.eof())
+			return;
+		int count, pr;
+		read >> count;
+		iobjs.clear();
+		iobjs.reserve(count);
+		std::string prs;
+		for (int i = 0; i < count; ++i)
+		{
+			read >> pr;
+			if (!ItemObj::IsNullInData(pr))
+				continue;
+			iobjs.push_back({});
+			read >> iobjs[i];
+			std::getline(read, prs);
+		}
+		std::cout << iobjs.size() << '\n';
+	}
+
 	bool InLockDoors(const sf::FloatRect& rect) const
 	{
 		for (const auto& i : doors)
@@ -585,5 +743,19 @@ private:
 		return false;
 	}
 
+	bool InIObjs(const sf::FloatRect rect) const
+	{
+		for (const auto& i : iobjs)
+			if (i.Intersecting(rect))
+				return true;
+		return false;
+	}
+	bool InIObjs(const sf::Vector2f& pos) const
+	{
+		for (const auto& i : iobjs)
+			if (i.Contain(pos))
+				return true;
+		return false;
+	}
 
 };
