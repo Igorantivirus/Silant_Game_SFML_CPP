@@ -14,6 +14,20 @@
 #define OBJECTTEXTURS_PATH "Sprites\\Objects.png"
 #define OBJECTTEXTURS_INFO "Sprites\\objectsinfo.txt"
 
+int GameDataReader(unsigned lineNomer, std::string file = "gamedata.txt")
+{
+	std::ifstream read(file);
+
+	for (unsigned i = 0; i < lineNomer; ++i)
+		std::getline(read, file);
+
+	int val;
+	read >> val;
+
+	read.close();
+	return val;
+}
+
 class Object
 {
 public:friend class ItemObj;
@@ -688,10 +702,16 @@ private:
 		objs.clear();
 		objs.reserve(count);
 		std::string pr;
-		for (int i = 0; i < count; ++i)
+		for (int i = 0, j = 0, gd; i < count; ++i)
 		{
+			read >> gd;
+			if (gd != 0 && GameDataReader(gd) != 0)
+			{
+				std::getline(read, pr);
+				continue;
+			}
 			objs.push_back({});
-			read >> objs[i];
+			read >> objs[j++];
 			std::getline(read, pr);
 		}
 	}
