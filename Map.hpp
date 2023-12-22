@@ -698,11 +698,11 @@ private:
 
 	void LoadItemObjects(std::ifstream& read)
 	{
+		iobjs.clear();
 		if (!read.is_open() || read.eof())
 			return;
 		int count, pr;
 		read >> count;
-		iobjs.clear();
 		iobjs.reserve(count);
 		std::string prs;
 		for (int i = 0; i < count; ++i)

@@ -23,9 +23,20 @@ public:
 		invent.Stop();
 		dialoge.Run(txt);
 	}
+	void RunAsk(const sf::String& txtA, const sf::String& txtB)
+	{
+		invent.Stop();
+		dialoge.Ask(txtA, txtB);
+	}
 	void RunInventory()
 	{
 		invent.Run();
+		dialoge.Stop();
+	}
+
+	short GetCaretResult() const
+	{
+		return dialoge.GetKaretResult();
 	}
 
 	bool IsActive() const

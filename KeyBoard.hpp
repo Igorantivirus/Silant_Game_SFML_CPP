@@ -56,7 +56,7 @@ public:
 		if (sf::Keyboard::isKeyPressed(key))
 			return (wasPressed = true), false;
 		else
-			return wasPressed ? (wasPressed = false), true : (wasPressed = false);
+			return wasPressed ? (wasPressed = false), true : false;
 	}
 
 	bool IsPressed() const

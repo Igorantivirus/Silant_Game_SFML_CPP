@@ -118,6 +118,7 @@ private://методы
 			if (sucs)
 				ProvGoRoom();
 		}
+
 		if (keyBoard.IsPressed(sf::Keyboard::Space))
 		{
 			float x,  y;
@@ -126,8 +127,12 @@ private://методы
 			silant.SetFootCenterPosition(x, y);
 			silant.SetAspirCenterFootPos(x, y);
 		}
+
 		if (keyBoard.IsFullScreenClick())
 			render.SetFullScreen(!render.IsFullScreen());
+	
+		if (keyBoard.IsPressed(sf::Keyboard::P))
+			dielogeM.RunAsk(L"Взять зонтик!", L"Оставить зонтик");
 	}
 
 	void TicksUpdate()
