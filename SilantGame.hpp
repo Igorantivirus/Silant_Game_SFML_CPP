@@ -2,9 +2,8 @@
 
 #include"Render.hpp"
 #include"KeyBoard.hpp"
-#include"MainMenu.hpp"
 #include"MainGame.hpp"
-#include"SettingsMenu.hpp"
+#include"AllMenu.hpp"
 
 class Game
 {
@@ -31,6 +30,11 @@ public:
 			{
 				SettingsMenu settings(render, keyboard);
 				settings.Run();
+			}
+			else
+			{
+				GameInfo infomenu(render, keyboard);
+				infomenu.Run();
 			}
 		}
 	}

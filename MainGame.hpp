@@ -5,7 +5,6 @@
 #include"Map.hpp"
 #include"KeyBoard.hpp"
 #include"WindowDialog/DialogeMutiWindow.hpp"
-#include"MainMenu.hpp"
 
 class MainGame
 {

@@ -7,9 +7,14 @@
 #include"Render.hpp"
 #include"KeyBoard.hpp"
 #include"Helper.hpp"
+#include"Reader.hpp"
 
-#define MAIN_MENU_FONT "GameFonts/constan.ttf"
-#define BACKGROUND_TEXTURE "Textures/MainMenu.png"
+#define BACKGROUND_TEXTURE_MAIN_MENU "Textures/MainMenu.png"
+#define SETTING_MENU_TEXTURE "Textures/SettingsMenu.png"
+#define INFO_MENU_FONT "Textures/InfoMenu.png"
+
+#define FONT_MENU "GameFonts/constan.ttf"
+#define FONT_MENU "GameFonts/constan.ttf"
 
 class MainMenu
 {
@@ -23,13 +28,13 @@ public:
 		Exit
 	};
 public:
-	MainMenu(Render& render, KeyBoard& keyboard) : render{ render }, keyboard{keyboard}
+	MainMenu(Render& render, KeyBoard& keyboard) : render{ render }, keyboard{ keyboard }
 	{
-		font.loadFromFile(MAIN_MENU_FONT);
-		
+		font.loadFromFile(FONT_MENU);
+
 		texts = std::vector<sf::Text>(7, sf::Text{});
-		
-		#pragma region InitTexts
+
+#pragma region InitTexts
 
 		FillText(texts[0], font, L"Силантъ", sf::Color::Yellow, { 0,0 }, { 1,1 }, 150);
 		FillText(texts[1], font, L"Играть", sf::Color::Yellow, { 0,0 }, { 1,1 }, 50);
@@ -40,11 +45,11 @@ public:
 		FillText(texts[5], font, L"Версия - 1.0.0", sf::Color::Yellow, { 0,0 }, { 1,1 }, 25);
 		FillText(texts[6], font, L"Автор - Igorantivirus", sf::Color::Yellow, { 0,0 }, { 1,1 }, 25);
 
-		#pragma endregion
+#pragma endregion
 
-		texture.loadFromFile(BACKGROUND_TEXTURE);
+		texture.loadFromFile(BACKGROUND_TEXTURE_MAIN_MENU);
 		background.setTexture(&texture);
-		background.setSize({render.GetWidth(), render.GetHeight()});
+		background.setSize({ render.GetWidth(), render.GetHeight() });
 
 		background.setPosition(render.GetNullPos());
 
@@ -86,11 +91,11 @@ private:
 	void Draw()
 	{
 		render.Clear();
-		
+
 		render.DrawRectangle(background);
 		for (const auto& i : texts)
 			render.DrawText(i);
-		
+
 		render.FinalizeRender();
 	}
 
@@ -118,7 +123,7 @@ private:
 			caret = 4;
 		else if (caret > 4)
 			caret = 1;
-	
+
 		for (size_t i = 1; i < 5; ++i)
 			texts[i].setOutlineColor({});
 
@@ -129,7 +134,7 @@ private:
 	{
 		sf::Vector2f pr;
 		auto center = pr = render.GetCenterPos();
-		
+
 		pr.x -= texts[0].getLocalBounds().width / 2.f;
 		pr.y -= render.GetHeight() / 4.f + texts[0].getLocalBounds().height;
 
@@ -152,4 +157,134 @@ private:
 		pr.y += render.GetHeight() - texts[6].getLocalBounds().height * 2;
 		texts[6].setPosition(pr);
 	}
+};
+
+class SettingsMenu
+{
+public:
+	SettingsMenu(Render& render, KeyBoard& keyboard) : render{ render }, keyboard{ keyboard }
+	{
+		texture.loadFromFile(SETTING_MENU_TEXTURE);
+		background.setTexture(&texture);
+		background.setSize({ render.GetWidth(), render.GetHeight() });
+
+		background.setPosition(render.GetNullPos());
+
+		texts = std::vector<sf::Text>{ 7, sf::Text{} };
+
+		sf::Font font;
+		font.loadFromFile(FONT_MENU);
+	}
+
+	void Run()
+	{
+		isOpen = true;
+		while (isOpen)
+		{
+			Draw();
+			GetEvents();
+			Update();
+		}
+	}
+
+
+
+private:
+	Render& render;
+	KeyBoard& keyboard;
+
+	bool isOpen{};
+
+	sf::Texture texture;
+	sf::RectangleShape background;
+
+	std::vector<sf::Text> texts;
+
+private:
+
+	void Draw()
+	{
+		render.Clear();
+
+		render.DrawRectangle(background);
+		for (const auto& i : texts)
+			render.DrawText(i);
+
+		render.FinalizeRender();
+	}
+
+	void GetEvents()
+	{
+		render.PollEvent();
+		if (keyboard.IsFullScreenClick())
+			render.SetFullScreen(!render.IsFullScreen());
+		if (keyboard.IsBackClick())
+			isOpen = false;
+	}
+
+	void Update()
+	{
+
+	}
+};
+
+class GameInfo
+{
+public:
+	GameInfo(Render& render, KeyBoard& keyboard) : render{ render }, keyboard{ keyboard }
+	{
+		texture.loadFromFile(INFO_MENU_FONT);
+		background.setTexture(&texture);
+		background.setSize({ render.GetWidth(), render.GetHeight() });
+		background.setPosition(render.GetNullPos());
+
+		font.loadFromFile(FONT_MENU);
+		text.setFont(font);
+		text.setString(ReadWrite::ReadInfoGame());
+		text.setPosition(render.GetNullPos());
+	}
+
+	void Run()
+	{
+		isOpen = true;
+		while (isOpen)
+		{
+			Draw();
+			GetEvents();
+		}
+	}
+
+private:
+	Render& render;
+	KeyBoard& keyboard;
+
+	sf::Texture texture;
+	sf::RectangleShape background;
+
+	sf::Font font;
+	sf::Text text;
+
+	bool isOpen{};
+
+private:
+
+	void Draw()
+	{
+		render.Clear();
+
+		render.DrawRectangle(background);
+		render.DrawText(text);
+
+		render.FinalizeRender();
+	}
+
+	void GetEvents()
+	{
+		render.PollEvent();
+		if (keyboard.IsBackClick())
+			isOpen = false;
+		if (keyboard.IsFullScreenClick())
+			render.SetFullScreen(!render.IsFullScreen());
+	}
+
 };

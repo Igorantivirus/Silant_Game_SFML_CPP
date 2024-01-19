@@ -102,20 +102,7 @@ sf::Text& FillText(sf::Text& text, const sf::Font& font, const sf::String& str, 
 
 #pragma endregion
 
-
-
 #pragma region InOut
-
-template<typename type>
-std::ostream& operator<<(std::ostream& out, const sf::Rect<type> val)
-{
-	return out << "x = " << val.left << " y = " << val.top << " width = " << val.width << " height = " << val.height;
-}
-template<typename type>
-std::ostream& operator<<(std::ostream& out, const sf::Vector2<type> val)
-{
-	return out << "x = " << val.x << " y = " << val.y;
-}
 
 template<typename type>
 sf::Rect<type> operator+(const sf::Rect<type>& left, const sf::Vector2<type> right)
@@ -134,6 +121,17 @@ sf::Rect<type> operator-(const sf::Rect<type>& left, const sf::Vector2<type> rig
 	return res;
 }
 
+template<typename type>
+std::ostream& operator<<(std::ostream& out, const sf::Rect<type> val)
+{
+	return out << "x = " << val.left << " y = " << val.top << " width = " << val.width << " height = " << val.height;
+}
+template<typename type>
+std::ostream& operator<<(std::ostream& out, const sf::Vector2<type> val)
+{
+	return out << "x = " << val.x << " y = " << val.y;
+}
+
 void getlineToSpecialSymbol(std::ifstream& read, sf::String& str)
 {
 	str.clear();
@@ -148,6 +146,40 @@ void getlineToSpecialSymbol(std::ifstream& read, sf::String& str)
 		str += ToUInt32(pr);
 	} while (pr != '|' && pr != '\n' && !read.eof());
 	str.erase(str.getSize() - 1);
+}
+
+template<typename type>
+bool getlineUTF8(std::basic_ifstream<type, std::char_traits<type>>& read, sf::String& str)
+{
+	str.clear();
+	if (!read.is_open() || read.eof())
+		return false;
+	int pr = read.get();
+	while (pr != '\n' && !read.eof())
+	{
+		if (pr == 208)
+			str += sf::Uint32(read.get() + 896);
+		else if (pr == 209)
+			str += sf::Uint32(read.get() + 960);
+		else
+			str += sf::Uint32(pr);
+		pr = read.get();
+	}
+	return true;
+}
+
+bool getline(std::ifstream& read, sf::String& str)
+{
+	str.clear();
+	if (!read.is_open() || read.eof())
+		return false;
+	sf::Uint32 pr = read.get();
+	while (pr != '\n' && !read.eof())
+	{
+		str += pr;
+		pr = read.get();
+	}
+	return true;
 }
 
 std::ifstream& operator>>(std::ifstream& fin, sf::Keyboard::Key& key)
