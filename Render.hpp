@@ -23,7 +23,7 @@ public:
 	}
 	sf::Vector2f GetNullPos() const
 	{
-		return window.mapPixelToCoords({0,0});
+		return view.getCenter() - view.getSize() / 2.f;
 	}
 	sf::Vector2u GetSize() const
 	{
@@ -50,11 +50,7 @@ public:
 
 	#pragma endregion
 
-	void SaveToTexture(sf::Texture& texture)
-	{
-		texture.create(window.getSize().x / 0.25f , window.getSize().y / 0.25f);
-		texture.update(window);
-	}
+	#pragma region Draw
 
 	void SetWindowSize(unsigned width, unsigned height)
 	{
@@ -105,7 +101,13 @@ public:
 	{
 		window.draw(text);
 	}
+	void DrawRectangle(const sf::RectangleShape& rectangle)
+	{
+		window.draw(rectangle);
+	}
 
+	#pragma endregion
+	
 	void BlackWindow()
 	{
 		sf::Clock clock;
