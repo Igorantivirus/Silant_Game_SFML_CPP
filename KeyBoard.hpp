@@ -4,6 +4,8 @@
 
 #include<SFML\Window\Keyboard.hpp>
 
+#include"Reader.hpp"
+
 #define SETTINGS_FILE "settings.txt"
 
 class Key
@@ -92,35 +94,42 @@ public:
 	
 	void LoadFromFile()
 	{
-		std::ifstream read(SETTINGS_FILE);
-
-		read			>>
-			up			>>
-			down		>>
-			left		>>
-			right		>>
-			next		>>
-			back		>>
-			inventory	>>
-			pause		>>
-			fullScreen;
-		read.close();
+		auto pr = ReadWrite::ReadKeyBoard();
+		for (size_t i = 0; i < CountParams() && i < pr.size(); ++i)
+			operator[](i).SetKey(pr[i]);
 	}
 
 	void SaveSettings() const
 	{
-		std::ofstream write(SETTINGS_FILE);
-		write <<
-			up			<< " up\n"			<<
-			down		<< " down\n"		<<
-			left		<< " left\n"		<<
-			right		<< " right\n"		<<
-			next		<< " next\n"		<<
-			back		<< " back\n"		<<
-			inventory	<< " inventory\n"	<<
-			pause		<< " pause\n"		<<
-			fullScreen	<< " fullscreen\n";
-		write.close();
+		std::vector<sf::Keyboard::Key> arr;
+		for (size_t i = 0; i < CountParams(); ++i)
+			arr.push_back(operator[](i).GetKey());
+		ReadWrite::WriteKeyBoard(arr);
+	}
+
+	bool HaveKey(const sf::Keyboard::Key key) const
+	{
+		for (size_t i = 0; i < CountParams(); ++i)
+			if (operator[](i).GetKey() == key)
+				return true;
+		return false;
+	}
+
+	void DefaultSettings()
+	{
+		up = sf::Keyboard::W;
+		down = sf::Keyboard::S;
+		left = sf::Keyboard::A;
+		right = sf::Keyboard::D;
+
+		next = sf::Keyboard::Enter;
+		back = sf::Keyboard::RShift;
+
+		inventory = sf::Keyboard::RControl;
+		pause = sf::Keyboard::Escape;
+		fullScreen = sf::Keyboard::F11;
+
+		nullKey = sf::Keyboard::Unknown;
 	}
 
 	KeyBoard& operator=(const KeyBoard& other)
@@ -134,6 +143,36 @@ public:
 		inventory = other.inventory;
 		pause = other.pause;
 	}
+
+	#pragma region All Get
+
+	std::vector<sf::String> GetNames() const
+	{
+		auto res = ReadWrite::ReadKeyBoardNames();
+		for (size_t i = 0; i < CountParams() && i < res.size(); ++i)
+			res[i] += " " + ToRealName(this->operator[](i).GetKey());
+		return res;
+	}
+
+	size_t CountParams() const
+	{
+		return 9;
+	}
+
+	Key  operator[](size_t ind) const
+	{
+		if (ind >= CountParams())
+			return Key{};
+		return *(&up + ind);
+	}
+	Key& operator[](size_t ind)
+	{
+		if (ind >= CountParams())
+			return nullKey;
+		return *(&up + ind);
+	}
+
+	#pragma endregion
 
 	#pragma region GetSettings
 
@@ -340,17 +379,19 @@ public:
 	#pragma endregion
 
 private:
-	Key up = sf::Keyboard::W;
-	Key down = sf::Keyboard::S;
-	Key left = sf::Keyboard::A;
-	Key right = sf::Keyboard::D;
+	Key up;
+	Key down;
+	Key left;
+	Key right;
 	
-	Key next = sf::Keyboard::Enter;
-	Key back = sf::Keyboard::RShift;
+	Key next;
+	Key back;
 	
-	Key inventory = sf::Keyboard::RControl;
-	Key pause = sf::Keyboard::Escape;
-	Key fullScreen = sf::Keyboard::F11;
+	Key inventory;
+	Key pause;
+	Key fullScreen;
+
+	Key nullKey;
 
 	bool HaveDuplecate(const sf::Keyboard::Key key) const
 	{

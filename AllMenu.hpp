@@ -4,17 +4,17 @@
 
 #include<SFML\Graphics.hpp>
 
+#include"Reader.hpp"
 #include"Render.hpp"
 #include"KeyBoard.hpp"
 #include"Helper.hpp"
-#include"Reader.hpp"
 
 #define BACKGROUND_TEXTURE_MAIN_MENU "Textures/MainMenu.png"
-#define SETTING_MENU_TEXTURE "Textures/SettingsMenu.png"
-#define INFO_MENU_FONT "Textures/InfoMenu.png"
+#define BACKGROUND_TEXTURE_SETTINGS_MENU "Textures/SettingsMenu.png"
+#define BACKGROUND_TEXTURE_INFO_MENU "Textures/InfoMenu.png"
 
-#define FONT_MENU "GameFonts/constan.ttf"
-#define FONT_MENU "GameFonts/constan.ttf"
+#define FONT_MENU "Settings/constan.ttf"
+#define FONT_SETTINGS "Settings/consola.ttf"
 
 class MainMenu
 {
@@ -34,7 +34,7 @@ public:
 
 		texts = std::vector<sf::Text>(7, sf::Text{});
 
-#pragma region InitTexts
+		#pragma region InitTexts
 
 		FillText(texts[0], font, L"Силантъ", sf::Color::Yellow, { 0,0 }, { 1,1 }, 150);
 		FillText(texts[1], font, L"Играть", sf::Color::Yellow, { 0,0 }, { 1,1 }, 50);
@@ -45,7 +45,7 @@ public:
 		FillText(texts[5], font, L"Версия - 1.0.0", sf::Color::Yellow, { 0,0 }, { 1,1 }, 25);
 		FillText(texts[6], font, L"Автор - Igorantivirus", sf::Color::Yellow, { 0,0 }, { 1,1 }, 25);
 
-#pragma endregion
+		#pragma endregion
 
 		texture.loadFromFile(BACKGROUND_TEXTURE_MAIN_MENU);
 		background.setTexture(&texture);
@@ -59,7 +59,7 @@ public:
 	{
 		res = Result::None;
 		CentrateALl();
-		while (res == Result::None)
+		while (res == Result::None && render.IsOpen())
 		{
 			Draw();
 			GetEvents();
@@ -71,7 +71,6 @@ public:
 	{
 		return res;
 	}
-
 
 private:
 	Render& render;
@@ -164,22 +163,24 @@ class SettingsMenu
 public:
 	SettingsMenu(Render& render, KeyBoard& keyboard) : render{ render }, keyboard{ keyboard }
 	{
-		texture.loadFromFile(SETTING_MENU_TEXTURE);
+		font.loadFromFile(FONT_SETTINGS);
+
+		CentrateAll();
+
+		texture.loadFromFile(BACKGROUND_TEXTURE_INFO_MENU);
 		background.setTexture(&texture);
 		background.setSize({ render.GetWidth(), render.GetHeight() });
-
 		background.setPosition(render.GetNullPos());
 
-		texts = std::vector<sf::Text>{ 7, sf::Text{} };
-
-		sf::Font font;
-		font.loadFromFile(FONT_MENU);
 	}
 
 	void Run()
 	{
+		startKeyBoard = keyboard;
 		isOpen = true;
-		while (isOpen)
+		useButton = false;
+		CentrateAll();
+		while (isOpen && render.IsOpen())
 		{
 			Draw();
 			GetEvents();
@@ -187,18 +188,21 @@ public:
 		}
 	}
 
-
-
 private:
 	Render& render;
 	KeyBoard& keyboard;
 
-	bool isOpen{};
+	KeyBoard startKeyBoard;
 
 	sf::Texture texture;
 	sf::RectangleShape background;
 
+	sf::Font font;
 	std::vector<sf::Text> texts;
+	int caret = 1;
+
+	bool useButton{};
+	bool isOpen{};
 
 private:
 
@@ -215,14 +219,94 @@ private:
 
 	void GetEvents()
 	{
-		render.PollEvent();
+		if (useButton)
+		{
+			auto pr = render.PollEventKeysReleased();
+			if(pr.size() == 1)
+			{
+				if (!keyboard.HaveKey(pr[0]))
+				{
+					keyboard[caret].SetKey(pr[0]);
+					CentrateAll();
+				}
+				useButton = false;
+			}
+		}
+		else
+			render.PollEvent();
+
+		if (keyboard.IsUpClick())
+			caret--;
+		else if (keyboard.IsDownClick())
+			caret++;
+		if (keyboard.IsNextClick())
+			useButton = true;
+
+		if (keyboard.IsBack())
+			isOpen = false;
+
 		if (keyboard.IsFullScreenClick())
 			render.SetFullScreen(!render.IsFullScreen());
-		if (keyboard.IsBackClick())
-			isOpen = false;
 	}
 
 	void Update()
+	{
+		if (texts.size() == 0)
+			return;
+		if (caret < 0)
+			caret = texts.size() - 1;
+		else if (caret >= texts.size())
+			caret = 0;
+
+		for (auto& i : texts)
+			i.setOutlineColor({});
+
+		texts[caret].setOutlineColor(sf::Color::Blue);
+
+		if (useButton)
+		{
+			if (caret == (texts.size() - 1))
+			{
+				keyboard.DefaultSettings();
+				CentrateAll();
+				useButton = false;
+			}
+			else if (caret == texts.size() - 2)
+			{
+				keyboard = startKeyBoard;
+				isOpen = useButton = false;
+			}
+			else if (caret == texts.size() - 3)
+			{
+				SaveAll();
+				isOpen = useButton = false;
+			}
+			else
+				texts[caret].setOutlineColor(sf::Color::Red);
+		}
+
+	}
+
+	void CentrateAll()
+	{
+		auto null = render.GetNullPos();
+		std::vector<sf::String> names = keyboard.GetNames();
+		texts = std::vector<sf::Text>(names.size() + 3, sf::Text{});
+
+		for (size_t i = 0; i < names.size(); ++i)
+			FillText(texts[i], font, names[i], sf::Color::Yellow, null + sf::Vector2f{ 20.f, i * 50.f + 50.f }, { 1,1 }, 50);
+
+		null.y += render.GetHeight() - 100;
+		null.x += 50;
+		FillText(texts[texts.size() - 1], font, L"Стандартные настройки", sf::Color::Yellow, null);
+		null.y -= texts[texts.size() - 1].getLocalBounds().height + 25;
+		FillText(texts[texts.size() - 2], font, L"Отменить  и выйти", sf::Color::Yellow, null);
+		null.y -= texts[texts.size() - 2].getLocalBounds().height + 25;
+		FillText(texts[texts.size() - 3], font, L"Сохранить и выйти", sf::Color::Yellow, null);
+		null.y -= texts[texts.size() - 3].getLocalBounds().height + 25;
+	}
+
+	void SaveAll()
 	{
 
 	}
@@ -233,7 +317,7 @@ class GameInfo
 public:
 	GameInfo(Render& render, KeyBoard& keyboard) : render{ render }, keyboard{ keyboard }
 	{
-		texture.loadFromFile(INFO_MENU_FONT);
+		texture.loadFromFile(BACKGROUND_TEXTURE_SETTINGS_MENU);
 		background.setTexture(&texture);
 		background.setSize({ render.GetWidth(), render.GetHeight() });
 		background.setPosition(render.GetNullPos());
@@ -247,7 +331,7 @@ public:
 	void Run()
 	{
 		isOpen = true;
-		while (isOpen)
+		while (isOpen && render.IsOpen())
 		{
 			Draw();
 			GetEvents();

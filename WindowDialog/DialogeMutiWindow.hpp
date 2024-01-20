@@ -3,7 +3,7 @@
 #include"DIalogeWindow.hpp"
 #include"InventoryWindow.hpp"
 
-#define FONT_FILE "WindowDialog\\constan.ttf"
+#define FONT_FILE "Settings/constan.ttf"
 #define TEXTURE_PATH "WindowDialog\\PlayerSprites.png"
 
 class MultiDialogeWindow

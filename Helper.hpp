@@ -3,6 +3,10 @@
 #include<iostream>
 #include<fstream>
 
+#include<locale>
+#include<codecvt>
+#include<cassert>
+
 #include<SFML/Graphics.hpp>
 
 #pragma region Convert
@@ -11,6 +15,8 @@
 #define toInt(a) static_cast<int>(a)
 #define toUInt(a) static_cast<unsigned int>(a)
 #define toUInt8(a) static_cast<unsigned char>(a)
+#define toWChar(a) static_cast<wchar_t>(a)
+#define toChar(a) static_cast<char>(a)
 
 sf::Uint32 ToUInt32(int c)
 {
@@ -21,7 +27,7 @@ sf::Uint32 ToUInt32(int c)
 	return c;
 }
 
-sf::String ToReadlName(const sf::Keyboard::Key key)
+sf::String ToRealName(const sf::Keyboard::Key key)
 {
 	if (key >= 0 && key <= 25)
 		return std::string(1, 'A' + static_cast<char>(key));
@@ -30,7 +36,12 @@ sf::String ToReadlName(const sf::Keyboard::Key key)
 	if (key >= 75 && key <= 84)
 		return "Numpad" + std::string(1, static_cast<char>(key) - 75 + '0');
 	if (key >= 85 && key <= 99)
-		return "F" + std::string(1, static_cast<char>(key) - 85 + '0');
+	{
+		if(key <= 94)
+			return "F" + std::string(1, static_cast<char>(key) - 85 + '0');
+		return "F1" + std::string(1, static_cast<char>(key) - 94 + '0');
+
+	}
 	switch (key)
 	{
 		case sf::Keyboard::Key::Escape:		return "Escape";
@@ -76,33 +87,15 @@ sf::String ToReadlName(const sf::Keyboard::Key key)
 	}
 }
 
+std::string UnicodeToUTF8(const sf::String& str)
+{
+	std::wstring_convert<std::codecvt_utf8<sf::Uint32>, sf::Uint32> converter;
+	return converter.to_bytes(str.toUtf32());
+}
+
 #pragma endregion
 
 #pragma region Initializing
-
-sf::Text& FillText(sf::Text& text, const sf::Font& font, const sf::Color& color, float scaleX, float scaleY)
-{
-	text.setFont(font);
-	text.setFillColor(color);
-	text.setScale(scaleX, scaleY);
-	return text;
-}
-
-sf::Text& FillText(sf::Text& text, const sf::Font& font, const sf::String& str, const sf::Color& color, const sf::Vector2f& pos, const sf::Vector2f& scale, unsigned size, float outlineThiscknes = 3)
-{
-	text.setFont(font);
-	text.setString(str);
-	text.setFillColor(color);
-	text.setPosition(pos);
-	text.setScale(scale.x, scale.y);
-	text.setCharacterSize(size);
-	text.setOutlineThickness(outlineThiscknes);
-	return text;
-}
-
-#pragma endregion
-
-#pragma region InOut
 
 template<typename type>
 sf::Rect<type> operator+(const sf::Rect<type>& left, const sf::Vector2<type> right)
@@ -121,6 +114,30 @@ sf::Rect<type> operator-(const sf::Rect<type>& left, const sf::Vector2<type> rig
 	return res;
 }
 
+sf::Text& FillText(sf::Text& text, const sf::Font& font, const sf::Color& color, float scaleX = 1.f, float scaleY = 1.f)
+{
+	text.setFont(font);
+	text.setFillColor(color);
+	text.setScale(scaleX, scaleY);
+	return text;
+}
+
+sf::Text& FillText(sf::Text& text, const sf::Font& font, const sf::String& str, const sf::Color& color, const sf::Vector2f& pos = {0.f,0.f}, const sf::Vector2f& scale = { 1.f,1.f }, unsigned size = 40, float outlineThiscknes = 3)
+{
+	text.setFont(font);
+	text.setString(str);
+	text.setFillColor(color);
+	text.setPosition(pos);
+	text.setScale(scale.x, scale.y);
+	text.setCharacterSize(size);
+	text.setOutlineThickness(outlineThiscknes);
+	return text;
+}
+
+#pragma endregion
+
+#pragma region InOut
+
 template<typename type>
 std::ostream& operator<<(std::ostream& out, const sf::Rect<type> val)
 {
@@ -130,6 +147,15 @@ template<typename type>
 std::ostream& operator<<(std::ostream& out, const sf::Vector2<type> val)
 {
 	return out << "x = " << val.x << " y = " << val.y;
+}
+
+std::ifstream& operator>>(std::ifstream& fin, sf::Keyboard::Key& key)
+{
+	int pr;
+	fin >> pr;
+	std::string prs;
+	std::getline(fin, prs);
+	return fin;
 }
 
 void getlineToSpecialSymbol(std::ifstream& read, sf::String& str)
@@ -168,7 +194,17 @@ bool getlineUTF8(std::basic_ifstream<type, std::char_traits<type>>& read, sf::St
 	return true;
 }
 
-bool getline(std::ifstream& read, sf::String& str)
+template<typename type>
+void writeline(std::basic_ofstream<type, std::char_traits<type>>& write, const sf::String& str)
+{
+	if (write.eof() || !write.is_open())
+		return;
+	for (const auto& i : str)
+		write << i;
+}
+
+template<typename type>
+bool getline(std::basic_ifstream<type, std::char_traits<type>>& read, sf::String& str)
 {
 	str.clear();
 	if (!read.is_open() || read.eof())
@@ -180,15 +216,6 @@ bool getline(std::ifstream& read, sf::String& str)
 		pr = read.get();
 	}
 	return true;
-}
-
-std::ifstream& operator>>(std::ifstream& fin, sf::Keyboard::Key& key)
-{
-	int pr;
-	fin >> pr;
-	std::string prs;
-	std::getline(fin, prs);
-	return fin;
 }
 
 #pragma endregion

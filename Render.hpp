@@ -1,5 +1,7 @@
 #pragma once
 
+#include<vector>
+
 #include<SFML\Graphics.hpp>
 
 #include"Map.hpp"
@@ -167,6 +169,19 @@ public:
 			if (event.type == sf::Event::Closed)
 				window.close();
 		}
+	}
+	std::vector<sf::Keyboard::Key> PollEventKeysReleased()
+	{
+		std::vector<sf::Keyboard::Key> res;
+		if (window.pollEvent(event))
+		{
+			if (event.type == sf::Event::Closed)
+				window.close();
+			else if (event.type == sf::Event::KeyReleased)
+				res.push_back(event.key.code);
+			sf::Event::EventType;
+		}
+		return res;
 	}
 
 	void SetFullScreen(const bool vs)

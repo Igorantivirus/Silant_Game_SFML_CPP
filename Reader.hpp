@@ -3,7 +3,6 @@
 #include<fstream>
 #include<vector>
 
-#include"KeyBoard.hpp"
 #include"Helper.hpp"
 
 #define KEYBOARD_SETTINGS_FILE_NAME "Settings/keyboardSettings.txt"
@@ -12,24 +11,6 @@
 
 namespace ReadWrite
 {
-	void ReadKeyBoard(KeyBoard& kb)
-	{
-		std::ifstream read(KEYBOARD_SETTINGS_FILE_NAME);
-		
-		std::string pr;
-		sf::Keyboard::Key key;
-		
-		read >> key; kb.SetUp(key);
-		read >> key; kb.SetDown(key);
-		read >> key; kb.SetLeft(key);
-		read >> key; kb.SetRight(key);
-		read >> key; kb.SetNext(key);
-		read >> key; kb.SetBack(key);
-		read >> key; kb.SetInventory(key);
-		read >> key; kb.SetFullScreen(key);
-		read.close();
-	}
-
 	std::vector<sf::String> ReadKeyBoardNames()
 	{
 		std::ifstream read(KEYBOARD_SETTINGS_FILE_NAME);
@@ -40,11 +21,50 @@ namespace ReadWrite
 		while (!read.eof())
 		{
 			read >> pr;
-			getlineUTF8(read,str);
+			getlineUTF8(read, str);
+			if (str.getSize() < 15)
+				str += std::string(15 - str.getSize(), ' ');
 			res.push_back(str);
 		}
 		return res;
 	}
+
+	std::vector<sf::Keyboard::Key> ReadKeyBoard()
+	{
+		std::ifstream read(KEYBOARD_SETTINGS_FILE_NAME);
+		std::vector<sf::Keyboard::Key> res;
+		std::string pr;
+		int key;
+		for (int i = 0; i < 9; ++i)
+		{
+			read >> key; res.push_back(static_cast<sf::Keyboard::Key>(key)); std::getline(read, pr);
+
+		}
+		read.close();
+		return res;
+	}
+	void WriteKeyBoard(std::vector<sf::Keyboard::Key> keys)
+	{
+		std::ifstream inpr(KEYBOARD_SETTINGS_FILE_NAME);
+		std::vector<std::string> pr;
+		std::string prstr;
+		int pri;
+		while (!inpr.eof())
+		{
+			inpr >> pri;
+			std::getline(inpr, prstr);
+			pr.push_back(prstr);
+		}
+		inpr.close();
+
+		std::ofstream w(KEYBOARD_SETTINGS_FILE_NAME);
+
+		w << toInt(keys[0]) << pr[0];
+		for (size_t i = 1; i < pr.size() && i < keys.size(); ++i)
+			w << '\n' << toInt(keys[i]) << pr[i];
+		w.close();
+	}
+
 
 	sf::String ReadInfoGame()
 	{
