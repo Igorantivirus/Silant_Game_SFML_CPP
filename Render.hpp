@@ -6,7 +6,7 @@
 
 #include"Map.hpp"
 #include"Player.hpp"
-#include"WindowDialog/DialogeMutiWindow.hpp"
+#include"DialogeMutiWindow.hpp"
 
 class Render
 {
@@ -56,7 +56,7 @@ public:
 
 	void SetWindowSize(unsigned width, unsigned height)
 	{
-		view.setSize(width, height);
+		view.setSize(toFloat(width), toFloat(height));
 		window.setSize({ width, height });
 	}
 
@@ -179,7 +179,6 @@ public:
 				window.close();
 			else if (event.type == sf::Event::KeyReleased)
 				res.push_back(event.key.code);
-			sf::Event::EventType;
 		}
 		return res;
 	}

@@ -24,19 +24,21 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AllMenu.hpp" />
+    <ClInclude Include="Converter.hpp" />
+    <ClInclude Include="DialogeMutiWindow.hpp" />
+    <ClInclude Include="DIalogeWindow.hpp" />
     <ClInclude Include="Enums.hpp" />
     <ClInclude Include="Helper.hpp" />
     <ClInclude Include="Inventory.hpp" />
+    <ClInclude Include="InventoryWindow.hpp" />
     <ClInclude Include="KeyBoard.hpp" />
     <ClInclude Include="MainGame.hpp" />
     <ClInclude Include="Map.hpp" />
     <ClInclude Include="Player.hpp" />
     <ClInclude Include="Reader.hpp" />
     <ClInclude Include="Render.hpp" />
+    <ClInclude Include="ResoursMeneger.hpp" />
     <ClInclude Include="SilantGame.hpp" />
-    <ClInclude Include="WindowDialog\DialogeMutiWindow.hpp" />
-    <ClInclude Include="WindowDialog\DIalogeWindow.hpp" />
-    <ClInclude Include="WindowDialog\InventoryWindow.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

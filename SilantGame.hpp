@@ -1,5 +1,8 @@
 #pragma once
 
+
+#include"Converter.hpp"
+#include<SFMLmyplus/out.hpp>
 #include"Render.hpp"
 #include"KeyBoard.hpp"
 #include"MainGame.hpp"
@@ -43,6 +46,4 @@ public:
 private:
 	Render render;
 	KeyBoard keyboard;
-
-
 };

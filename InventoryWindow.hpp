@@ -145,7 +145,7 @@ public:
 		window.draw(sprite);
 		window.draw(point);
 		for (short i = 0; i < info.inventory.GetSize(); ++i)
-			DrawTxt(window, FloatRectFabrick::GetTextPosAtCenter(CenterPos(), i), info.inventory.GetAt(i).GenNane());
+			DrawTxt(window, FloatRectFabrick::GetTextPosAtCenter(CenterPos(), i), info.inventory.GetAt(toUInt8(i)).GenNane());
 
 		DrawTxt(window, FloatRectFabrick::GetHPPosAtCenter(CenterPos()), std::to_string(info.hp));
 		DrawTxt(window, FloatRectFabrick::GetBorodaPosAtCenter(CenterPos()), std::to_string(info.boroda));
@@ -201,11 +201,11 @@ private:
 	void Use()
 	{
 		if (useCaret == 0)
-			waitStr = info.inventory.UseAt(caret, info.hp, info.boroda, info.defence, info.armor);
+			waitStr = info.inventory.UseAt(toUInt8(caret), info.hp, info.boroda, info.defence, info.armor);
 		else if (useCaret == 2)
-			waitStr = info.inventory.SeeAt(caret);
+			waitStr = info.inventory.SeeAt(toUInt8(caret));
 		else
-			waitStr = info.inventory.TrashAt(caret);
+			waitStr = info.inventory.TrashAt(toUInt8(caret));
 		wait = true;
 		isUse = false;
 	}

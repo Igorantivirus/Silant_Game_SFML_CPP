@@ -7,11 +7,78 @@
 
 #define KEYBOARD_SETTINGS_FILE_NAME "Settings/keyboardSettings.txt"
 
-#define GAME_INFO_FILE "Sprites/InfoMenu.txt"
+#define GAME_INFO_FILE "InfoFiles/InfoMenu.txt"
 
-namespace ReadWrite
+class ReadWrite
 {
-	std::vector<sf::String> ReadKeyBoardNames()
+public:
+
+	#pragma region ReadWrite
+
+	template<typename type>
+	static bool getline(std::basic_ifstream<type, std::char_traits<type>>& read, sf::String& str)
+	{
+		str.clear();
+		if (!read.is_open() || read.eof())
+			return false;
+		sf::Uint32 pr = read.get();
+		while (pr != '\n' && !read.eof())
+		{
+			str += pr;
+			pr = read.get();
+		}
+		return true;
+	}
+
+	template<typename type>
+	static bool getlineToStopSymbol(std::basic_ifstream<type, std::char_traits<type>>& read, sf::String& str, const char stop)
+	{
+		str.clear();
+		if (!read.is_open() || read.eof())
+			return false;
+		sf::Uint32 pr = read.get();
+		while (pr != '\n' && !read.eof() && pr != stop)
+		{
+			str += pr;
+			pr = read.get();
+		}
+		return true;
+	}
+
+	template<typename type>
+	static bool getlineUTF8(std::basic_ifstream<type, std::char_traits<type>>& read, sf::String& str)
+	{
+		str.clear();
+		if (!read.is_open() || read.eof())
+			return false;
+		int pr = read.get();
+		while (pr != '\n' && !read.eof())
+		{
+			if (pr == 208)
+				str += sf::Uint32(read.get() + 896);
+			else if (pr == 209)
+				str += sf::Uint32(read.get() + 960);
+			else
+				str += sf::Uint32(pr);
+			pr = read.get();
+		}
+		return true;
+	}
+
+	template<typename type>
+	static void write(std::basic_ofstream<type, std::char_traits<type>>& write, const sf::String& str)
+	{
+		if (write.eof() || !write.is_open())
+			return;
+		for (const auto& i : str)
+			write << static_cast<type>(i);
+	}
+
+	#pragma endregion
+
+	#pragma region KeyBoard
+
+	static std::vector<sf::String> ReadKeyBoardNames()
 	{
 		std::ifstream read(KEYBOARD_SETTINGS_FILE_NAME);
 
@@ -29,7 +96,7 @@ namespace ReadWrite
 		return res;
 	}
 
-	std::vector<sf::Keyboard::Key> ReadKeyBoard()
+	static std::vector<sf::Keyboard::Key> ReadKeyBoard()
 	{
 		std::ifstream read(KEYBOARD_SETTINGS_FILE_NAME);
 		std::vector<sf::Keyboard::Key> res;
@@ -43,7 +110,7 @@ namespace ReadWrite
 		read.close();
 		return res;
 	}
-	void WriteKeyBoard(std::vector<sf::Keyboard::Key> keys)
+	static void WriteKeyBoard(std::vector<sf::Keyboard::Key> keys)
 	{
 		std::ifstream inpr(KEYBOARD_SETTINGS_FILE_NAME);
 		std::vector<std::string> pr;
@@ -65,8 +132,9 @@ namespace ReadWrite
 		w.close();
 	}
 
+	#pragma endregion
 
-	sf::String ReadInfoGame()
+	static sf::String ReadInfoGame()
 	{
 		std::ifstream read(GAME_INFO_FILE);
 		sf::String res, pr;
@@ -74,4 +142,4 @@ namespace ReadWrite
 			res += pr + '\n';
 		return res;
 	}
-}
+};

@@ -6,9 +6,9 @@
 
 #include<SFML\Graphics.hpp>
 
-#include"Helper.hpp"
+#include"Reader.hpp"
 
-#define ITEMS_INFO_PATH "Sprites\\items.txt"
+#define ITEMS_INFO_PATH "InfoFiles\\items.txt"
 
 class Item
 {
@@ -124,10 +124,15 @@ public:
 		read >> ID;
 		read.get(); read.get();
 
-		getlineToSpecialSymbol(read, name);
-		getlineToSpecialSymbol(read, seeInf);
-		getlineToSpecialSymbol(read, useInf);
-		getlineToSpecialSymbol(read, brkInf);
+		ReadWrite::getlineToStopSymbol(read, name, '|');
+		ReadWrite::getlineToStopSymbol(read, seeInf, '|');
+		ReadWrite::getlineToStopSymbol(read, useInf, '|');
+		ReadWrite::getlineToStopSymbol(read, brkInf, '|');
+
+		name = Converter::UTF8ToUnicode(name);
+		seeInf = Converter::UTF8ToUnicode(seeInf);
+		useInf = Converter::UTF8ToUnicode(useInf);
+		brkInf = Converter::UTF8ToUnicode(brkInf);
 
 		int t;
 		read >> t >> healthPls >> borodaPls >> damagePls >> arrmorPls;

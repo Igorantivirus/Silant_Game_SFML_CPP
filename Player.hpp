@@ -8,6 +8,8 @@
 #include"Helper.hpp"
 #include"Inventory.hpp"
 
+#define PLAYER_TEXTURE "Textures/Player.png"
+
 struct PersonInfo
 {
 	Inventory inventory;
@@ -34,12 +36,11 @@ struct PersonInfo
 class Player
 {
 public:
-	Player(){}
-	Player(const sf::String& fileName, const sf::IntRect& rect)
+	Player()
 	{
-		animTexture.loadFromFile(fileName);
+		animTexture.loadFromFile(PLAYER_TEXTURE);
 		sprite.setTexture(animTexture);
-		sprite.setTextureRect(rect);
+		sprite.setTextureRect({ 0, 0, 16, 34 });
 
 		Item itm;
 		itm.LoadAtID(1);

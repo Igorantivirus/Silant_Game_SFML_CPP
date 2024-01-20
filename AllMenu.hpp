@@ -254,7 +254,7 @@ private:
 		if (texts.size() == 0)
 			return;
 		if (caret < 0)
-			caret = texts.size() - 1;
+			caret = toInt(texts.size()) - 1;
 		else if (caret >= texts.size())
 			caret = 0;
 

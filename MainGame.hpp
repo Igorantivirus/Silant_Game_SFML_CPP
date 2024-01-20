@@ -4,7 +4,7 @@
 #include"Player.hpp"
 #include"Map.hpp"
 #include"KeyBoard.hpp"
-#include"WindowDialog/DialogeMutiWindow.hpp"
+#include"DialogeMutiWindow.hpp"
 
 class MainGame
 {
@@ -38,7 +38,7 @@ private://параметры
 	MultiDialogeWindow dielogeM;
 
 	GameMap map;
-	Player silant{ "Sprites\\Player.png", sf::IntRect{0, 0, 16, 34} };
+	Player silant;
 
 	int ticks = 0;
 

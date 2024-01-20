@@ -150,7 +150,7 @@ public:
 	{
 		auto res = ReadWrite::ReadKeyBoardNames();
 		for (size_t i = 0; i < CountParams() && i < res.size(); ++i)
-			res[i] += " " + ToRealName(this->operator[](i).GetKey());
+			res[i] += " " + Converter::KeyToString(this->operator[](i).GetKey());
 		return res;
 	}
 

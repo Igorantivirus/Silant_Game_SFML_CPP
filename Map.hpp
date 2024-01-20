@@ -6,13 +6,14 @@
 
 #include<SFML\Graphics.hpp>
 
+#include"Reader.hpp"
 #include"Helper.hpp"
 #include"Enums.hpp"
 
 #define PIXELS_IN_BLOCK 16
 
-#define OBJECTTEXTURS_PATH "Sprites\\Objects.png"
-#define OBJECTTEXTURS_INFO "Sprites\\objectsinfo.txt"
+#define OBJECTTEXTURS_PATH "Textures\\Objects.png"
+#define OBJECTTEXTURS_INFO "InfoFiles\\objectsinfo.txt"
 
 int GameDataReader(unsigned lineNomer, std::string file = "gamedata.txt")
 {
@@ -176,12 +177,8 @@ public:friend class ItemObj;
 		(void)fin.get(); (void)fin.get();
 		int pr = 0;
 		obj.text.clear();
-		while ((pr = fin.get()) != '|' && pr != '\n')
-		{
-			if (pr == 208 || pr == 209)
-				continue;
-			obj.text += ToUInt32(pr);
-		}
+		ReadWrite::getlineToStopSymbol(fin, obj.text, '|');
+		obj.text = Converter::UTF8ToUnicode(obj.text);
 		return fin;
 	}
 
@@ -394,12 +391,8 @@ public:
 		(void)fin.get(); (void)fin.get();
 		int pr = 0;
 		iobj.txt.clear();
-		while ((pr = fin.get()) != '|' && pr != '\n')
-		{
-			if (pr == 208 || pr == 209)
-				continue;
-			iobj.txt += ToUInt32(pr);
-		}
+		ReadWrite::getlineToStopSymbol(fin, iobj.txt, '|');
+		iobj.txt = Converter::UTF8ToUnicode(iobj.txt);
 		return fin;
 	}
 
@@ -565,8 +558,6 @@ public:
 		std::string pr;
 		getline(read, pr);
 		LoadTexture(loc, pr);
-
-		int count;
 
 		LoadColision(read);
 		LoadDoors(read);

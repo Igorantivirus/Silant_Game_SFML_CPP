@@ -4,7 +4,7 @@
 #include"InventoryWindow.hpp"
 
 #define FONT_FILE "Settings/constan.ttf"
-#define TEXTURE_PATH "WindowDialog\\PlayerSprites.png"
+#define TEXTURE_PATH "Textures\\PlayerSprites.png"
 
 class MultiDialogeWindow
 {
