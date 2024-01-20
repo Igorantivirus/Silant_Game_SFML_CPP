@@ -89,8 +89,9 @@ sf::String ToRealName(const sf::Keyboard::Key key)
 
 std::string UnicodeToUTF8(const sf::String& str)
 {
-	std::wstring_convert<std::codecvt_utf8<sf::Uint32>, sf::Uint32> converter;
-	return converter.to_bytes(str.toUtf32());
+	return str.toAnsiString();
+	//std::wstring_convert<std::codecvt_utf8<sf::Uint32>, sf::Uint32> converter;
+	//return converter.to_bytes(str.toUtf32());
 }
 
 #pragma endregion
