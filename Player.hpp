@@ -129,8 +129,6 @@ public:
 
 	#pragma region Position
 
-	#pragma region RealPos
-
 	sf::Vector2f GetViewPosition() const
 	{
 		sf::Vector2f pos = { barierBox.left + barierBox.width / 2.f, barierBox.top + barierBox.height / 2.f };
@@ -169,6 +167,7 @@ public:
 			x - sprite.getTextureRect().width / 2.f,
 			y - sprite.getTextureRect().height
 		);
+		aspiratPos = {0.f,0.f};
 		barierBox.left = x - barierBox.width / 2.f;
 		barierBox.top = y - barierBox.height / 2.f;
 	}
@@ -176,95 +175,35 @@ public:
 	{
 		SetFootCenterPosition(pos.x, pos.y);
 	}
-	void SetFootCenterPosition(const sf::Vector2i& pos)
+
+	const sf::Vector2f& GetAspirPos() const
 	{
-		SetFootCenterPosition(toFloat(pos.x), toFloat(pos.y));
+		return aspiratPos;
 	}
-	void SetFootCenterPosition(int x, int y)
+	void SetAspirPos(const sf::Vector2f& pos)
 	{
-		SetFootCenterPosition(toFloat(x), toFloat(y));
+		aspiratPos = pos;
 	}
 
-	void SetCenterPosition(float x, float y)
+	const float GetNextX() const
 	{
-		sprite.setPosition(
-			x - sprite.getTextureRect().width / 2.f,
-			y - sprite.getTextureRect().height / 2.f
-		);
-		barierBox.left = x - barierBox.width / 2.f;
-		barierBox.top = y  + sprite.getTextureRect().height / 2.f - barierBox.height / 2.f;
+		return aspiratPos.x;
 	}
-	void SetCenterPosition(int x, int y)
+	const float GetNextY() const
 	{
-		SetCenterPosition(toFloat(x), toFloat(y));
+		return aspiratPos.y;
 	}
-	void SetCenterPosition(const sf::Vector2f& pos)
+	void SetAspirX(const float x)
 	{
-		SetCenterPosition(pos.x, pos.y);
+		aspiratPos.x = x;
 	}
-	void SetCenterPosition(const sf::Vector2i& pos)
+	void SetAspirY(const float y)
 	{
-		SetCenterPosition(toFloat(pos.x), toFloat(pos.y));
+		aspiratPos.y = y;
 	}
+
 
 	#pragma endregion
-	
-	#pragma region aspirPos
-	
-	sf::Vector2f GetAspirCenterPos() const
-	{
-		return aspiratPos + sf::Vector2f{sprite.getTextureRect().width / 2.f, sprite.getTextureRect().height / 2.f};
-	}
-	sf::Vector2f GetAspirCenterFootPos() const
-	{
-		return aspiratPos + sf::Vector2f{sprite.getTextureRect().width / 2.f, toFloat(sprite.getTextureRect().height)};
-	}
-
-	void SetAspirCenterPos(float x, float y)
-	{
-		aspiratPos.x = x - sprite.getTextureRect().width / 2.f;
-		aspiratPos.y = y - sprite.getTextureRect().height / 2.f;
-	}
-	void SetAspirCenterPos(int x, int y)
-	{
-		SetAspirCenterPos(toFloat(x), toFloat(y));
-	}
-	void SetAspirCenterPos(const sf::Vector2f& pos)
-	{
-		SetAspirCenterPos(pos.x, pos.y);
-	}
-	void SetAspirCenterPos(const sf::Vector2i& pos)
-	{
-		SetAspirCenterPos(toFloat(pos.x), toFloat(pos.y));
-
-	}
-
-	void SetAspirCenterFootPos(float x, float y)
-	{
-		aspiratPos.x = x - sprite.getTextureRect().width / 2.f;
-		aspiratPos.y = y - sprite.getTextureRect().height;
-	}
-	void SetAspirCenterFootPos(int x, int y)
-	{
-		SetAspirCenterFootPos(toFloat(x), toFloat(y));
-	}
-	void SetAspirCenterFootPos(const sf::Vector2f& pos)
-	{
-		SetAspirCenterFootPos(pos.x, pos.y);
-	}
-	void SetAspirCenterFootPos(const sf::Vector2i& pos)
-	{
-		SetAspirCenterFootPos(toFloat(pos.x), toFloat(pos.y));
-	}
-
-	#pragma endregion
-
-	#pragma endregion
-
-	sf::IntRect GetRectSprite() const
-	{
-		return sprite.getTextureRect();
-	}
 
 	sf::FloatRect GetBarierBox() const
 	{
@@ -272,7 +211,7 @@ public:
 	}
 	sf::FloatRect GetBarierBoxAspir() const
 	{
-		return barierBox + (aspiratPos - sprite.getPosition());
+		return barierBox + aspiratPos;
 	}
 
 	const sf::Sprite& GetSprite() const
@@ -286,30 +225,32 @@ public:
 
 	void UpdatePosition()
 	{
-		sprite.move((aspiratPos - sprite.getPosition()) * sliding);
+		sprite.move(aspiratPos *= sliding);
 
 		barierBox.left = sprite.getPosition().x + sprite.getTextureRect().width / 2.f - barierBox.width / 2.f;
-		barierBox.top = sprite.getPosition().y + sprite.getTextureRect().height - barierBox.height / 2.f;
-
-		if (std::abs(aspiratPos.x - sprite.getPosition().x) < sliding)
-			aspiratPos.x = sprite.getPosition().x;
-		if (std::abs(aspiratPos.y - sprite.getPosition().y) < sliding)
-			aspiratPos.y = sprite.getPosition().y;
+		barierBox.top  = sprite.getPosition().y + sprite.getTextureRect().height - barierBox.height / 2.f;
 	}
 
 	void StopRun()
 	{
-		aspiratPos = sprite.getPosition();
+		aspiratPos = { 0.f, 0.f };
+		//aspiratPos = sprite.getPosition();
 	}
 
 	void UpdateAnum()
 	{
-		if (aspiratPos.x - sprite.getPosition().x == 0.f && aspiratPos.y - sprite.getPosition().y == 0.f)
+		if (aspiratPos.x == 0.f && aspiratPos.y == 0.f)
+			pos = pos > 3 ? 4 : 1;
+		else if (aspiratPos.x < 0 && pos > 3)
+			pos = 1;
+		else if (aspiratPos.x > 0 && pos < 4)
+			pos = 4;
+		/*if (aspiratPos.x - sprite.getPosition().x == 0.f && aspiratPos.y - sprite.getPosition().y == 0.f)
 			pos = pos > 3 ? 4 : 1;
 		else if ((aspiratPos.x - sprite.getPosition().x) < 0 && pos > 3)
 			pos = 1;
 		else if ((aspiratPos.x - sprite.getPosition().x) > 0 && pos < 4)
-			pos = 4;
+			pos = 4;*/
 		else if (pos == 6)
 			pos = 4;
 		else if (pos > 3)
@@ -366,8 +307,9 @@ private:
 
 	sf::FloatRect barierBox = {0, 0, 15, 6};
 
-	float speed = .2f;
-	float sliding = .1f;
+
+	float speed = .8f;
+	float sliding = 0.2f;
 
 	Rotation rotation = Rotation::Up;
 	short pos = 1;

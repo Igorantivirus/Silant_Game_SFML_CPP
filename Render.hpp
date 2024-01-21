@@ -65,21 +65,20 @@ public:
 		view.setCenter(player.GetCenterPosition());
 		map.Draw(window);
 
-		//auto pr = map.GetObjs();
 		for (const auto& i : map.GetObjs())
-			if (i.GetCenterBarierBoxPosition().y < player.GetAspirCenterFootPos().y)
+			if (i.GetCenterBarierBoxPosition().y < player.GetFootCenterPosition().y)
 				i.Draw(window);
 		for(const auto& i : map.GetIObjs())
-			if (i.GetCenterBarierBoxPosition().y < player.GetAspirCenterFootPos().y)
+			if (i.GetCenterBarierBoxPosition().y < player.GetFootCenterPosition().y)
 				i.Draw(window);
 
 		player.Draw(window);
 
 		for (const auto& i : map.GetObjs())
-			if (i.GetCenterBarierBoxPosition().y > player.GetAspirCenterFootPos().y)
+			if (i.GetCenterBarierBoxPosition().y > player.GetFootCenterPosition().y)
 				i.Draw(window);
 		for (const auto& i : map.GetIObjs())
-			if (i.GetCenterBarierBoxPosition().y > player.GetAspirCenterFootPos().y)
+			if (i.GetCenterBarierBoxPosition().y > player.GetFootCenterPosition().y)
 				i.Draw(window);
 	}
 	void DrawDialoge(const DialogeWindow& dialog)

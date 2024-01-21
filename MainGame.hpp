@@ -27,6 +27,7 @@ public:
 			DrawAll();
 			GetEvent();
 			TicksUpdate();
+			//std::cout << silant.GetCenterPosition() << '\t' << silant.GetAspirPos() << '\n';
 		}
 		render.Zoom(4.f);
 	}
@@ -42,7 +43,7 @@ private://параметры
 	GameMap map;
 	Player silant;
 
-	int ticks = 0;
+	unsigned short ticks = 0;
 
 private://методы
 
@@ -82,33 +83,15 @@ private://методы
 		}
 		else
 		{
-#pragma region WASD
 			bool sucs = false;
 			if (keyBoard.IsUp())
-			{
-				silant.SetRotation(Rotation::Up);
-				if (!map.InBocks(silant.GetBarierBoxAspir() - sf::Vector2f{0.f, silant.GetSpeed()}))
-					(sucs = true), silant.Up();
-			}
-			if (keyBoard.IsLeft())
-			{
-				silant.SetRotation(Rotation::Left);
-				if (!map.InBocks(silant.GetBarierBoxAspir() - sf::Vector2f{silant.GetSpeed(), 0.f}))
-					(sucs = true), silant.Left();
-			}
+				silant.Up(), sucs = true;
 			if (keyBoard.IsDown())
-			{
-				silant.SetRotation(Rotation::Down);
-				if (!map.InBocks(silant.GetBarierBoxAspir() + sf::Vector2f{0.f, silant.GetSpeed()}))
-					(sucs = true), silant.Down();
-			}
+				silant.Down(), sucs = true;
+			if (keyBoard.IsLeft())
+				silant.Left(), sucs = true;
 			if (keyBoard.IsRight())
-			{
-				silant.SetRotation(Rotation::Right);
-				if (!map.InBocks(silant.GetBarierBoxAspir() + sf::Vector2f{silant.GetSpeed(), 0.f}))
-					(sucs = true), silant.Right();
-			}
-#pragma endregion
+				silant.Right(), sucs = true;
 			if (keyBoard.IsNextClick())
 			{
 				sf::String txt;
@@ -129,7 +112,6 @@ private://методы
 			x = toFloat(rand() % 500 - 100);
 			y = toFloat(rand() % 500 - 100);
 			silant.SetFootCenterPosition(x, y);
-			silant.SetAspirCenterFootPos(x, y);
 		}
 
 		if (keyBoard.IsFullScreenClick())
@@ -141,8 +123,14 @@ private://методы
 
 	void TicksUpdate()
 	{
+
+		if (map.InBocks(silant.GetBarierBox() + sf::Vector2f{0.f, silant.GetNextY()}))
+			silant.SetAspirY(0.f);
+		if (map.InBocks(silant.GetBarierBox() + sf::Vector2f{silant.GetNextX(), 0.f}))
+			silant.SetAspirX(0.f);
 		silant.UpdatePosition();
-		if (ticks % 100 == 0)
+
+		if(ticks % 100 == 0)
 			silant.UpdateAnum();
 
 		if (dielogeM.IsActive())
@@ -151,8 +139,8 @@ private://методы
 			if (ticks % 10 == 0)
 				dielogeM.Update();
 		}
-		if (ticks > 1000000)
-			ticks = 0;
+		if (ticks > 10000)
+			ticks = 0u;
 		ticks++;
 	}
 };

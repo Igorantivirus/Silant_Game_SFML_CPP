@@ -714,7 +714,6 @@ private:
 			read >> iobjs[i];
 			std::getline(read, prs);
 		}
-		std::cout << iobjs.size() << '\n';
 	}
 
 	bool InLockDoors(const sf::FloatRect& rect) const
