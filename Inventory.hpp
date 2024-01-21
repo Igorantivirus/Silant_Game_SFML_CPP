@@ -65,7 +65,7 @@ public:
 	{
 		return type;
 	}
-	const sf::String GenNane() const
+	const sf::String GenName() const
 	{
 		return name;
 	}
@@ -196,6 +196,7 @@ public:
 		if (items.size() >= maxItems)
 			return false;
 		items.push_back(newItem);
+		return true;
 	}
 
 	void PopAt(unsigned char ind)
@@ -232,14 +233,14 @@ public:
 		if (items[ind].GetType() == Item::Type::Armor)
 		{
 			std::swap(currentArmor, items[ind]);
-			if (items[ind].GenNane().isEmpty())
+			if (items[ind].GenName().isEmpty())
 				items.erase(items.begin() + ind, items.begin() + ind + 1);
 		}
 		else if (items[ind].GetType() == Item::Type::Weapon)
 		{
 			std::swap(currentWeapon, items[ind]);
 			std::swap(currentArmor, items[ind]);
-			if (items[ind].GenNane().isEmpty())
+			if (items[ind].GenName().isEmpty())
 				items.erase(items.begin() + ind, items.begin() + ind + 1);
 		}
 		else

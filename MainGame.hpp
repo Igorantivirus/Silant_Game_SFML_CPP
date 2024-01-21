@@ -27,7 +27,6 @@ public:
 			DrawAll();
 			GetEvent();
 			TicksUpdate();
-			//std::cout << silant.GetCenterPosition() << '\t' << silant.GetAspirPos() << '\n';
 		}
 		render.Zoom(4.f);
 	}
@@ -130,7 +129,7 @@ private://методы
 			silant.SetAspirX(0.f);
 		silant.UpdatePosition();
 
-		if(ticks % 100 == 0)
+		if(ticks % 150 == 0)
 			silant.UpdateAnum();
 
 		if (dielogeM.IsActive())

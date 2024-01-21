@@ -140,13 +140,13 @@ public:
 		window.draw(sprite);
 		window.draw(point);
 		for (short i = 0; i < info.inventory.GetSize(); ++i)
-			DrawTxt(window, FloatRectFabrick::GetTextPosAtCenter(CenterPos(), i), info.inventory.GetAt(toUInt8(i)).GenNane());
+			DrawTxt(window, FloatRectFabrick::GetTextPosAtCenter(CenterPos(), i), info.inventory.GetAt(toUInt8(i)).GenName());
 
 		DrawTxt(window, FloatRectFabrick::GetHPPosAtCenter(CenterPos()), std::to_string(info.hp));
 		DrawTxt(window, FloatRectFabrick::GetBorodaPosAtCenter(CenterPos()), std::to_string(info.boroda));
 		DrawTxt(window, FloatRectFabrick::GetMoneyPosAtCenter(CenterPos()), std::to_string(info.money));
-		DrawTxt(window, FloatRectFabrick::GetArmorPosArCenter(CenterPos()), info.inventory.GetArmor().GenNane());
-		DrawTxt(window, FloatRectFabrick::GetWeaponPosArCenter(CenterPos()), info.inventory.GetWeapon().GenNane());
+		DrawTxt(window, FloatRectFabrick::GetArmorPosArCenter(CenterPos()), info.inventory.GetArmor().GenName());
+		DrawTxt(window, FloatRectFabrick::GetWeaponPosArCenter(CenterPos()), info.inventory.GetWeapon().GenName());
 	}
 
 private:

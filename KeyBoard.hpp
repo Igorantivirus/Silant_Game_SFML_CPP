@@ -140,6 +140,7 @@ public:
 		right	= other.right;
 		inventory = other.inventory;
 		pause = other.pause;
+		return *this;
 	}
 
 	#pragma region All Get
