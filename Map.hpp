@@ -6,13 +6,13 @@
 
 #include<SFML\Graphics.hpp>
 
+#include"ResourceMeneger.hpp"
 #include"Reader.hpp"
 #include"Helper.hpp"
 #include"Enums.hpp"
 
 #define PIXELS_IN_BLOCK 16
 
-#define OBJECTTEXTURS_PATH "Textures\\Objects.png"
 #define OBJECTTEXTURS_INFO "InfoFiles\\objectsinfo.txt"
 
 int GameDataReader(unsigned lineNomer, std::string file = "gamedata.txt")
@@ -32,13 +32,10 @@ int GameDataReader(unsigned lineNomer, std::string file = "gamedata.txt")
 class Object
 {
 public:friend class ItemObj;
-	Object()
+	Object(const ResourceMeneger& meneger)
 	{
-		sprite.setTexture(objTexture);
+		sprite.setTexture(meneger.GetObjectsTexture());
 	}
-	Object(const sf::Texture& texture, const sf::IntRect& newRect) :
-		sprite{ texture, newRect }, rectBlock{newRect}
-	{}
 	Object(const Object& other) = default;
 
 	#pragma region Get Set
@@ -155,11 +152,6 @@ public:friend class ItemObj;
 		return rectBlock.contains(pos);
 	}
 
-	static void InitializedTexture()
-	{
-		objTexture.loadFromFile(OBJECTTEXTURS_PATH);
-	}
-
 	friend std::ifstream& operator>>(std::ifstream& fin, Object& obj)
 	{
 		fin >> obj.ID >> obj.rectBlock.left >> obj.rectBlock.top;
@@ -220,12 +212,7 @@ private:
 		sprite.setPosition(rectBlock.left, rectBlock.top);
 		ghostly = true;
 	}
-
-private:
-	static sf::Texture objTexture;
-
 };
-sf::Texture Object::objTexture{};
 
 class DoorObj
 {
@@ -330,9 +317,9 @@ private:
 class ItemObj
 {
 public:
-	ItemObj()
+	ItemObj(const ResourceMeneger& meneger)
 	{
-		sprite.setTexture(Object::objTexture);
+		sprite.setTexture(meneger.GetObjectsTexture());
 	}
 
 	#pragma region Get Set
@@ -540,10 +527,9 @@ private:
 class GameMap
 {
 public:
-	GameMap()
-	{
-		Object::InitializedTexture();
-	}
+	GameMap(ResourceMeneger& meneger) :
+		meneger{meneger}
+	{}
 
 	void LoadFromFile(Location loc, int num)
 	{
@@ -636,6 +622,9 @@ public:
 	}
 
 private:
+	ResourceMeneger& meneger;
+
+
 	std::vector<Object> objs;
 	std::vector<ItemObj> iobjs;
 	std::vector<DoorObj> doors;
@@ -701,7 +690,7 @@ private:
 				std::getline(read, pr);
 				continue;
 			}
-			objs.push_back({});
+			objs.push_back({meneger});
 			read >> objs[j++];
 			std::getline(read, pr);
 		}
@@ -721,7 +710,7 @@ private:
 			read >> pr;
 			if (!ItemObj::IsNullInData(pr))
 				continue;
-			iobjs.push_back({});
+			iobjs.push_back({meneger});
 			read >> iobjs[i];
 			std::getline(read, prs);
 		}

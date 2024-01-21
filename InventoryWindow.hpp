@@ -62,17 +62,12 @@ private:
 		}
 	};
 public:
-	InventoryWindow(PersonInfo& info) : info{ info } {}
-	void Init(const sf::Texture& texture, const sf::Font& font)
+	InventoryWindow(PersonInfo& info, const ResourceMeneger& meneger) :
+		info{ info }, sprite{meneger.GetInventorySprite()}
 	{
-		sprite.setTexture(texture);
-		sprite.setTextureRect({ 0,0,300,300 });
-		sprite.setScale(0.5f, 0.5f);
-
+		FillText(txt, meneger.GetMainFont(), sf::Color::Black, 0.25f, 0.25f);
 		point.setRadius(1);
 		point.setFillColor(sf::Color::Black);
-
-		FillText(txt, font, sf::Color::Black, 0.25f, 0.25f);
 	}
 
 	bool IsActive() const

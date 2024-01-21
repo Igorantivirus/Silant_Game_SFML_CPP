@@ -1,22 +1,15 @@
 #pragma once
 
+#include"ResourceMeneger.hpp"
 #include"DIalogeWindow.hpp"
 #include"InventoryWindow.hpp"
-
-#define FONT_FILE "Settings/constan.ttf"
-#define TEXTURE_PATH "Textures\\PlayerSprites.png"
 
 class MultiDialogeWindow
 {
 public:
-	MultiDialogeWindow(PersonInfo& info) : invent{ info }, dialoge{}
-	{
-		texture.loadFromFile(TEXTURE_PATH);
-		font.loadFromFile(FONT_FILE);
-
-		invent.Init(texture, font);
-		dialoge.Init(texture, font);
-	}
+	MultiDialogeWindow(PersonInfo& info, const ResourceMeneger& meneger) :
+		invent{ info, meneger }, dialoge{ meneger }
+	{}
 
 	void RunDialoge(const sf::String& txt)
 	{
@@ -88,11 +81,6 @@ public:
 	}
 
 private:
-	sf::Texture texture;
-
-	sf::Font font;
-
 	DialogeWindow dialoge;
 	InventoryWindow invent;
-
 };

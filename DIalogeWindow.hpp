@@ -2,6 +2,7 @@
 
 #include<SFML\Graphics.hpp>
 
+#include"ResourceMeneger.hpp"
 #include"Render.hpp"
 #include"KeyBoard.hpp"
 #include"Player.hpp"
@@ -9,16 +10,13 @@
 class DialogeWindow
 {
 public:
-	DialogeWindow() {}
-	void Init(const sf::Texture& dialogeTexture, const sf::Font& font)
+	DialogeWindow(const ResourceMeneger& meneger) :
+		sprite{meneger.GetDiaogeWindowSprite()}
 	{
-		sprite.setTexture(dialogeTexture);
-		sprite.setTextureRect({ 0, 300, 195, 70 });
-
-		FillText(textLabel, font, sf::Color::Black, 0.25f, 0.25f);
-
+		FillText(textLabel, meneger.GetMainFont(), sf::Color::Black, 0.25f, 0.25f);
 		point.setRadius(1);
 		point.setFillColor(sf::Color::Black);
+	
 	}
 
 	void Run(const sf::String& txt)

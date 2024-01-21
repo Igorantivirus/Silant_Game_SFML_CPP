@@ -4,11 +4,10 @@
 
 #include<SFML/Graphics.hpp>
 
+#include"ResourceMeneger.hpp"
 #include"Enums.hpp"
 #include"Helper.hpp"
 #include"Inventory.hpp"
-
-#define PLAYER_TEXTURE "Textures/Player.png"
 
 struct PersonInfo
 {
@@ -36,10 +35,9 @@ struct PersonInfo
 class Player
 {
 public:
-	Player()
+	Player(const ResourceMeneger& meneger)
 	{
-		animTexture.loadFromFile(PLAYER_TEXTURE);
-		sprite.setTexture(animTexture);
+		sprite.setTexture(meneger.GetPlayerTexture());
 		sprite.setTextureRect({ 0, 0, 16, 34 });
 
 		Item itm;
@@ -69,15 +67,6 @@ public:
 	PersonInfo& GetInfoLink()
 	{
 		return info;
-	}
-
-	bool SetTexture(const sf::String file, const sf::IntRect& rect)
-	{
-		if (!animTexture.loadFromFile(file))
-			return false;
-		sprite.setTexture(animTexture);
-		sprite.setTextureRect(rect);
-		return true;
 	}
 
 	unsigned GetWidth() const
@@ -371,7 +360,6 @@ public:
 private:
 	PersonInfo info;
 
-	sf::Texture animTexture;
 	sf::Sprite sprite;
 
 	sf::Vector2f aspiratPos{};

@@ -37,7 +37,7 @@
     <ClInclude Include="Player.hpp" />
     <ClInclude Include="Reader.hpp" />
     <ClInclude Include="Render.hpp" />
-    <ClInclude Include="ResoursMeneger.hpp" />
+    <ClInclude Include="ResourceMeneger.hpp" />
     <ClInclude Include="SilantGame.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

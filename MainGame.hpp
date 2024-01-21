@@ -1,5 +1,6 @@
 #pragma once
 
+#include"ResourceMeneger.hpp"
 #include"Render.hpp"
 #include"Player.hpp"
 #include"Map.hpp"
@@ -10,7 +11,7 @@ class MainGame
 {
 public:
 	MainGame(Render& render, KeyBoard& keyboard, Location loc, int room) :
-		render{ render }, keyBoard{ keyboard }, dielogeM{ silant.GetInfoLink() }
+		meneger{}, render{ render }, keyBoard{ keyboard }, silant{meneger}, dielogeM { silant.GetInfoLink(), meneger }, map{meneger}
 	{
 		render.Zoom(0.25f);
 
@@ -34,6 +35,7 @@ public:
 private://параметры
 	Render& render;
 	KeyBoard& keyBoard;
+	ResourceMeneger meneger;
 
 	MultiDialogeWindow dielogeM;
 

@@ -8,7 +8,7 @@
 
 #include"Reader.hpp"
 
-#define ITEMS_INFO_PATH "InfoFiles\\items.txt"
+#define ITEMS_INFO_PATH "InfoFiles/items.txt"
 
 class Item
 {

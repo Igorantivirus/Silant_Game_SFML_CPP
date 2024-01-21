@@ -6,8 +6,6 @@
 
 #include"Reader.hpp"
 
-#define SETTINGS_FILE "settings.txt"
-
 class Key
 {
 public:
