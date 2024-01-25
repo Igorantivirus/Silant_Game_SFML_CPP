@@ -5,6 +5,7 @@
 
 #include"Helper.hpp"
 #include"ResourceMeneger.hpp"
+#include"Enums.hpp"
 
 #define KEYBOARD_SETTINGS_FILE_NAME "Settings/keyboardSettings.txt"
 
@@ -16,11 +17,44 @@
 
 namespace Package
 {
-	struct ObjectP
+	struct ObjP
 	{
 		unsigned int ID;
 		sf::IntRect spriteRect;
 		sf::FloatRect barierBox;
+	};
+
+	struct ObjectP
+	{
+		unsigned int ID;
+		sf::String text;
+		sf::IntRect spriteRect;
+		sf::FloatRect rectBlock;
+		bool ghostly;
+	};
+	struct ObjectItemP
+	{
+		unsigned int ID;
+		unsigned int itemID;
+		sf::String text;
+		sf::IntRect spriteRect;
+		sf::FloatRect rectBlock;
+		bool ghostly;
+	};
+	struct DoorP
+	{
+		sf::FloatRect barierBox;
+		Location loc;
+		unsigned nextRoom;
+		sf::Vector2f nextPos;
+	};
+	struct MapP
+	{
+		std::string backgroundFile;
+		std::vector<sf::FloatRect> collisionP;
+		std::vector<DoorP> doorsP;
+		std::vector<ObjectP> objectsP;
+		std::vector<ObjectItemP> objectsItemP;
 	};
 }
 
@@ -172,9 +206,9 @@ public:
 		return val;
 	}
 
-	static Package::ObjectP ReadObjectInfo(const unsigned int ID)
+	static Package::ObjP ReadObjectInfo(const unsigned int ID)
 	{
-		Package::ObjectP res;
+		Package::ObjP res;
 
 		std::ifstream read(OBJECTTEXTURS_INFO);
 		std::string pr;
@@ -189,4 +223,104 @@ public:
 		read.close();
 		return res;
 	}
+
+	static Package::MapP ReadMap(const unsigned int nroom)
+	{
+		decltype(ReadMap(0)) res;
+
+		std::ifstream read("Rooms/room" + std::to_string(nroom) + ".txt");
+		std::string prs;
+		int pri;
+		unsigned int count;
+
+		std::getline(read, res.backgroundFile);
+		
+		read >> count;
+		for (unsigned int i = 0; i < count; ++i)
+		{
+			res.collisionP.push_back({});
+			ReadCollision(read, res.collisionP[i]);
+		}
+
+		read >> count;
+		for (unsigned int i = 0; i < count; ++i)
+		{
+			res.doorsP.push_back({});
+			ReadDoorP(read, res.doorsP[i]);
+		}
+
+		read >> count;
+		for (unsigned int i = 0; i < count; ++i)
+		{
+			res.objectsP.push_back({});
+			ReadObject(read, res.objectsP[i]);
+		}
+
+		read >> count;
+		for (unsigned int i = 0; i < count; ++i)
+		{
+			res.objectsP.push_back({});
+			ReadItemObject(read, res.objectsItemP[i]);
+		}
+
+		return res;
+	}
+private:
+	static void ReadCollision(std::ifstream& read, sf::FloatRect& rect)
+	{
+		read >> rect.left >> rect.top >> rect.width >> rect.height;
+	}
+	static void ReadDoorP(std::ifstream& read, Package::DoorP& d)
+	{
+		read >> d.barierBox.left >> d.barierBox.top >> d.barierBox.width >> d.barierBox.height;
+		d.barierBox.top *= PIXELS_IN_BLOCK;
+		d.barierBox.left *= PIXELS_IN_BLOCK;
+		d.barierBox.width *= PIXELS_IN_BLOCK;
+		d.barierBox.height *= PIXELS_IN_BLOCK;
+
+		read >> d.nextRoom;
+		d.loc = static_cast<Location>(d.nextRoom);
+		read >> d.nextRoom;
+
+		read >> d.nextPos.x >> d.nextPos.y;
+	}
+	static void ReadObject(std::ifstream& read, Package::ObjectP& o)
+	{
+		read >> o.ID >> o.rectBlock.left >> o.rectBlock.top;
+		o.rectBlock.left *= PIXELS_IN_BLOCK;
+		o.rectBlock.top *= PIXELS_IN_BLOCK;
+		if (o.ID == 0)
+		{
+			read >> o.rectBlock.width >> o.rectBlock.height;
+			o.rectBlock.width *= PIXELS_IN_BLOCK;
+			o.rectBlock.height *= PIXELS_IN_BLOCK;
+			
+			o.ghostly = true;
+			o.spriteRect = {};
+		}
+		else
+		{
+			o.ghostly = false;
+			auto p = ReadObjectInfo(o.ID);
+			o.spriteRect = p.spriteRect;
+			o.rectBlock.width = p.barierBox.width;
+			o.rectBlock.height = p.barierBox.height;
+		}
+		(void)read.get(); (void)read.get();
+		o.text.clear();
+		ReadWrite::getlineToStopSymbol(read, o.text, '|');
+		o.text = Converter::UTF8ToUnicode(o.text);
+	}
+	static void ReadItemObject(std::ifstream& read, Package::ObjectItemP& o)
+	{
+		read >> o.itemID;
+		Package::ObjectP pr;
+		ReadObject(read, pr);
+		o.ghostly = pr.ghostly;
+		o.ID = pr.ID;
+		o.rectBlock = pr.rectBlock;
+		o.spriteRect = pr.spriteRect;
+		o.text = pr.text;
+	}
+
 };
