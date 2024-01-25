@@ -77,9 +77,7 @@ private://методы
 		render.PollEvent();
 
 		if (dielogeM.IsActive())
-		{
 			dielogeM.GetEvent(keyBoard);
-		}
 		else
 		{
 			bool sucs = false;
@@ -111,6 +109,10 @@ private://методы
 			x = toFloat(rand() % 500 - 100);
 			y = toFloat(rand() % 500 - 100);
 			silant.SetFootCenterPosition(x, y);
+		}
+		if (keyBoard.IsPressed(sf::Keyboard::Q))
+		{
+			render.CloseWindow();
 		}
 
 		if (keyBoard.IsFullScreenClick())

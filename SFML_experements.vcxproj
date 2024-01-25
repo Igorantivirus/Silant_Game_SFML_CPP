@@ -24,9 +24,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AllMenu.hpp" />
+    <ClInclude Include="CollisionMap.hpp" />
     <ClInclude Include="Converter.hpp" />
     <ClInclude Include="DialogeMutiWindow.hpp" />
     <ClInclude Include="DIalogeWindow.hpp" />
+    <ClInclude Include="Door.hpp" />
     <ClInclude Include="Enums.hpp" />
     <ClInclude Include="Helper.hpp" />
     <ClInclude Include="Inventory.hpp" />
@@ -34,6 +36,7 @@
     <ClInclude Include="KeyBoard.hpp" />
     <ClInclude Include="MainGame.hpp" />
     <ClInclude Include="Map.hpp" />
+    <ClInclude Include="Object.hpp" />
     <ClInclude Include="Player.hpp" />
     <ClInclude Include="Reader.hpp" />
     <ClInclude Include="Render.hpp" />

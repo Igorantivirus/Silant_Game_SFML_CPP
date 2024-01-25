@@ -10,6 +10,8 @@
 
 #define OBJECTS_TEXTUR_FILE "Textures\\Objects.png"
 
+#define PIXELS_IN_BLOCK 16
+
 class ResourceMeneger
 {
 public:

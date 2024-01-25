@@ -4,10 +4,25 @@
 #include<vector>
 
 #include"Helper.hpp"
+#include"ResourceMeneger.hpp"
 
 #define KEYBOARD_SETTINGS_FILE_NAME "Settings/keyboardSettings.txt"
 
 #define GAME_INFO_FILE "InfoFiles/InfoMenu.txt"
+
+#define GAMEDATA_FILE "gamedata.txt"
+
+#define OBJECTTEXTURS_INFO "InfoFiles\\objectsinfo.txt"
+
+namespace Package
+{
+	struct ObjectP
+	{
+		unsigned int ID;
+		sf::IntRect spriteRect;
+		sf::FloatRect barierBox;
+	};
+}
 
 class ReadWrite
 {
@@ -140,6 +155,38 @@ public:
 		sf::String res, pr;
 		while (getlineUTF8(read, pr))
 			res += pr + '\n';
+		return res;
+	}
+	static int GameDataReader(unsigned lineNumber)
+	{
+		std::ifstream read(GAMEDATA_FILE);
+		std::string pr;
+
+		for (unsigned i = 0; i < lineNumber; ++i)
+			std::getline(read, pr);
+
+		int val;
+		read >> val;
+
+		read.close();
+		return val;
+	}
+
+	static Package::ObjectP ReadObjectInfo(const unsigned int ID)
+	{
+		Package::ObjectP res;
+
+		std::ifstream read(OBJECTTEXTURS_INFO);
+		std::string pr;
+		for (unsigned i = 0u; i < ID; ++i)
+			std::getline(read, pr);
+
+		read >> 
+			res.ID >>
+			res.spriteRect.left >> res.spriteRect.top >> res.spriteRect.width >> res.spriteRect.height >>
+			res.barierBox.width >> res.barierBox.height >>res.barierBox.left >> res.barierBox.top;
+
+		read.close();
 		return res;
 	}
 };
