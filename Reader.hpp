@@ -3,6 +3,8 @@
 #include<fstream>
 #include<vector>
 
+#include<pugixml.hpp>
+
 #include"Helper.hpp"
 #include"ResourceMeneger.hpp"
 #include"Enums.hpp"
@@ -19,14 +21,14 @@ namespace Package
 {
 	struct ObjP
 	{
-		unsigned int ID;
+		unsigned int ID{};
 		sf::IntRect spriteRect;
 		sf::FloatRect barierBox;
 	};
 
 	struct ObjectP
 	{
-		unsigned int ID;
+		unsigned int ID{};
 		sf::String text;
 		sf::IntRect spriteRect;
 		sf::FloatRect rectBlock;
@@ -34,8 +36,8 @@ namespace Package
 	};
 	struct ObjectItemP
 	{
-		unsigned int ID;
-		unsigned int itemID;
+		unsigned int ID{};
+		unsigned int itemID{};
 		sf::String text;
 		sf::IntRect spriteRect;
 		sf::FloatRect rectBlock;
@@ -57,6 +59,26 @@ namespace Package
 		std::vector<ObjectItemP> objectsItemP;
 	};
 }
+
+class RoomReader
+{
+public:
+
+	static Package::MapP Read(const unsigned int roomNumber)
+	{
+		Package::MapP res;
+		std::string fileName = "Rooms/room" + std::to_string(roomNumber) + ".txt";
+
+		pugi::xml_document doc;
+		if(!doc.load_file(fileName.c_str()))
+			return res;
+
+
+
+		return res;
+	}
+
+};
 
 class ReadWrite
 {

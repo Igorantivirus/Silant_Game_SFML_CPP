@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<room>
+	<!-- Текстура -->
+	<background_texture>room2.png</background_texture>
+
+	<!-- Колизии -->
+    <collisions>
+		<element x="0"	y="0"	width="21"	height="2"	/>	
+		<element x="0"	y="2"	width="3"	height="1"	/>	
+		<element x="5"	y="2"	width="3"	height="1"	/>	
+		<element x="10"	y="2"	width="7"	height="1"	/>	
+		<element x="19"	y="2"	width="2"	height="1"	/>	
+		<element x="0"	y="3"	width="1"	height="2"	/>	
+		<element x="20"	y="3"	width="1"	height="2"	/>	
+		<element x="0"	y="6"	width="1"	height="4"	/>	
+		<element x="0"	y="6"	width="6"	height="1"	/>	
+		<element x="3"	y="7"	width="1"	height="1"	/>	
+		<element x="5"	y="7"	width="1"	height="1"	/>	
+		<element x="20"	y="6"	width="1"	height="4"	/>	
+		<element x="16"	y="6"	width="3"	height="1"	/>	
+		<element x="16"	y="7"	width="1"	height="2"	/>	
+		<element x="0"	y="9"	width="21"	height="1"	/>	
+    </collisions>
+
+	<!-- Двери -->
+    <doors>
+		<element x="0"	y="5"	width="1"	height="1"	nextRoom="1"	newX="2"	newY="5.5"	/>
+		<element x="20"	y="5"	width="1"	height="1"	nextRoom="1"	newX="16"	newY="5.5"	/>
+		<element x="3"	y="2"	width="1"	height="1"	nextRoom="4"	newX="28"	newY="17.5"	/>
+    </doors>
+
+	<!-- Объекты -->
+    <objects>
+		<element gameDataLine="0"	objectID="1"	x="6"		y="3"	text="Большая ваза, а за ней лицо какого-то глазастого мужика!"	/>
+		<element gameDataLine="0"	objectID="5"	x="17.2"	y="7"	text="Странно, почему здесь пианино? Тут же был синтезатор..., стоп! А кк мне пройти за него? Наверное дебилы неправильно поставили!"/>
+		<element gameDataLine="0"	objectID="0"	x="11"		y="2"	width="1"	height="1"	text="О, Вика? Моя любовь."/>
+		<element gameDataLine="0"	objectID="0"	x="13"		y="2"	width="1"	height="1"	text="Мой дружище Одинцов! Рад его видеть, где же он сейчас?..."/>
+		<element gameDataLine="0"	objectID="0"	x="15"		y="2"	width="1"	height="1"	text="Эх, какой я молодой был..."/>
+    </objects>
+
+	<!-- Объекты предметов -->
+    <itemObjects>
+        <!-- <element gameDataLine="0" objectID="5" itemID="1" x="1" y="1" text="" /> -->
+    </itemObjects>
+	
+</room>

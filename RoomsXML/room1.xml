@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<room>
+	<!-- Текстура -->
+	<background_texture>room1.png</background_texture>
+
+	<!-- Колизии -->
+    <collisions>
+		<element x="0" 	y="0" width="18" 	height="2 "	/>
+		<element x="0" 	y="2" width="3" 	height="1"	/>	
+		<element x="5" 	y="2" width="9" 	height="1"	/>	
+		<element x="16" y="2" width="1" 	height="1 "	/>
+		<element x="6" 	y="3" width="7" 	height="2"	/>	
+		<element x="0" 	y="3" width="1" 	height="2"	/>	
+		<element x="0" 	y="6" width="1" 	height="4"	/>	
+		<element x="17" y="2" width="1" 	height="3 "	/>
+		<element x="17" y="6" width="1" 	height="4 "	/>
+		<element x="0" 	y="9" width="18"	height="1 "	/>
+    </collisions>
+
+	<!-- Двери -->
+    <doors>
+        <element x="0"		y="5" width="1" height="1" nextRoom="2" newX="1.5"	newY="5.5"	/>
+        <element x="17"		y="5" width="1" height="1" nextRoom="2" newX="19"	newY="5.5"	/>
+		<element x="0"		y="5" width="1" height="1" nextRoom="2" newX="1.5"	newY="5.5"	/>
+		<element x="17"		y="5" width="1" height="1" nextRoom="2" newX="19"	newY="5.5"	/>
+		<element x="16.8"	y="3" width="1" height="1" nextRoom="3" newX="3"	newY="4"	/>
+		<element x="3"		y="1" width="1" height="2" nextRoom="5" newX="1.5"	newY="5"	/>
+    </doors>
+
+	<!-- Объекты -->
+    <objects>
+		<element gameDataLine="0" objectID="3" x="1" x="3" text="Пожилая сидушка." />
+    </objects>
+
+	<!-- Объекты предметов -->
+    <itemObjects>
+        <!-- <element gameDataLine="0" objectID="5" itemID="1" x="1" y="1" text="" /> -->
+    </itemObjects>
+	
+</room>
