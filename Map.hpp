@@ -118,6 +118,7 @@ public:
 		objs.clear();
 		iobjs.clear();
 		doors.clear();
+		cols.Clear();
 
 		LoadTexture(pac.backgroundFile);
 		/*texture.loadFromFile("Textures/" + pac.backgroundFile);

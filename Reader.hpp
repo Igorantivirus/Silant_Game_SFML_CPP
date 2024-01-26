@@ -254,7 +254,6 @@ public:
 		ReadDoors(doc, res.doorsP);
 		ReadObjects(doc, res.objectsP);
 		ReadObjectsItem(doc, res.objectsItemP);
-
 		return res;
 	}
 private:
