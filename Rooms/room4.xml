@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<room>
+	<!-- Текстура -->
+	<background_texture>room4.png</background_texture>
+
+	<!-- Колизии -->
+    <collisions>
+		<element x="0"		y="0"		width="32"	height="3"	/>
+		<element x="0"		y="0"		width="1"	height="19"	/>
+		<element x="31"		y="0"		width="1"	height="19"	/>
+		<element x="0"		y="18"		width="27"	height="1"	/>
+		<element x="30"		y="18"		width="1"	height="1"	/>
+		<element x="3.5"	y="16.2"	width="24"	height="0.2"/>
+		<element x="3.3"	y="9.5"		width="0.1"	height="7"	/>
+		<element x="27.5"	y="9.5"		width="0.1"	height="7"	/>
+		<element x="3.5"	y="9.8"		width="7"	height="1"	/>
+		<element x="3.5"	y="11.7"	width="7"	height="1"	/>
+		<element x="3.5"	y="13.6"	width="7"	height="1"	/>
+		<element x="3.5"	y="15.5"	width="7"	height="1"	/>
+		<element x="13.3"	y="9.8"		width="14"	height="1"	/>
+		<element x="13.3"	y="11.7"	width="14"	height="1"	/>
+		<element x="13.3"	y="13.6"	width="14"	height="1"	/>
+		<element x="13.3"	y="15.5"	width="14"	height="1"	/>
+    </collisions>
+
+	<!-- Двери -->
+    <doors>
+		<element x="27"	y="18"	width="3"	height="1"	nextRoom="2"	newX="4"	newY="4"	/>
+    </doors>
+
+	<!-- Объекты -->
+		<objects>
+		<element gameDataLine="0"	objectID="2"	x="1"		y="9"	text="Еще Шаловливый стол"/>
+		<element gameDataLine="0"	objectID="2"	x="29"		y="9"	text="шаловливый стол"/>
+		<element gameDataLine="0"	objectID="6"	x="1"		y="7"	text=""/>
+		<element gameDataLine="0"	objectID="6"	x="26.5"	y="7"	text="АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ"/>
+		<element gameDataLine="0"	objectID="6"	x="23"		y="4"	text="абвгдеёжзийклмнопрстуфхцчшщъыьэюя"/>
+		<element gameDataLine="0"	objectID="6"	x="19.5"	y="4"	text=""/>
+		<element gameDataLine="0"	objectID="6"	x="16"		y="4"	text=""/>
+		<element gameDataLine="0"	objectID="6"	x="9"		y="4"	text=""/>
+		<element gameDataLine="0"	objectID="6"	x="5.5"		y="4"	text="Меня зовут Кира Йошикаге. Мне 33 года. Мой дом находится в северо-восточной части Морио, где расположены все виллы. Я не женат. Я работаю в универмаге Kame Yu и прихожу домой не позднее 8 вечера. Я не курю, но иногда выпиваю. Я ложусь спать в 11 вечера, и убеждаюсь, что я получаю ровно восемь часов сна, несмотря ни на что. Выпив стакан теплого молока и потянувшись минут двадцать перед сном, я обычно без проблем сплю до утра. Словно ребёнок я просыпаюсь утром без всякой усталости и стресса. На моём последнем осмотре мне сказали, что у меня нет никаких проблем со здоровьем. Я пытаюсь донести, что я обычный человек, который хочет жить спокойной жизнью. Я забочусь о том, чтобы не утруждать себя какими-либо врагами, победами и поражениями, которые могли бы потревожить мой сон. Вот как я отношусь к обществу, и я знаю, что это приносит мне счастье. Хотя, если бы мне пришлось сражаться, я бы никому не проиграл."/>
+		<element gameDataLine="0"	objectID="6"	x="2"		y="4"	text=""/>
+		<element gameDataLine="0"	objectID="6"	x="12.5"	y="5.5" text="Сраная кулиса, почему она так стоит??? Может дебилы постарались?"/>
+		<element gameDataLine="0"	objectID="0"	x="2"		y="2" width="10"	height="1" text="Что? Дебилы??? Где дебилы?! АААА, ДЕБИЛЫ!!! Где деблы? Инвалиды, идиоты! ну вы и *****, ААА!"/>
+	</objects>
+
+	<!-- Объекты предметов -->
+    <itemObjects>
+        <!-- <element gameDataLine="0" objectID="5" itemID="1" x="1" y="1" text="" /> -->
+    </itemObjects>
+	
+</room>

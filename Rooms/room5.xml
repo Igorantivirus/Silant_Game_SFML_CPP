@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<room>
+	<!-- Текстура -->
+	<background_texture>room5.png</background_texture>
+
+	<!-- Колизии -->
+    <collisions>
+		<element x="0"	y="0"	width="10"	height="3"	/>
+		<element x="10"	y="0"	width="13"	height="3.3"/>
+		<element x="23"	y="0"	width="1"	height="9"	/>
+		<element x="0"	y="3"	width="1"	height="1"	/>
+		<element x="0"	y="6"	width="1"	height="1"	/>
+		<element x="0"	y="7"	width="6"	height="1"	/>
+		<element x="8"	y="7"	width="2"	height="1"	/>
+		<element x="10"	y="7.3"	width="5"	height="1"	/>
+		<element x="17"	y="7.3"	width="7"	height="1"	/>
+    </collisions>
+
+	<!-- Двери -->
+    <doors>
+		<element x="0"	y="4"	width="1"	height="2"	nextRoom="1"	newX="4"	newY="4"	/>
+		<element x="22"	y="3.3"	width="1"	height="4"	nextRoom="6"	newX="16"	newY="11.5"	/>
+    </doors>
+
+	<!-- Объекты -->
+    <objects>
+		<element gameDataLine="0"	objectID="0"	x="6"	y="2"	width="1"	height="1"	text="О, это же мой спектакль! Его еще не убрали?...	Стоп, с ним что-то не то... Что? почему тут написано ''Шаловливый запад''?	Это дебилы постарались???"/>
+		<element gameDataLine="0"	objectID="0"	x="14"	y="2.3"	width="1"	height="1"	text="Что стало с афишей колобка???"/>
+		<element gameDataLine="0"	objectID="0"	x="16"	y="2.3"	width="1"	height="1"	text="ПРИКЛЮЧЕНИЯ ЧИКАТИЛО?!?!?"/>
+		<element gameDataLine="0"	objectID="0"	x="18"	y="2.3"	width="1"	height="1"	text="Да я сам как пожАлой фрукт!"/>
+		<element gameDataLine="0"	objectID="0"	x="20"	y="2.3"	width="1"	height="1"	text="Галя?! Только не она!!! НЕЕЕТ!"/>
+	</objects>
+
+	<!-- Объекты предметов -->
+    <itemObjects>
+        <!-- <element gameDataLine="0" objectID="5" itemID="1" x="1" y="1" text="" /> -->
+    </itemObjects>
+	
+</room>

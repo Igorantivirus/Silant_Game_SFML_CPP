@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<room>
+	<!-- Текстура -->
+	<background_texture>room3.png</background_texture>
+
+	<!-- Колизии -->
+    <collisions>
+		<element x="4"	y="0"	width="20"	height="3"	/>
+		<element x="0"	y="7"	width="24"	height="1"	/>
+		<element x="23"	y="0"	width="1"	height="8"	/>
+		<element x="0"	y="0"	width="2"	height="3"	/>	
+    </collisions>
+
+	<!-- Двери -->
+    <doors>
+		<element x="2"	y="0"	width="2"	height="3"	nextRoom="1"	newX="16"	newY="4"	/>
+    </doors>
+
+	<!-- Объекты -->
+    <objects>
+		<element gameDataLine="0"	objectID="0"	x="5"		y="2"	width="4"	height="1"	text="В расписании только спектакли Серова"/>
+	</objects>
+
+	<!-- Объекты предметов -->
+    <itemObjects>
+        <!-- <element gameDataLine="0" objectID="5" itemID="1" x="1" y="1" text="" /> -->
+    </itemObjects>
+	
+</room>

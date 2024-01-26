@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<room>
+	<!-- Текстура -->
+	<background_texture>room6.png</background_texture>
+
+	<!-- Колизии -->
+    <collisions>
+		<element x="0"	y="0"	width="15.5"	height="6"		/>
+		<element x="0"	y="3"	width="1"		height="10"		/>
+		<element x="0"	y="12"	width="15"		height="1"		/>
+		<element x="14"	y="0"	width="9"		height="3.7"	/>
+		<element x="23"	y="0"	width="1"		height="8"		/>
+		<element x="21"	y="6"	width="3"		height="7"		/>
+		<element x="20"	y="12"	width="1"		height="1"		/>
+    </collisions>
+
+	<!-- Двери -->
+    <doors>
+		<element x="15"	y="12"	width="5"	height="1"	nextRoom="5"	newX="21"	newY="5"	/>
+    </doors>
+
+	<!-- Объекты -->
+    <objects>
+		<!-- Объекты -->
+	</objects>
+
+	<!-- Объекты предметов -->
+    <itemObjects>
+		<element gameDataLine="1"	objectID="7"	itemID="7"	x="7"	y="10"	text="Это синий зонтик, возьмeте ли вы это?"/>
+	</itemObjects>
+</room>

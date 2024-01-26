@@ -237,11 +237,15 @@ public:
 	static Package::MapP Read(const unsigned int roomNumber)
 	{
 		Package::MapP res;
-		std::string fileName = "RoomsXML/room" + std::to_string(roomNumber) + ".xml";
+		std::string fileName = "Rooms/room" + std::to_string(roomNumber) + ".xml";
 
 		pugi::xml_document doc;
-		if (!doc.load_file(fileName.c_str()))
+		pugi::xml_parse_result openRes = doc.load_file(fileName.c_str());
+		if (!openRes)
+		{
+			std::cout << "room is not open. Error: " << openRes.description() << '\n';
 			return res;
+		}
 
 		res.backgroundFile = doc.child("room").child("background_texture").text().as_string();
 
