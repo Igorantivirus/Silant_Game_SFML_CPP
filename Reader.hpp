@@ -224,6 +224,11 @@ public:
 			res.spriteRect.left >> res.spriteRect.top >> res.spriteRect.width >> res.spriteRect.height >>
 			res.barierBox.width >> res.barierBox.height >>res.barierBox.left >> res.barierBox.top;
 
+		/*res.barierBox.left *= PIXELS_IN_BLOCK;
+		res.barierBox.width *= PIXELS_IN_BLOCK;
+		res.barierBox.top *= PIXELS_IN_BLOCK;
+		res.barierBox.height *= PIXELS_IN_BLOCK;*/
+
 		read.close();
 		return res;
 	}
@@ -287,7 +292,7 @@ private:
 		elements.clear();
 		Package::ObjectP element;
 		int gameDataLine{};
-		for (auto elementNode : doc.child("room").child("doors").children("element"))
+		for (auto elementNode : doc.child("room").child("objects").children("element"))
 		{
 			gameDataLine = elementNode.attribute("gameDataLine").as_uint();
 			element.ID = elementNode.attribute("objectID").as_uint();
@@ -309,7 +314,9 @@ private:
 					element.rectBlock.left - pr.barierBox.left, element.rectBlock.top - pr.barierBox.top
 				};
 				element.spriteRect = pr.spriteRect;
-				element.rectBlock = pr.barierBox;
+				element.rectBlock.width = pr.barierBox.width;
+				element.rectBlock.height = pr.barierBox.height;
+				//element.rectBlock = pr.barierBox;
 				element.ghostly = false;
 			}
 			element.text = elementNode.attribute("text").as_string();
