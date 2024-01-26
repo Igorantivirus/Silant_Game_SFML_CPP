@@ -9,7 +9,12 @@
 
 class Object
 {
-public:friend class ItemObj;
+public:
+	Object(const ResourceMeneger& meneger, const Package::ObjectP& pac)
+	{
+		sprite.setTexture(meneger.GetObjectsTexture());
+		SetPackage(pac);
+	}
 	Object(const ResourceMeneger& meneger)
 	{
 		sprite.setTexture(meneger.GetObjectsTexture());
@@ -69,6 +74,16 @@ public:friend class ItemObj;
 	bool Contains(const sf::Vector2f& pos) const
 	{
 		return rectBlock.contains(pos);
+	}
+
+	void SetPackage(const Package::ObjectP& pac)
+	{
+		ghostly = pac.ghostly;
+		ID = pac.ID;
+		rectBlock = pac.rectBlock;
+		sprite.setPosition(pac.spritePos);
+		sprite.setTextureRect(pac.spriteRect);
+		text = pac.text;
 	}
 
 	friend std::ifstream& operator>>(std::ifstream& fin, Object& obj)
@@ -132,6 +147,11 @@ public:
 	{
 		sprite.setTexture(meneger.GetObjectsTexture());
 	}
+	ItemObj(const ResourceMeneger& meneger, const Package::ObjectItemP& pac)
+	{
+		sprite.setTexture(meneger.GetObjectsTexture());
+		SetPackage(pac);
+	}
 
 	#pragma region Get Set
 
@@ -169,6 +189,16 @@ public:
 	void Draw(sf::RenderWindow& window) const
 	{
 		window.draw(sprite);
+	}
+
+	void SetPackage(const Package::ObjectItemP& pac)
+	{
+		ID = pac.ID;
+		IDItem = pac.itemID;
+		rectBlock = pac.rectBlock;
+		sprite.setPosition(pac.spritePos);
+		sprite.setTextureRect(pac.spriteRect);
+		txt = pac.text;
 	}
 
 	friend std::ifstream& operator>>(std::ifstream& fin, ItemObj& iobj)

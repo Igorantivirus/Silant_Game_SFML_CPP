@@ -6,6 +6,7 @@
 #include<pugixml.hpp>
 
 #include"Helper.hpp"
+#include"Converter.hpp"
 #include"ResourceMeneger.hpp"
 #include"Enums.hpp"
 
@@ -32,6 +33,7 @@ namespace Package
 		sf::String text;
 		sf::IntRect spriteRect;
 		sf::FloatRect rectBlock;
+		sf::Vector2f spritePos;
 		bool ghostly;
 	};
 	struct ObjectItemP
@@ -41,13 +43,13 @@ namespace Package
 		sf::String text;
 		sf::IntRect spriteRect;
 		sf::FloatRect rectBlock;
+		sf::Vector2f spritePos;
 		bool ghostly;
 	};
 	struct DoorP
 	{
-		sf::FloatRect barierBox;
-		Location loc;
-		unsigned nextRoom;
+		sf::FloatRect trigerBox;
+		unsigned int nextRoom{};
 		sf::Vector2f nextPos;
 	};
 	struct MapP
@@ -59,26 +61,6 @@ namespace Package
 		std::vector<ObjectItemP> objectsItemP;
 	};
 }
-
-class RoomReader
-{
-public:
-
-	static Package::MapP Read(const unsigned int roomNumber)
-	{
-		Package::MapP res;
-		std::string fileName = "Rooms/room" + std::to_string(roomNumber) + ".txt";
-
-		pugi::xml_document doc;
-		if(!doc.load_file(fileName.c_str()))
-			return res;
-
-
-
-		return res;
-	}
-
-};
 
 class ReadWrite
 {
@@ -245,104 +227,127 @@ public:
 		read.close();
 		return res;
 	}
+private:
+};
 
-	static Package::MapP ReadMap(const unsigned int nroom)
+class RoomReader
+{
+public:
+
+	static Package::MapP Read(const unsigned int roomNumber)
 	{
-		decltype(ReadMap(0)) res;
+		Package::MapP res;
+		std::string fileName = "RoomsXML/room" + std::to_string(roomNumber) + ".xml";
 
-		std::ifstream read("Rooms/room" + std::to_string(nroom) + ".txt");
-		std::string prs;
-		int pri;
-		unsigned int count;
+		pugi::xml_document doc;
+		if (!doc.load_file(fileName.c_str()))
+			return res;
 
-		std::getline(read, res.backgroundFile);
-		
-		read >> count;
-		for (unsigned int i = 0; i < count; ++i)
-		{
-			res.collisionP.push_back({});
-			ReadCollision(read, res.collisionP[i]);
-		}
+		res.backgroundFile = doc.child("room").child("background_texture").text().as_string();
 
-		read >> count;
-		for (unsigned int i = 0; i < count; ++i)
-		{
-			res.doorsP.push_back({});
-			ReadDoorP(read, res.doorsP[i]);
-		}
-
-		read >> count;
-		for (unsigned int i = 0; i < count; ++i)
-		{
-			res.objectsP.push_back({});
-			ReadObject(read, res.objectsP[i]);
-		}
-
-		read >> count;
-		for (unsigned int i = 0; i < count; ++i)
-		{
-			res.objectsP.push_back({});
-			ReadItemObject(read, res.objectsItemP[i]);
-		}
+		ReadCollisions(doc, res.collisionP);
+		ReadDoors(doc, res.doorsP);
+		ReadObjects(doc, res.objectsP);
+		ReadItemObjects(doc, res.objectsItemP);
 
 		return res;
 	}
 private:
-	static void ReadCollision(std::ifstream& read, sf::FloatRect& rect)
+	static void ReadCollisions(const pugi::xml_document& doc, std::vector<sf::FloatRect>& elements)
 	{
-		read >> rect.left >> rect.top >> rect.width >> rect.height;
-	}
-	static void ReadDoorP(std::ifstream& read, Package::DoorP& d)
-	{
-		read >> d.barierBox.left >> d.barierBox.top >> d.barierBox.width >> d.barierBox.height;
-		d.barierBox.top *= PIXELS_IN_BLOCK;
-		d.barierBox.left *= PIXELS_IN_BLOCK;
-		d.barierBox.width *= PIXELS_IN_BLOCK;
-		d.barierBox.height *= PIXELS_IN_BLOCK;
-
-		read >> d.nextRoom;
-		d.loc = static_cast<Location>(d.nextRoom);
-		read >> d.nextRoom;
-
-		read >> d.nextPos.x >> d.nextPos.y;
-	}
-	static void ReadObject(std::ifstream& read, Package::ObjectP& o)
-	{
-		read >> o.ID >> o.rectBlock.left >> o.rectBlock.top;
-		o.rectBlock.left *= PIXELS_IN_BLOCK;
-		o.rectBlock.top *= PIXELS_IN_BLOCK;
-		if (o.ID == 0)
+		elements.clear();
+		sf::FloatRect element;
+		for (auto elementNode : doc.child("room").child("collisions").children("element"))
 		{
-			read >> o.rectBlock.width >> o.rectBlock.height;
-			o.rectBlock.width *= PIXELS_IN_BLOCK;
-			o.rectBlock.height *= PIXELS_IN_BLOCK;
-			
-			o.ghostly = true;
-			o.spriteRect = {};
+			element.left	= elementNode.attribute("x").as_float() * PIXELS_IN_BLOCK;
+			element.top		= elementNode.attribute("y").as_float() * PIXELS_IN_BLOCK;
+			element.width	= elementNode.attribute("width").as_float() * PIXELS_IN_BLOCK;
+			element.height	= elementNode.attribute("height").as_float() * PIXELS_IN_BLOCK;
+			elements.push_back(element);
 		}
-		else
-		{
-			o.ghostly = false;
-			auto p = ReadObjectInfo(o.ID);
-			o.spriteRect = p.spriteRect;
-			o.rectBlock.width = p.barierBox.width;
-			o.rectBlock.height = p.barierBox.height;
-		}
-		(void)read.get(); (void)read.get();
-		o.text.clear();
-		ReadWrite::getlineToStopSymbol(read, o.text, '|');
-		o.text = Converter::UTF8ToUnicode(o.text);
 	}
-	static void ReadItemObject(std::ifstream& read, Package::ObjectItemP& o)
+	static void ReadDoors(const pugi::xml_document& doc, std::vector<Package::DoorP>& elements)
 	{
-		read >> o.itemID;
-		Package::ObjectP pr;
-		ReadObject(read, pr);
-		o.ghostly = pr.ghostly;
-		o.ID = pr.ID;
-		o.rectBlock = pr.rectBlock;
-		o.spriteRect = pr.spriteRect;
-		o.text = pr.text;
+		elements.clear();
+		Package::DoorP element;
+		for (auto elementNode : doc.child("room").child("doors").children("element"))
+		{
+			element.trigerBox.left = elementNode.attribute("x").as_float() * PIXELS_IN_BLOCK;
+			element.trigerBox.top = elementNode.attribute("y").as_float() * PIXELS_IN_BLOCK;
+			element.trigerBox.width = elementNode.attribute("width").as_float() * PIXELS_IN_BLOCK;
+			element.trigerBox.height = elementNode.attribute("height").as_float() * PIXELS_IN_BLOCK;
+			element.nextRoom = elementNode.attribute("nextRoom").as_uint() * PIXELS_IN_BLOCK;
+			element.nextPos.x = elementNode.attribute("newX").as_float() * PIXELS_IN_BLOCK;
+			element.nextPos.y = elementNode.attribute("newY").as_float() * PIXELS_IN_BLOCK;
+			elements.push_back(element);
+		}
 	}
+	static void ReadObjects(const pugi::xml_document& doc, std::vector<Package::ObjectP>& elements)
+	{
+		elements.clear();
+		Package::ObjectP element;
+		int gameDataLine{};
+		for (auto elementNode : doc.child("room").child("doors").children("element"))
+		{
+			gameDataLine = elementNode.attribute("gameDataLine").as_uint();
+			element.ID = elementNode.attribute("objectID").as_uint();
+			element.rectBlock.left = elementNode.attribute("x").as_float() * PIXELS_IN_BLOCK;
+			element.rectBlock.top = elementNode.attribute("y").as_float() * PIXELS_IN_BLOCK;
 
+			if (element.ID == 0)
+			{
+				element.rectBlock.width		= elementNode.attribute("width").as_float()		* PIXELS_IN_BLOCK;
+				element.rectBlock.height	= elementNode.attribute("height").as_float()	* PIXELS_IN_BLOCK;
+				element.spriteRect = {};
+				element.spritePos = {};
+				element.ghostly = true;
+			}
+			else
+			{
+				auto pr = ReadWrite::ReadObjectInfo(element.ID);
+				element.spritePos = {
+					element.rectBlock.left - pr.barierBox.left, element.rectBlock.top - pr.barierBox.top
+				};
+				element.spriteRect = pr.spriteRect;
+				element.rectBlock = pr.barierBox;
+				element.ghostly = false;
+			}
+			element.text = elementNode.attribute("text").as_string();
+			elements.push_back(element);
+		}
+	}
+	static void ReadItemObjects(const pugi::xml_document& doc, std::vector<Package::ObjectItemP>& elements)
+	{
+		elements.clear();
+		Package::ObjectItemP element;
+		int gameDataLine{};
+		for (auto elementNode : doc.child("room").child("doors").children("element"))
+		{
+			gameDataLine = elementNode.attribute("gameDataLine").as_uint();
+			element.ID = elementNode.attribute("objectID").as_uint();
+			element.rectBlock.left = elementNode.attribute("x").as_float() * PIXELS_IN_BLOCK;
+			element.rectBlock.top = elementNode.attribute("y").as_float() * PIXELS_IN_BLOCK;
+
+			if (element.ID == 0)
+			{
+				element.rectBlock.width = elementNode.attribute("width").as_float() * PIXELS_IN_BLOCK;
+				element.rectBlock.height = elementNode.attribute("height").as_float() * PIXELS_IN_BLOCK;
+				element.spriteRect = {};
+				element.spritePos = {};
+				element.ghostly = true;
+			}
+			else
+			{
+				auto pr = ReadWrite::ReadObjectInfo(element.ID);
+				element.spritePos = {
+					element.rectBlock.left - pr.barierBox.left, element.rectBlock.top - pr.barierBox.top
+				};
+				element.spriteRect = pr.spriteRect;
+				element.rectBlock = pr.barierBox;
+				element.ghostly = false;
+			}
+			element.text = elementNode.attribute("text").as_string();
+			elements.push_back(element);
+		}
+	}
 };

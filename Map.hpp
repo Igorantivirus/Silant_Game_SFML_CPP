@@ -42,6 +42,11 @@ public:
 
 		read.close();
 	}
+	void LoadFromFile2(Location loc, int num)
+	{
+		auto pac = RoomReader::Read(num);
+		SetPackage(pac);
+	}
 
 	#pragma region bool methods
 
@@ -106,6 +111,24 @@ public:
 		return iobjs;
 	}
 
+	void SetPackage(const Package::MapP& pac)
+	{
+		objs.clear();
+		iobjs.clear();
+		doors.clear();
+
+		texture.loadFromFile("Textures/" + pac.backgroundFile);
+		sprite.setTexture(texture);
+
+		for (const auto& i : pac.collisionP)
+			cols.Add(i);
+		for (const auto& i : pac.doorsP)
+			doors.push_back(i);
+		for (const auto& i : pac.objectsP)
+			objs.push_back({meneger, i});
+		for (const auto& i : pac.objectsItemP)
+			iobjs.push_back({meneger, i});
+	}	 
 	void Draw(sf::RenderWindow& window) const
 	{
 		window.draw(sprite);

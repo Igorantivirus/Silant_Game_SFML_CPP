@@ -15,7 +15,7 @@ public:
 	{
 		render.Zoom(0.25f);
 
-		map.LoadFromFile(loc, room);
+		map.LoadFromFile2(loc, room);
 		silant.SetFootCenterPosition(7 * PIXELS_IN_BLOCK, 7 * PIXELS_IN_BLOCK);
 		silant.StopRun();
 	}

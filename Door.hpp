@@ -12,6 +12,10 @@ class DoorObj
 {
 public:
 	DoorObj() {}
+	DoorObj(const Package::DoorP& package)
+	{
+		SetPackage(package);
+	}
 	DoorObj(const sf::Texture& texture, const sf::IntRect& irect) : sprite{ texture, irect } {}
 
 	bool Intersection(const sf::FloatRect& nrect) const
@@ -73,6 +77,13 @@ public:
 	void Draw(sf::RenderWindow& window)
 	{
 		window.draw(sprite);
+	}
+
+	void SetPackage(const Package::DoorP& pac)
+	{
+		newxPos = pac.nextPos;
+		nextNomer = pac.nextRoom;
+		rect = pac.trigerBox;
 	}
 
 	friend std::ifstream& operator>>(std::ifstream& fin, DoorObj& dobj)
