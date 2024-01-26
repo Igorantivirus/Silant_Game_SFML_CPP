@@ -56,6 +56,23 @@ public:
 		return converter.to_bytes(str.toUtf32());
 	}
 
+	static sf::String Win1251ToUnocide(const sf::String& str)
+	{
+		sf::String res = "";
+		for (size_t i = 0; i < str.getSize(); ++i)
+		{
+			if (str[i] >= 192 && str[i] <= 255)
+				res += static_cast<sf::Uint32>(str[i] + 848u);
+			else if (str[i] == 168)
+				res += 1025u;
+			else if (str[i] == 184)
+				res += 1105u;
+			else
+				res += str[i];
+		}
+		return res;
+	}
+
 	static sf::String KeyToString(const sf::Keyboard::Key key)
 	{
 		if (key >= 0 && key <= 25)

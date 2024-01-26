@@ -312,7 +312,7 @@ private:
 				};
 				element.ghostly = false;
 			}
-			element.text = elementNode.attribute("text").as_string();
+			element.text = Converter::Win1251ToUnocide(elementNode.attribute("text").as_string());
 			elements.push_back(element);
 		}
 	}
@@ -348,7 +348,7 @@ private:
 				};
 				element.ghostly = false;
 			}
-			element.text = elementNode.attribute("text").as_string();
+			element.text = Converter::Win1251ToUnocide(elementNode.attribute("text").as_string());
 			elements.push_back(element);
 		}
 	}
