@@ -113,12 +113,15 @@ public:
 
 	void SetPackage(const Package::MapP& pac)
 	{
+		if (pac.backgroundFile.empty())
+			return;
 		objs.clear();
 		iobjs.clear();
 		doors.clear();
 
-		texture.loadFromFile("Textures/" + pac.backgroundFile);
-		sprite.setTexture(texture);
+		LoadTexture(pac.backgroundFile);
+		/*texture.loadFromFile("Textures/" + pac.backgroundFile);
+		sprite.setTexture(texture);*/
 
 		for (const auto& i : pac.collisionP)
 			cols.Add(i);
@@ -145,6 +148,15 @@ private:
 
 	sf::Texture texture;
 	sf::Sprite sprite;
+
+	void LoadTexture(const std::string& fName)
+	{
+		std::string file = "Textures\\" + fName;
+		texture.loadFromFile(file);
+		sf::IntRect pr = { 0, 0, toInt(texture.getSize().x), toInt(texture.getSize().y) };
+		sprite.setTextureRect(pr);
+		sprite.setTexture(texture);
+	}
 
 	void LoadTexture(Location loc, const std::string& name)
 	{

@@ -19,12 +19,11 @@
 
 	<!-- Äâåðè -->
     <doors>
-        <element x="0"		y="5" width="1" height="1" nextRoom="2" newX="1.5"	newY="5.5"	/>
-        <element x="17"		y="5" width="1" height="1" nextRoom="2" newX="19"	newY="5.5"	/>
-		<element x="0"		y="5" width="1" height="1" nextRoom="2" newX="1.5"	newY="5.5"	/>
-		<element x="17"		y="5" width="1" height="1" nextRoom="2" newX="19"	newY="5.5"	/>
-		<element x="16.8"	y="3" width="1" height="1" nextRoom="3" newX="3"	newY="4"	/>
-		<element x="3"		y="1" width="1" height="2" nextRoom="5" newX="1.5"	newY="5"	/>
+		<element x="0"		y="5"	width="1"	height="1" nextRoom="2"	newX="1.5"	newY="5.5"	/>
+		<element x="17"		y="5"	width="1"	height="1" nextRoom="2"	newX="19"	newY="5.5"	/>
+		<element x="16.8"	y="3"	width="1"	height="1" nextRoom="3"	newX="3"	newY="4"	/>
+		<element x="3"		y="1"	width="1"	height="2" nextRoom="5"	newX="1.5"	newY="5"	/>
+		
     </doors>
 
 	<!-- Îáúåêòû -->

@@ -5,21 +5,23 @@
 
 	<!-- Колизии -->
     <collisions>
-		<element x="0"	y="0"	width="21"	height="2"	/>	
-		<element x="0"	y="2"	width="3"	height="1"	/>	
-		<element x="5"	y="2"	width="3"	height="1"	/>	
-		<element x="10"	y="2"	width="7"	height="1"	/>	
-		<element x="19"	y="2"	width="2"	height="1"	/>	
-		<element x="0"	y="3"	width="1"	height="2"	/>	
-		<element x="20"	y="3"	width="1"	height="2"	/>	
-		<element x="0"	y="6"	width="1"	height="4"	/>	
-		<element x="0"	y="6"	width="6"	height="1"	/>	
-		<element x="3"	y="7"	width="1"	height="1"	/>	
-		<element x="5"	y="7"	width="1"	height="1"	/>	
-		<element x="20"	y="6"	width="1"	height="4"	/>	
-		<element x="16"	y="6"	width="3"	height="1"	/>	
-		<element x="16"	y="7"	width="1"	height="2"	/>	
-		<element x="0"	y="9"	width="21"	height="1"	/>	
+	<!--
+		<element x="0"	y="0"	width="21"	height="2"	/>
+		<element x="0"	y="2"	width="3"	height="1"	/>
+		<element x="5"	y="2"	width="3"	height="1"	/>
+		<element x="10"	y="2"	width="7"	height="1"	/>
+		<element x="19"	y="2"	width="2"	height="1"	/>
+		<element x="0"	y="3"	width="1"	height="2"	/>
+		<element x="20"	y="3"	width="1"	height="2"	/>
+		<element x="0"	y="6"	width="1"	height="4"	/>
+		<element x="0"	y="6"	width="6"	height="1"	/>
+		<element x="3"	y="7"	width="1"	height="1"	/>
+		<element x="5"	y="7"	width="1"	height="1"	/>
+		<element x="20"	y="6"	width="1"	height="4"	/>
+		<element x="16"	y="6"	width="3"	height="1"	/>
+		<element x="16"	y="7"	width="1"	height="2"	/>
+		<element x="0"	y="9"	width="21"	height="1"	/>
+		-->
     </collisions>
 
 	<!-- Двери -->

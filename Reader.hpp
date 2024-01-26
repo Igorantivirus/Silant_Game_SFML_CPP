@@ -253,7 +253,7 @@ public:
 		ReadCollisions(doc, res.collisionP);
 		ReadDoors(doc, res.doorsP);
 		ReadObjects(doc, res.objectsP);
-		ReadItemObjects(doc, res.objectsItemP);
+		ReadObjectsItem(doc, res.objectsItemP);
 
 		return res;
 	}
@@ -281,7 +281,7 @@ private:
 			element.trigerBox.top = elementNode.attribute("y").as_float() * PIXELS_IN_BLOCK;
 			element.trigerBox.width = elementNode.attribute("width").as_float() * PIXELS_IN_BLOCK;
 			element.trigerBox.height = elementNode.attribute("height").as_float() * PIXELS_IN_BLOCK;
-			element.nextRoom = elementNode.attribute("nextRoom").as_uint() * PIXELS_IN_BLOCK;
+			element.nextRoom = elementNode.attribute("nextRoom").as_uint();
 			element.nextPos.x = elementNode.attribute("newX").as_float() * PIXELS_IN_BLOCK;
 			element.nextPos.y = elementNode.attribute("newY").as_float() * PIXELS_IN_BLOCK;
 			elements.push_back(element);
@@ -304,34 +304,34 @@ private:
 				element.rectBlock.width		= elementNode.attribute("width").as_float()		* PIXELS_IN_BLOCK;
 				element.rectBlock.height	= elementNode.attribute("height").as_float()	* PIXELS_IN_BLOCK;
 				element.spriteRect = {};
-				element.spritePos = {};
+				element.spritePos = { element.rectBlock.left, element.rectBlock.top };
 				element.ghostly = true;
 			}
 			else
 			{
 				auto pr = ReadWrite::ReadObjectInfo(element.ID);
-				element.spritePos = {
-					element.rectBlock.left - pr.barierBox.left, element.rectBlock.top - pr.barierBox.top
-				};
 				element.spriteRect = pr.spriteRect;
 				element.rectBlock.width = pr.barierBox.width;
 				element.rectBlock.height = pr.barierBox.height;
-				//element.rectBlock = pr.barierBox;
+				element.spritePos = {
+					element.rectBlock.left - pr.barierBox.left, element.rectBlock.top - pr.barierBox.top
+				};
 				element.ghostly = false;
 			}
 			element.text = elementNode.attribute("text").as_string();
 			elements.push_back(element);
 		}
 	}
-	static void ReadItemObjects(const pugi::xml_document& doc, std::vector<Package::ObjectItemP>& elements)
+	static void ReadObjectsItem(const pugi::xml_document& doc, std::vector<Package::ObjectItemP>& elements)
 	{
 		elements.clear();
 		Package::ObjectItemP element;
 		int gameDataLine{};
-		for (auto elementNode : doc.child("room").child("doors").children("element"))
+		for (auto elementNode : doc.child("room").child("itemObjects").children("element"))
 		{
 			gameDataLine = elementNode.attribute("gameDataLine").as_uint();
 			element.ID = elementNode.attribute("objectID").as_uint();
+			element.itemID = elementNode.attribute("itemID").as_uint();
 			element.rectBlock.left = elementNode.attribute("x").as_float() * PIXELS_IN_BLOCK;
 			element.rectBlock.top = elementNode.attribute("y").as_float() * PIXELS_IN_BLOCK;
 
@@ -340,17 +340,18 @@ private:
 				element.rectBlock.width = elementNode.attribute("width").as_float() * PIXELS_IN_BLOCK;
 				element.rectBlock.height = elementNode.attribute("height").as_float() * PIXELS_IN_BLOCK;
 				element.spriteRect = {};
-				element.spritePos = {};
+				element.spritePos = { element.rectBlock.left, element.rectBlock.top };
 				element.ghostly = true;
 			}
 			else
 			{
 				auto pr = ReadWrite::ReadObjectInfo(element.ID);
+				element.spriteRect = pr.spriteRect;
+				element.rectBlock.width = pr.barierBox.width;
+				element.rectBlock.height = pr.barierBox.height;
 				element.spritePos = {
 					element.rectBlock.left - pr.barierBox.left, element.rectBlock.top - pr.barierBox.top
 				};
-				element.spriteRect = pr.spriteRect;
-				element.rectBlock = pr.barierBox;
 				element.ghostly = false;
 			}
 			element.text = elementNode.attribute("text").as_string();

@@ -65,7 +65,7 @@ private://методы
 		{
 			render.BlackWindow();
 			auto pr = map.GetDoorAt(pos);
-			map.LoadFromFile(pr.GetNextLock(), pr.GetNextNomer());
+			map.LoadFromFile2(pr.GetNextLock(), pr.GetNextNomer());
 			silant.SetFootCenterPosition(pr.GetNextPos());
 			silant.StopRun();
 		}
