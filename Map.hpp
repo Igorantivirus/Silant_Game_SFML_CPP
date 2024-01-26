@@ -1,7 +1,6 @@
 #pragma once
 
 #include<vector>
-#include<fstream>
 #include<string>
 
 #include<SFML\Graphics.hpp>
@@ -21,28 +20,7 @@ public:
 		meneger{meneger}
 	{}
 
-	void LoadFromFile(Location loc, int num)
-	{
-		std::string filename = NameOfLocSTD(loc) + "\\room" + std::to_string(num) + ".txt";
-		std::ifstream read(filename);
-		if (!read.is_open())
-		{
-			std::cout << "Room " << filename << " cnot open!\n";
-			return;
-		}
-
-		std::string pr;
-		getline(read, pr);
-		LoadTexture(loc, pr);
-
-		LoadColision(read);
-		LoadDoors(read);
-		LoadObjects(read);
-		LoadItemObjects(read);
-
-		read.close();
-	}
-	void LoadFromFile2(Location loc, int num)
+	void LoadFromFile(const int num)
 	{
 		auto pac = RoomReader::Read(num);
 		SetPackage(pac);
@@ -120,9 +98,7 @@ public:
 		doors.clear();
 		cols.Clear();
 
-		LoadTexture(pac.backgroundFile);
-		/*texture.loadFromFile("Textures/" + pac.backgroundFile);
-		sprite.setTexture(texture);*/
+		sprite = meneger.OpenNewBackground(pac.backgroundFile);
 
 		for (const auto& i : pac.collisionP)
 			cols.Add(i);
@@ -141,106 +117,12 @@ public:
 private:
 	ResourceMeneger& meneger;
 
-
 	std::vector<Object> objs;
 	std::vector<ItemObj> iobjs;
 	std::vector<DoorObj> doors;
 	CollisionMap cols;
 
-	sf::Texture texture;
 	sf::Sprite sprite;
-
-	void LoadTexture(const std::string& fName)
-	{
-		std::string file = "Textures\\" + fName;
-		texture.loadFromFile(file);
-		sf::IntRect pr = { 0, 0, toInt(texture.getSize().x), toInt(texture.getSize().y) };
-		sprite.setTextureRect(pr);
-		sprite.setTexture(texture);
-	}
-
-	void LoadTexture(Location loc, const std::string& name)
-	{
-		std::string file = "Textures\\" + name;
-		texture.loadFromFile(file);
-		sf::IntRect pr = { 0, 0, toInt(texture.getSize().x), toInt(texture.getSize().y) };
-		sprite.setTextureRect(pr);
-		sprite.setTexture(texture);
-	}
-
-	void LoadColision(std::ifstream& read)
-	{
-		int count;
-		read >> count;
-		cols.Clear();
-		sf::FloatRect prRect;
-		std::string pr;
-		for (float i = 0, x, y, w, h; i < count; ++i)
-		{
-			read >> x >> y >> w >> h;
-			prRect.left = x * PIXELS_IN_BLOCK;
-			prRect.top = y * PIXELS_IN_BLOCK;
-			prRect.width = w * PIXELS_IN_BLOCK;
-			prRect.height = h * PIXELS_IN_BLOCK;
-			cols.Add(prRect);
-			getline(read, pr);
-		}
-	}
-
-	void LoadDoors(std::ifstream& read)
-	{
-		int count;
-		std::string pr;
-		read >> count;
-		doors.clear();
-		for (int i = 0; i < count; ++i)
-		{
-			doors.push_back({});
-			read >> doors[i];
-			std::getline(read, pr);
-		}
-	}
-
-	void LoadObjects(std::ifstream& read)
-	{
-		int count;
-		read >> count;
-		objs.clear();
-		objs.reserve(count);
-		std::string pr;
-		for (int i = 0, j = 0, gd; i < count; ++i)
-		{
-			read >> gd;
-			if (gd != 0 && ReadWrite::GameDataReader(gd) != 0)
-			{
-				std::getline(read, pr);
-				continue;
-			}
-			objs.push_back({meneger});
-			read >> objs[j++];
-			std::getline(read, pr);
-		}
-	}
-
-	void LoadItemObjects(std::ifstream& read)
-	{
-		iobjs.clear();
-		if (!read.is_open() || read.eof())
-			return;
-		int count, pr;
-		read >> count;
-		iobjs.reserve(count);
-		std::string prs;
-		for (int i = 0; i < count; ++i)
-		{
-			read >> pr;
-			if (!ItemObj::IsNullInData(pr))
-				continue;
-			iobjs.push_back({meneger});
-			read >> iobjs[i];
-			std::getline(read, prs);
-		}
-	}
 
 	bool InLockDoors(const sf::FloatRect& rect) const
 	{
@@ -286,5 +168,4 @@ private:
 				return true;
 		return false;
 	}
-
 };

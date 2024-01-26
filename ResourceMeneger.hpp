@@ -2,6 +2,8 @@
 
 #include<SFML/Graphics.hpp>
 
+#include"Converter.hpp"
+
 #define MAIN_GAME_FONT "Settings/constan.ttf"
 #define MONO_GAME_FONT "Settings/consola.ttf"
 
@@ -58,6 +60,19 @@ public:
 	{
 		return objectsTexture;
 	}
+	const sf::Texture& GetBackgroundTexture() const
+	{
+		return backgroundTexture;
+	}
+
+	sf::Sprite OpenNewBackground(const std::string& fName)
+	{
+		std::string file = "Textures\\" + fName;
+		backgroundTexture.loadFromFile(file);
+		//sf::IntRect pr = { 0, 0, toInt(backgroundTexture.getSize().x), toInt(backgroundTexture.getSize().y) };
+		sf::Sprite sprite{backgroundTexture};
+		return sprite;
+	}
 
 private:
 	sf::Font gameFont;
@@ -66,5 +81,7 @@ private:
 	sf::Texture dialogesTexture;
 	sf::Texture playerTexture;
 	sf::Texture objectsTexture;
+
+	sf::Texture backgroundTexture;
 
 };

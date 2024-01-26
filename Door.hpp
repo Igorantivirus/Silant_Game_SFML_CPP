@@ -36,15 +36,6 @@ public:
 
 	#pragma region Get Set
 
-	Location GetNextLock() const
-	{
-		return nextLock;
-	}
-	void SetNextLock(Location loc)
-	{
-		nextLock = loc;
-	}
-
 	sf::Vector2f GetNextPos() const
 	{
 		return newxPos;
@@ -67,12 +58,12 @@ public:
 	{
 		return nextNomer;
 	}
-	void SetNextNomer(int n)
+	void SetNextNomer(const unsigned int n)
 	{
 		nextNomer = 0;
 	}
 
-#pragma endregion
+	#pragma endregion
 
 	void Draw(sf::RenderWindow& window)
 	{
@@ -86,35 +77,13 @@ public:
 		rect = pac.trigerBox;
 	}
 
-	friend std::ifstream& operator>>(std::ifstream& fin, DoorObj& dobj)
-	{
-		float x, y;
-		fin >> x >> y;
-		dobj.sprite.setPosition(x * PIXELS_IN_BLOCK, y * PIXELS_IN_BLOCK);
-		dobj.rect.left = x * PIXELS_IN_BLOCK;
-		dobj.rect.top = y * PIXELS_IN_BLOCK;
-
-		fin >> x >> y;
-		dobj.rect.width = x * PIXELS_IN_BLOCK;
-		dobj.rect.height = y * PIXELS_IN_BLOCK;
-		int pr;
-		fin >> pr;
-		dobj.nextLock = static_cast<Location>(pr);
-		fin >> pr;
-		dobj.nextNomer = pr;
-		fin >> x >> y;
-		dobj.newxPos = { x * PIXELS_IN_BLOCK, y * PIXELS_IN_BLOCK };
-		return fin;
-	}
-
 private:
 	sf::Sprite sprite;
 
 	bool lock = false;
 	sf::FloatRect rect{};
 
-	Location nextLock = Location::Default;
-	int nextNomer{};
+	unsigned int nextNomer{};
 	sf::Vector2f newxPos{};
 
 };

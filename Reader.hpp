@@ -224,11 +224,6 @@ public:
 			res.spriteRect.left >> res.spriteRect.top >> res.spriteRect.width >> res.spriteRect.height >>
 			res.barierBox.width >> res.barierBox.height >>res.barierBox.left >> res.barierBox.top;
 
-		/*res.barierBox.left *= PIXELS_IN_BLOCK;
-		res.barierBox.width *= PIXELS_IN_BLOCK;
-		res.barierBox.top *= PIXELS_IN_BLOCK;
-		res.barierBox.height *= PIXELS_IN_BLOCK;*/
-
 		read.close();
 		return res;
 	}

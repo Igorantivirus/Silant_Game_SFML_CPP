@@ -26,7 +26,7 @@ public:
 				render.CloseWindow();
 			else if (res == MainMenu::Game)
 			{
-				MainGame game(render, keyboard, Location::Default, 1);
+				MainGame game(render, keyboard, 1);
 				game.Run();
 			}
 			else if (res == MainMenu::Settings)

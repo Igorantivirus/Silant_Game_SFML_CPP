@@ -10,12 +10,12 @@
 class MainGame
 {
 public:
-	MainGame(Render& render, KeyBoard& keyboard, Location loc, int room) :
+	MainGame(Render& render, KeyBoard& keyboard, int room) :
 		meneger{}, render{ render }, keyBoard{ keyboard }, silant{meneger}, dielogeM { silant.GetInfoLink(), meneger }, map{meneger}
 	{
 		render.Zoom(0.25f);
 
-		map.LoadFromFile2(loc, room);
+		map.LoadFromFile(room);
 		silant.SetFootCenterPosition(7 * PIXELS_IN_BLOCK, 7 * PIXELS_IN_BLOCK);
 		silant.StopRun();
 	}
@@ -65,7 +65,7 @@ private://методы
 		{
 			render.BlackWindow();
 			auto pr = map.GetDoorAt(pos);
-			map.LoadFromFile2(pr.GetNextLock(), pr.GetNextNomer());
+			map.LoadFromFile(pr.GetNextNomer());
 			silant.SetFootCenterPosition(pr.GetNextPos());
 			silant.StopRun();
 		}
