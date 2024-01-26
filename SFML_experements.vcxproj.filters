@@ -13,72 +13,90 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Файлы заголовков\Helpers">
+      <UniqueIdentifier>{ad3cbb40-acd8-4372-b95b-033d763ed82f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\DialogeWindows">
+      <UniqueIdentifier>{becf4da3-1336-407c-84c2-ed3d5b10856f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\EngineBasics">
+      <UniqueIdentifier>{8e06892a-27d8-4674-a461-45994d1c12c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\RoomBasics">
+      <UniqueIdentifier>{7a4fa327-ca6d-45a4-831d-7d01229afb38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\PlayerBasics">
+      <UniqueIdentifier>{5e1f03b9-3382-4632-ab5b-883a72252f68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\GameBasics">
+      <UniqueIdentifier>{158166bb-1686-4ea8-9f9d-4043b392a0c7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Файлы ресурсов</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Lybrorys\jsoncpp\dist\jsoncpp.cpp">
+    <ClCompile Include="..\..\Lybrorys\pugixml-1.14\src\pugixml.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Player.hpp">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="Enums.hpp">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="Helper.hpp">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="Map.hpp">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="Render.hpp">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="SilantGame.hpp">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="KeyBoard.hpp">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="Inventory.hpp">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="MainGame.hpp">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="Reader.hpp">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="AllMenu.hpp">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="Converter.hpp">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="DialogeMutiWindow.hpp">
-      <Filter>Файлы заголовков</Filter>
+    <ClInclude Include="InventoryWindow.hpp">
+      <Filter>Файлы заголовков\DialogeWindows</Filter>
     </ClInclude>
     <ClInclude Include="DIalogeWindow.hpp">
-      <Filter>Файлы заголовков</Filter>
+      <Filter>Файлы заголовков\DialogeWindows</Filter>
     </ClInclude>
-    <ClInclude Include="InventoryWindow.hpp">
-      <Filter>Файлы заголовков</Filter>
+    <ClInclude Include="DialogeMutiWindow.hpp">
+      <Filter>Файлы заголовков\DialogeWindows</Filter>
+    </ClInclude>
+    <ClInclude Include="Converter.hpp">
+      <Filter>Файлы заголовков\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Enums.hpp">
+      <Filter>Файлы заголовков\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Helper.hpp">
+      <Filter>Файлы заголовков\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Reader.hpp">
+      <Filter>Файлы заголовков\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyBoard.hpp">
+      <Filter>Файлы заголовков\EngineBasics</Filter>
     </ClInclude>
     <ClInclude Include="ResourceMeneger.hpp">
-      <Filter>Файлы заголовков</Filter>
+      <Filter>Файлы заголовков\EngineBasics</Filter>
+    </ClInclude>
+    <ClInclude Include="Render.hpp">
+      <Filter>Файлы заголовков\EngineBasics</Filter>
+    </ClInclude>
+    <ClInclude Include="Map.hpp">
+      <Filter>Файлы заголовков\RoomBasics</Filter>
     </ClInclude>
     <ClInclude Include="Object.hpp">
-      <Filter>Файлы заголовков</Filter>
+      <Filter>Файлы заголовков\RoomBasics</Filter>
     </ClInclude>
     <ClInclude Include="Door.hpp">
-      <Filter>Файлы заголовков</Filter>
+      <Filter>Файлы заголовков\RoomBasics</Filter>
     </ClInclude>
     <ClInclude Include="CollisionMap.hpp">
-      <Filter>Файлы заголовков</Filter>
+      <Filter>Файлы заголовков\RoomBasics</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.hpp">
+      <Filter>Файлы заголовков\PlayerBasics</Filter>
+    </ClInclude>
+    <ClInclude Include="Inventory.hpp">
+      <Filter>Файлы заголовков\PlayerBasics</Filter>
+    </ClInclude>
+    <ClInclude Include="SilantGame.hpp">
+      <Filter>Файлы заголовков\GameBasics</Filter>
+    </ClInclude>
+    <ClInclude Include="MainGame.hpp">
+      <Filter>Файлы заголовков\GameBasics</Filter>
+    </ClInclude>
+    <ClInclude Include="AllMenu.hpp">
+      <Filter>Файлы заголовков\GameBasics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
