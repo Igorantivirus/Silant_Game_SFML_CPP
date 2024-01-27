@@ -10,6 +10,13 @@
 class DialogeWindow
 {
 public:
+	enum class Result : char
+	{
+		False,
+		True,
+		None
+	};
+public:
 	DialogeWindow(const ResourceMeneger& meneger) :
 		sprite{meneger.GetDiaogeWindowSprite()}
 	{
@@ -32,6 +39,7 @@ public:
 
 	void Ask2(const sf::String& txtA, const sf::String& txtB)
 	{
+		lastRes = Result::None;
 		isActive = true;
 		waitNext = false;
 		isAsk = true;
@@ -44,6 +52,7 @@ public:
 
 	void Ask(const sf::String& txt)
 	{
+		lastRes = Result::None;
 		isActive = true;
 		waitNext = false;
 		isAsk = true;
@@ -140,7 +149,7 @@ public:
 			if (IsFullEnter())
 			{
 				if (isAsk)
-					Ask2(L"Да", L"Нет");
+					Ask2(L"Нет", L"Да");
 				else
 					isActive = false;
 			}
@@ -154,12 +163,20 @@ public:
 			if (keyBoard.IsDownClick())
 				caret += 1;
 			if (IsFullEnter() && keyBoard.IsNextClick())
+			{
+				lastRes = static_cast<Result>(caret);
 				isActive = false;
+			}
 		}
 	}
 	short GetKaretResult() const
 	{
 		return caret;
+	}
+
+	Result GetLastResult() const
+	{
+		return lastRes;
 	}
 
 	void Draw(sf::RenderWindow& window) const
@@ -187,6 +204,8 @@ private:
 	bool isDialoge = false;
 	bool isAsk = false;
 	bool caret = 0;
+
+	Result lastRes = Result::None;
 
 private://methods
 

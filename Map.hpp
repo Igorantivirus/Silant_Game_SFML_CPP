@@ -24,6 +24,7 @@ public:
 	{
 		auto pac = RoomReader::Read(num);
 		SetPackage(pac);
+		waitItemIndex = -1;
 	}
 
 	#pragma region bool methods
@@ -48,12 +49,14 @@ public:
 			}
 		return false;
 	}
-	bool HaveIntersectionWithIObjs(const sf::Vector2f pos, sf::String& str) const
+	bool HaveIntersectionWithIObjs(const sf::Vector2f pos, sf::String& str, int& ind) const
 	{
+		ind = -1;
 		for (const auto& i : iobjs)
 			if (i.Contain(pos))
 			{
 				str = i.GetText();
+				ind = &i - &iobjs[0];
 				return true;
 			}
 		return false;
@@ -87,6 +90,24 @@ public:
 	const std::vector<ItemObj>& GetIObjs() const
 	{
 		return iobjs;
+	}
+
+	void SetWaitItemIndex(const int index)
+	{
+		if (index >= iobjs.size())
+			waitItemIndex = -1;
+		else
+			waitItemIndex = index;
+	}
+	const int GetWaitItemInd() const
+	{
+		return waitItemIndex;
+	}
+	void DeleteIObjAtInd()
+	{
+		if (waitItemIndex >= 0 && waitItemIndex < iobjs.size())
+			iobjs.erase(iobjs.begin() + waitItemIndex, iobjs.begin() + waitItemIndex + 1);
+		waitItemIndex = -1;
 	}
 
 	void SetPackage(const Package::MapP& pac)
@@ -123,6 +144,8 @@ private:
 	CollisionMap cols;
 
 	sf::Sprite sprite;
+
+	int waitItemIndex = -1;
 
 	bool InLockDoors(const sf::FloatRect& rect) const
 	{

@@ -32,6 +32,11 @@ public:
 		return dialoge.GetKaretResult();
 	}
 
+	DialogeWindow::Result GetLastResult() const
+	{
+		return dialoge.GetLastResult();
+	}
+
 	bool IsActive() const
 	{
 		return dialoge.IsAvtive() || invent.IsActive();

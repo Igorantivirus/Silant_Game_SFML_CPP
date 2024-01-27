@@ -43,6 +43,7 @@ private://параметры
 	Player silant;
 
 	unsigned short ticks = 0;
+	
 
 private://методы
 
@@ -92,10 +93,14 @@ private://методы
 			if (keyBoard.IsNextClick())
 			{
 				sf::String txt;
+				int ind;
 				if (map.HaveIntersectionWithObjs(silant.GetViewPosition(), txt) && !txt.isEmpty())
 					dielogeM.RunDialoge(txt);
-				else if (map.HaveIntersectionWithIObjs(silant.GetViewPosition(), txt) && !txt.isEmpty())
+				else if (map.HaveIntersectionWithIObjs(silant.GetViewPosition(), txt, ind) && !txt.isEmpty())
+				{
+					map.SetWaitItemIndex(ind);
 					dielogeM.RunAsk(txt);
+				}
 			}
 			else if (keyBoard.IsInventoryClick())
 				dielogeM.RunInventory();
@@ -125,6 +130,17 @@ private://методы
 		if (map.InBocks(silant.GetBarierBox() + sf::Vector2f{silant.GetNextX(), 0.f}))
 			silant.SetAspirX(0.f);
 		silant.UpdatePosition();
+
+		if (map.GetWaitItemInd() > -1 && !dielogeM.IsActive() && dielogeM.GetCaretResult() == 1)
+		{
+			if (!silant.AddItem(map.GetIObjs()[map.GetWaitItemInd()].GetIDOfItem()))
+			{
+				dielogeM.RunDialoge(L"У заполнен инвентарь!");
+				map.SetWaitItemIndex(-1);
+			}
+			else
+				map.DeleteIObjAtInd();
+		}
 
 		if(ticks % 150 == 0)
 			silant.UpdateAnum();

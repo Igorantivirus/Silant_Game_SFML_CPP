@@ -55,8 +55,24 @@ public:
 
 		itm.LoadAtID(5);
 		info.inventory.Add(itm);
+		info.inventory.Add(itm);
+		info.inventory.Add(itm);
+		info.inventory.Add(itm);
+		info.inventory.Add(itm);
+		info.inventory.Add(itm);
 
 	}
+
+	#pragma region Inventory
+
+	bool AddItem(const unsigned int iID)
+	{
+		Item it;
+		it.LoadAtID(iID);
+		return info.inventory.Add(it);
+	}
+
+	#pragma endregion
 
 	#pragma region SetGet
 
@@ -201,7 +217,6 @@ public:
 	{
 		aspiratPos.y = y;
 	}
-
 
 	#pragma endregion
 
