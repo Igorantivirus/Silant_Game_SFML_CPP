@@ -16,7 +16,7 @@
 
 #define GAMEDATA_FILE "gamedata.txt"
 
-#define OBJECTTEXTURS_INFO "InfoFiles\\objectsinfo.txt"
+#define OBJECTTEXTURS_INFO "InfoFiles/objectsInfo.xml"
 
 #define ITEMS_INFO_FILE "InfoFiles/items.xml"
 
@@ -230,20 +230,45 @@ public:
 	{
 		Package::ObjP res;
 
-		std::ifstream read(OBJECTTEXTURS_INFO);
-		std::string pr;
-		for (unsigned i = 0u; i < ID; ++i)
-			std::getline(read, pr);
+		pugi::xml_document doc;
+		pugi::xml_parse_result openRes = doc.load_file(OBJECTTEXTURS_INFO);
+		if (!openRes)
+		{
+			std::cout << "Object info file is not open. Error: " << openRes.description() << '\n';
+			return res;
+		}
 
-		read >> 
-			res.ID >>
-			res.spriteRect.left >> res.spriteRect.top >> res.spriteRect.width >> res.spriteRect.height >>
-			res.barierBox.width >> res.barierBox.height >>res.barierBox.left >> res.barierBox.top;
+		std::string elementName = "object" + std::to_string(ID);
+		pugi::xml_node itemNode = doc.child("objects").child(elementName.c_str());
 
-		read.close();
+		if (itemNode.empty()) {
+			std::cout << "Object with ID " << ID << " not found.\n";
+			return res;
+		}
+
+		res.ID = ID;
+		res.barierBox = ReadRectFromXMLNode(itemNode.child("hitbox"));
+		auto pr = ReadRectFromXMLNode(itemNode.child("texture"));
+		res.spriteRect.left = toInt(pr.left);
+		res.spriteRect.top = toInt(pr.top);
+		res.spriteRect.width = toInt(pr.width);
+		res.spriteRect.height = toInt(pr.height);
+
 		return res;
 	}
+
 private:
+	static sf::FloatRect ReadRectFromXMLNode(const pugi::xml_node& nodeRect)
+	{
+		sf::FloatRect res;
+
+		res.left	= nodeRect.attribute("x").as_int();
+		res.top		= nodeRect.attribute("y").as_int();
+		res.width	= nodeRect.attribute("width").as_int();
+		res.height	= nodeRect.attribute("height").as_int();
+
+		return res;
+	}
 };
 
 class RoomReader

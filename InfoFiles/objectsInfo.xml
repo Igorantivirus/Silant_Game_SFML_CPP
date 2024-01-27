@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<objects>
+	<object1>
+        <texture x="0" y="0" width="20" height="37" />
+        <hitbox width="19" height="10" x="0" y="29" />
+    </object1>
+	
+    <object2>
+        <texture x="21" y="0" width="28" height="22" />
+        <hitbox width="15" height="0" x="7" y="28" />
+    </object2>
+	
+    <object3>
+        <texture x="21" y="22" width="28" height="28" />
+        <hitbox width="28" height="13" x="0" y="16" />
+    </object3>
+	
+    <object4>
+        <texture x="50" y="0" width="17" height="56" />
+        <hitbox width="17" height="17" x="0" y="43" />
+    </object4>
+	
+    <object5>
+        <texture x="0" y="51" width="45" height="26" />
+        <hitbox width="45" height="7" x="0" y="19" />
+    </object5>
+	
+    <object6>
+        <texture x="68" y="0" width="66" height="46" />
+        <hitbox width="66" height="12" x="0" y="36" />
+    </object6>
+	
+    <object7>
+        <texture x="67" y="46" width="43" height="31" />
+        <hitbox width="43" height="5" x="0" y="26" />
+    </object7>
+	
+</objects>
