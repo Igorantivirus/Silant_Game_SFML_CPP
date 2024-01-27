@@ -55,11 +55,6 @@ public:
 
 		itm.LoadAtID(5);
 		info.inventory.Add(itm);
-		info.inventory.Add(itm);
-		info.inventory.Add(itm);
-		info.inventory.Add(itm);
-		info.inventory.Add(itm);
-		info.inventory.Add(itm);
 
 	}
 

@@ -8,6 +8,8 @@
 #include<SFMLmyplus/out.hpp>
 using namespace out;
 
+using TypeID = unsigned short;
+
 template<typename type>
 sf::Rect<type> operator+(const sf::Rect<type>& left, const sf::Vector2<type> right)
 {

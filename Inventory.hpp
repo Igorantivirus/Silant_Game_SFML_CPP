@@ -8,8 +8,6 @@
 
 #include"Reader.hpp"
 
-#define ITEMS_INFO_PATH "InfoFiles/items.txt"
-
 class Item
 {
 public:
@@ -23,6 +21,14 @@ public:
 	};
 public:
 	Item() {}
+	Item(const unsigned short ID)
+	{
+		LoadAtID(ID);
+	}
+	Item(const Package::ItemP& pac)
+	{
+		SetPackage(pac);
+	}
 	Item(const Item& other) :
 		ID{other.ID},
 		type{other.type},
@@ -100,45 +106,25 @@ public:
 		return arrmorPls;
 	}
 
-	friend std::ifstream& operator>>(std::ifstream& fin, Item& i)
-	{
-		fin >> i.ID;
-		i.LoadAtID(i.ID);
-		return fin;
-	}
-
 	void LoadAtID(unsigned short newID)
 	{
-		if (newID == 0)
-		{
-			ID = 0;
-			name = seeInf = useInf = brkInf = "";
-			healthPls = borodaPls = damagePls = arrmorPls = 0;
-			return;
-		}
-		std::ifstream read(ITEMS_INFO_PATH);
+		SetPackage(ItemReader::ReadItem(newID));
+	}
 
-		std::string pr;
-		for (unsigned short i = 0; i < newID; ++i)
-			std::getline(read, pr);
-		read >> ID;
-		read.get(); read.get();
+	void SetPackage(const Package::ItemP& pac)
+	{
+		ID = pac.ID;
+		type = static_cast<Type>(pac.type);
+		name = pac.name;
 
-		ReadWrite::getlineToStopSymbol(read, name, '|');
-		ReadWrite::getlineToStopSymbol(read, seeInf, '|');
-		ReadWrite::getlineToStopSymbol(read, useInf, '|');
-		ReadWrite::getlineToStopSymbol(read, brkInf, '|');
+		borodaPls = pac.Boroda;
+		healthPls = pac.HP;
+		damagePls = pac.Damage;
+		arrmorPls = pac.Armor;
 
-		name = Converter::UTF8ToUnicode(name);
-		seeInf = Converter::UTF8ToUnicode(seeInf);
-		useInf = Converter::UTF8ToUnicode(useInf);
-		brkInf = Converter::UTF8ToUnicode(brkInf);
-
-		int t;
-		read >> t >> healthPls >> borodaPls >> damagePls >> arrmorPls;
-		type = static_cast<Type>(t);
-
-		read.close();
+		useInf = pac.useInfo;
+		seeInf = pac.info;
+		brkInf = pac.breakInfo;
 	}
 
 private:
@@ -154,15 +140,14 @@ private:
 	sf::String useInf;
 	sf::String seeInf;
 	sf::String brkInf;
-
 };
 
 class Inventory
 {
 public:
-	Inventory(unsigned char maxSize = 10) : maxItems{ maxSize }
-	{
-	}
+	Inventory(unsigned char maxSize = 10)
+		: maxItems{ maxSize }
+	{}
 
 	const Item& GetArmor() const
 	{

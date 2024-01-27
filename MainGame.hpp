@@ -117,9 +117,6 @@ private://методы
 
 		if (keyBoard.IsFullScreenClick())
 			render.SetFullScreen(!render.IsFullScreen());
-
-		if (keyBoard.IsPressed(sf::Keyboard::P))
-			dielogeM.RunAsk(L"Взять зонтик!");
 	}
 
 	void TicksUpdate()

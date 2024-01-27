@@ -18,6 +18,8 @@
 
 #define OBJECTTEXTURS_INFO "InfoFiles\\objectsinfo.txt"
 
+#define ITEMS_INFO_FILE "InfoFiles/items.xml"
+
 namespace Package
 {
 	struct ObjP
@@ -59,6 +61,20 @@ namespace Package
 		std::vector<DoorP> doorsP;
 		std::vector<ObjectP> objectsP;
 		std::vector<ObjectItemP> objectsItemP;
+	};
+
+	struct ItemP
+	{
+		unsigned int ID{};
+		unsigned short type{};
+		int HP{};
+		int Boroda{};
+		int Armor{};
+		int Damage{};
+		sf::String name;
+		sf::String info;
+		sf::String useInfo;
+		sf::String breakInfo;
 	};
 }
 
@@ -355,5 +371,45 @@ private:
 			element.text = Converter::Win1251ToUnocide(elementNode.attribute("text").as_string());
 			elements.push_back(element);
 		}
+	}
+};
+
+class ItemReader
+{
+public:
+	static Package::ItemP ReadItem(const unsigned int ID)
+	{
+		Package::ItemP res;
+
+		pugi::xml_document doc;
+		pugi::xml_parse_result openRes = doc.load_file(ITEMS_INFO_FILE);
+		if (!openRes)
+		{
+			std::cout << "item bd is not open. Error: " << openRes.description() << '\n';
+			return res;
+		}
+
+		std::string elementName = "item" + std::to_string(ID);
+		pugi::xml_node itemNode = doc.child("items").child(elementName.c_str());
+		
+		if (itemNode.empty()) {
+			std::cout << "Item with ID " << ID << " not found.\n";
+			return res;
+		}
+
+		res.name = itemNode.name();
+		res.ID = ID;
+		res.type = itemNode.attribute("type").as_uint();
+
+		res.name		= Converter::Win1251ToUnocide(itemNode.attribute("name").value());
+		res.info		= Converter::Win1251ToUnocide(itemNode.child("info").text().get());
+		res.useInfo		= Converter::Win1251ToUnocide(itemNode.child("useInfo").text().get());
+		res.breakInfo	= Converter::Win1251ToUnocide(itemNode.child("breakInfo").text().get());
+		res.HP			= itemNode.child("HP").text().as_int();
+		res.Boroda		= itemNode.child("boroda").text().as_int();
+		res.Armor		= itemNode.child("armor").text().as_int();
+		res.Damage		= itemNode.child("damage").text().as_int();
+
+		return res;
 	}
 };

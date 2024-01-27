@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<items>
+	
+	<item1 name="Сигареты" type="1">
+		<info>Обыкновенная пачка любимых сигарет Силантича(Он любит все сигареты)</info>
+		<useInfo>Силантич скурил пачку сигарет. Стало лучше...</useInfo>
+		<breakInfo>Вы выбросили пачку сигарет.	Зачем???</breakInfo>
+		<HP>-10</HP>
+		<boroda>5</boroda>
+		<damage>0</damage>
+		<armor>0</armor>
+	</item1>
+	
+	<item2 name="Батончик" type="1">
+		<info>Обычный батончик из автомата. Такие любят покупать дебилы.</info>
+		<useInfo>Силантич съел батончик. Вкусно</useInfo>
+		<breakInfo>Вы выкинули батончик... Вы бессовестный!</breakInfo>
+		<HP>15</HP>
+		<boroda>0</boroda>
+		<damage>0</damage>
+		<armor>0</armor>
+	</item2>
+	
+	<item3 name="Детский сок" type="1">
+		<info>Сок "Фруто-ЖМА", молодит, надо быть осторожным!</info>
+		<useInfo>Вы выпили сок, борода начала расти в обратную сторону...?</useInfo>
+		<breakInfo>Вы выкинули сок, сок разлился и образовал лужу. Вам не стыдно?</breakInfo>
+		<HP>5</HP>
+		<boroda>-7</boroda>
+		<damage>0</damage>
+		<armor>0</armor>
+	</item3>
+	
+	<item4 name="Зонтик" type="3">
+		<info>Зонтик со спектакля "Человек в футляре".</info>
+		<useInfo>Вы нацепили зонтик. Теперь вам не страшен дожь.	Но в театре же нет дождя?</useInfo>
+		<breakInfo>Вы выкинули зонтик...	Туда его.</breakInfo>
+		<HP>0</HP>
+		<boroda>0</boroda>
+		<damage>5</damage>
+		<armor>0</armor>
+	</item4>
+	
+	<item5 name="Плащ" type="2">
+		<info>Плащ со спектакля "Человек в футляре", слегка неудобный.</info>
+		<useInfo>Вы надели плащ, вы весь в пыли.</useInfo>
+		<breakInfo>Вы выбросили плащ...	Туда его</breakInfo>
+		<HP>0</HP>
+		<boroda>0</boroda>
+		<damage>0</damage>
+		<armor>2</armor>
+	</item5>
+
+</items>
