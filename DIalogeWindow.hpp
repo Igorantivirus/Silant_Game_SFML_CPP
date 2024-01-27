@@ -24,18 +24,33 @@ public:
 		isActive = true;
 		waitNext = false;
 		isAsk = false;
+		isDialoge = true;
 		str = txt;
 		ind = 0;
 		textLabel.setString("");
 	}
-	void Ask(const sf::String& txtA, const sf::String& txtB)
+
+	void Ask2(const sf::String& txtA, const sf::String& txtB)
 	{
 		isActive = true;
 		waitNext = false;
 		isAsk = true;
+		isDialoge = false;
 		caret = 0;
 		ind = 0;
 		str = "          " + txtA + "\n\n          " + txtB;
+		textLabel.setString("");
+	}
+
+	void Ask(const sf::String& txt)
+	{
+		isActive = true;
+		waitNext = false;
+		isAsk = true;
+		isDialoge = true;
+		caret = 0;
+		ind = 0;
+		str = txt;
 		textLabel.setString("");
 	}
 
@@ -118,25 +133,28 @@ public:
 			return;
 		if (keyBoard.IsBackClick())
 			FinalizeDialoge();
-		if (isAsk)
+		if (isDialoge)
 		{
-			if (keyBoard.IsUpClick())
-				caret--;
-			if (keyBoard.IsDownClick())
-				caret++;
-			if (caret > 1)
-				caret = 0;
-			else if (caret < 0)
-				caret = 1;
-			if(IsFullEnter() && keyBoard.IsNext())
-				isActive = false;
-		}
-		else if (keyBoard.IsNextClick())
-		{
+			if (!keyBoard.IsNextClick())
+				return;
 			if (IsFullEnter())
-				isActive = false;
+			{
+				if (isAsk)
+					Ask2(L"Да", L"Нет");
+				else
+					isActive = false;
+			}
 			else if (IsWaiting())
 				NextSlide();
+		}
+		else if (isAsk)
+		{
+			if (keyBoard.IsUpClick())
+				caret -= 1;
+			if (keyBoard.IsDownClick())
+				caret += 1;
+			if (IsFullEnter() && keyBoard.IsNextClick())
+				isActive = false;
 		}
 	}
 	short GetKaretResult() const
@@ -148,7 +166,7 @@ public:
 	{
 		window.draw(sprite);
 		window.draw(textLabel);
-		if (isAsk && IsFullEnter())
+		if (isAsk && !isDialoge && IsFullEnter())
 			window.draw(point);
 	}
 
@@ -166,8 +184,9 @@ private:
 	bool waitNext = false;
 	bool isActive = false;
 
+	bool isDialoge = false;
 	bool isAsk = false;
-	char caret = 0;
+	bool caret = 0;
 
 private://methods
 

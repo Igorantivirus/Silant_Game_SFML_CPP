@@ -95,7 +95,7 @@ private://методы
 				if (map.HaveIntersectionWithObjs(silant.GetViewPosition(), txt) && !txt.isEmpty())
 					dielogeM.RunDialoge(txt);
 				else if (map.HaveIntersectionWithIObjs(silant.GetViewPosition(), txt) && !txt.isEmpty())
-					dielogeM.RunDialoge(txt);
+					dielogeM.RunAsk(txt);
 			}
 			else if (keyBoard.IsInventoryClick())
 				dielogeM.RunInventory();
@@ -103,23 +103,18 @@ private://методы
 				ProvGoRoom();
 		}
 
-		if (keyBoard.IsPressed(sf::Keyboard::Space))
-		{
-			float x, y;
-			x = toFloat(rand() % 500 - 100);
-			y = toFloat(rand() % 500 - 100);
-			silant.SetFootCenterPosition(x, y);
-		}
+		if (keyBoard.IsRTPClick())
+			silant.SetFootCenterPosition(toFloat(rand() % 500 - 100), toFloat(rand() % 500 - 100));
+		if (keyBoard.IsSPosClick())
+			print(silant.GetCenterPosition(), enter);
 		if (keyBoard.IsPressed(sf::Keyboard::Q))
-		{
 			render.CloseWindow();
-		}
 
 		if (keyBoard.IsFullScreenClick())
 			render.SetFullScreen(!render.IsFullScreen());
 
 		if (keyBoard.IsPressed(sf::Keyboard::P))
-			dielogeM.RunAsk(L"Взять зонтик!", L"Оставить зонтик");
+			dielogeM.RunAsk(L"Взять зонтик!");
 	}
 
 	void TicksUpdate()

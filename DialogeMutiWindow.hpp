@@ -16,10 +16,10 @@ public:
 		invent.Stop();
 		dialoge.Run(txt);
 	}
-	void RunAsk(const sf::String& txtA, const sf::String& txtB)
+	void RunAsk(const sf::String& txt)
 	{
 		invent.Stop();
-		dialoge.Ask(txtA, txtB);
+		dialoge.Ask(txt);
 	}
 	void RunInventory()
 	{

@@ -377,6 +377,15 @@ public:
 
 	#pragma endregion
 
+	bool IsRTPClick() const
+	{
+		return rtp.IsClicked();
+	}
+	bool IsSPosClick() const
+	{
+		return spos.IsClicked();
+	}
+
 private:
 	Key up;
 	Key down;
@@ -391,6 +400,9 @@ private:
 	Key fullScreen;
 
 	Key nullKey;
+
+	Key rtp = sf::Keyboard::Space;
+	Key spos = sf::Keyboard::Num0;
 
 	bool HaveDuplecate(const sf::Keyboard::Key key) const
 	{
