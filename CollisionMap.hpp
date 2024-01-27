@@ -59,7 +59,7 @@ public:
 
 	bool Contain(const sf::Vector2f& pos) const
 	{
-		return Contain(toInt(pos.x), toInt(pos.y));
+		return Contain(pos.x, pos.y);
 	}
 	bool Contain(float x, float y) const
 	{

@@ -20,7 +20,7 @@ public:
 		meneger{meneger}
 	{}
 
-	void LoadFromFile(const int num)
+	void LoadFromFile(const TypeID num)
 	{
 		auto pac = RoomReader::Read(num);
 		SetPackage(pac);
@@ -56,7 +56,7 @@ public:
 			if (i.Contain(pos))
 			{
 				str = i.GetText();
-				ind = &i - &iobjs[0];
+				ind = toInt(&i - &iobjs[0]);
 				return true;
 			}
 		return false;
@@ -78,8 +78,6 @@ public:
 
 	const DoorObj& GetDoorAt(size_t i)
 	{
-		if (i >= doors.size())
-			return DoorObj();
 		return doors[i];
 	}
 

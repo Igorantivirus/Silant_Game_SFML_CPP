@@ -54,11 +54,11 @@ public:
 		rect = nr;
 	}
 
-	int GetNextNomer() const
+	TypeID GetNextNomer() const
 	{
 		return nextNomer;
 	}
-	void SetNextNomer(const unsigned int n)
+	void SetNextNomer(const TypeID n)
 	{
 		nextNomer = 0;
 	}
@@ -83,7 +83,7 @@ private:
 	bool lock = false;
 	sf::FloatRect rect{};
 
-	unsigned int nextNomer{};
+	TypeID nextNomer{};
 	sf::Vector2f newxPos{};
 
 };

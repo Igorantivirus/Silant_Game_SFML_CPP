@@ -158,10 +158,8 @@ public:
 		}
 		else if (isAsk)
 		{
-			if (keyBoard.IsUpClick())
-				caret -= 1;
-			if (keyBoard.IsDownClick())
-				caret += 1;
+			if (keyBoard.IsUpClick() || keyBoard.IsDownClick())
+				caret = !caret;
 			if (IsFullEnter() && keyBoard.IsNextClick())
 			{
 				lastRes = static_cast<Result>(caret);

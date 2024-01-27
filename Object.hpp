@@ -28,7 +28,7 @@ public:
 		return text;
 	}
 
-	unsigned GetID() const
+	TypeID GetID() const
 	{
 		return ID;
 	}
@@ -87,7 +87,7 @@ public:
 	}
 
 private:
-	unsigned ID{};
+	TypeID ID{};
 
 	sf::Sprite sprite;
 
@@ -113,11 +113,11 @@ public:
 
 	#pragma region Get Set
 
-	unsigned GetIDOfItem() const
+	TypeID GetIDOfItem() const
 	{
 		return IDItem;
 	}
-	unsigned GetId() const
+	TypeID GetId() const
 	{
 		return ID;
 	}
@@ -142,7 +142,7 @@ public:
 		sprite.setPosition(pos);
 	}
 
-#pragma endregion
+	#pragma endregion
 
 	void Draw(sf::RenderWindow& window) const
 	{
@@ -183,8 +183,8 @@ public:
 	}
 
 private:
-	unsigned IDItem = 0;
-	unsigned ID = 0;
+	TypeID IDItem = 0;
+	TypeID ID = 0;
 	sf::Sprite sprite;
 	sf::FloatRect rectBlock;
 

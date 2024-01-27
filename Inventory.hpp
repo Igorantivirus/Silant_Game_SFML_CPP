@@ -21,7 +21,7 @@ public:
 	};
 public:
 	Item() {}
-	Item(const unsigned short ID)
+	Item(const TypeID ID)
 	{
 		LoadAtID(ID);
 	}
@@ -63,7 +63,7 @@ public:
 		return *this;
 	}
 
-	unsigned short GetID() const
+	TypeID GetID() const
 	{
 		return ID;
 	}
@@ -106,7 +106,7 @@ public:
 		return arrmorPls;
 	}
 
-	void LoadAtID(unsigned short newID)
+	void LoadAtID(const TypeID newID)
 	{
 		SetPackage(ItemReader::ReadItem(newID));
 	}
@@ -128,7 +128,7 @@ public:
 	}
 
 private:
-	unsigned short ID = 0;
+	TypeID ID = 0;
 	Type type = Type::None;
 	sf::String name;
 
@@ -171,8 +171,6 @@ public:
 
 	const Item& GetAt(unsigned char ind) const
 	{
-		if (ind >= maxItems)
-			return Item();
 		return items[ind];
 	}
 

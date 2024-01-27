@@ -24,34 +24,34 @@ namespace Package
 {
 	struct ObjP
 	{
-		unsigned int ID{};
+		TypeID ID{};
 		sf::IntRect spriteRect;
 		sf::FloatRect barierBox;
 	};
 
 	struct ObjectP
 	{
-		unsigned int ID{};
+		TypeID ID{};
 		sf::String text;
 		sf::IntRect spriteRect;
 		sf::FloatRect rectBlock;
 		sf::Vector2f spritePos;
-		bool ghostly;
+		bool ghostly{};
 	};
 	struct ObjectItemP
 	{
-		unsigned int ID{};
-		unsigned int itemID{};
+		TypeID ID{};
+		TypeID itemID{};
 		sf::String text;
 		sf::IntRect spriteRect;
 		sf::FloatRect rectBlock;
 		sf::Vector2f spritePos;
-		bool ghostly;
+		bool ghostly{};
 	};
 	struct DoorP
 	{
 		sf::FloatRect trigerBox;
-		unsigned int nextRoom{};
+		TypeID nextRoom{};
 		sf::Vector2f nextPos;
 	};
 	struct MapP
@@ -65,7 +65,7 @@ namespace Package
 
 	struct ItemP
 	{
-		unsigned int ID{};
+		TypeID ID{};
 		unsigned short type{};
 		int HP{};
 		int Boroda{};
@@ -226,7 +226,7 @@ public:
 		return val;
 	}
 
-	static Package::ObjP ReadObjectInfo(const unsigned int ID)
+	static Package::ObjP ReadObjectInfo(const TypeID ID)
 	{
 		Package::ObjP res;
 
@@ -250,7 +250,7 @@ class RoomReader
 {
 public:
 
-	static Package::MapP Read(const unsigned int roomNumber)
+	static Package::MapP Read(const TypeID roomNumber)
 	{
 		Package::MapP res;
 		std::string fileName = "Rooms/room" + std::to_string(roomNumber) + ".xml";
@@ -377,7 +377,7 @@ private:
 class ItemReader
 {
 public:
-	static Package::ItemP ReadItem(const unsigned int ID)
+	static Package::ItemP ReadItem(const TypeID ID)
 	{
 		Package::ItemP res;
 
