@@ -474,7 +474,7 @@ class SaveWriter
 {
 public:
 	
-	static void Save(const std::string& saveName, const Package::PlayerP& pPac)
+	static void SavePlayer(const std::string& saveName, const Package::PlayerP& pPac)
 	{
 		pugi::xml_document playerDoc;
 		pugi::xml_node playerNode = playerDoc.append_child("player");
@@ -494,7 +494,22 @@ public:
 
 		doc.save_file(saveName.c_str());
 	}
+	static Package::PlayerP LoadPlayer(const std::string& fName)
+	{
+		Package::PlayerP res;
 
+		pugi::xml_document doc;
+		pugi::xml_parse_result openRes = doc.load_file(fName.c_str());
+		if (!openRes)
+		{
+			std::cout << "Fail open file " << fName << " Error : " << openRes.description() << '\n';
+			return res;
+		}
+		pugi::xml_node playerNode = doc.child("gameSave").child("player");
+		ReadPlayer(playerNode, res);
+
+		return res;
+	}
 
 private:
 	static void WriteInventory(pugi::xml_node& node, const Package::InventoryP& inventory) {
@@ -522,6 +537,26 @@ private:
 		positionNode.append_attribute("y").set_value(pac.pos.y);
 		pugi::xml_node inventoryNode = node.append_child("inventory");
 		WriteInventory(inventoryNode, pac.invent);
+	}
+
+	static void ReadInventory(const pugi::xml_node& node, Package::InventoryP& inventory)
+	{
+		inventory.armor = node.child("armor").text().as_uint();
+		inventory.weapon = node.child("weapon").text().as_uint();
+		for (auto item : node.children("item"))
+			inventory.items.push_back(item.attribute("ID").as_uint());
+	}
+	static void ReadPlayer(const pugi::xml_node& node, Package::PlayerP& pac)
+	{
+		pac.HP = node.child("HP").text().as_uint();
+		pac.boroda = node.child("boroda").text().as_uint();
+		pac.room = node.child("room").text().as_uint();
+
+		pugi::xml_node posNode = node.child("position");
+		pac.pos = { posNode.attribute("x").as_float(), posNode.attribute("y").as_float() };
+
+		pugi::xml_node inventNode = node.child("inventory");
+		ReadInventory(inventNode, pac.invent);
 	}
 
 };
