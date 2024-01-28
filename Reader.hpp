@@ -436,6 +436,8 @@ public:
 	static Package::ItemP ReadItem(const TypeID ID)
 	{
 		Package::ItemP res;
+		if (ID == 0)
+			return res;
 
 		pugi::xml_document doc;
 		pugi::xml_parse_result openRes = doc.load_file(ITEMS_INFO_FILE);
@@ -541,8 +543,8 @@ private:
 
 	static void ReadInventory(const pugi::xml_node& node, Package::InventoryP& inventory)
 	{
-		inventory.armor = node.child("armor").text().as_uint();
-		inventory.weapon = node.child("weapon").text().as_uint();
+		inventory.armor = node.child("armor").attribute("ID").as_uint();
+		inventory.weapon = node.child("weapon").attribute("ID").as_uint();
 		for (auto item : node.children("item"))
 			inventory.items.push_back(item.attribute("ID").as_uint());
 	}

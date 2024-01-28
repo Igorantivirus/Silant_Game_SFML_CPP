@@ -126,7 +126,6 @@ public:
 		seeInf = pac.info;
 		brkInf = pac.breakInfo;
 	}
-
 private:
 	TypeID ID = 0;
 	Type type = Type::None;
@@ -249,6 +248,29 @@ public:
 		currentArmor = other.currentArmor;
 		currentWeapon = other.currentWeapon;
 		return *this;
+	}
+
+	Package::InventoryP GetPackage() const
+	{
+		Package::InventoryP res;
+
+		res.armor = currentArmor.GetID();
+		res.weapon = currentWeapon.GetID();
+
+		for (const auto& i : items)
+			res.items.push_back(i.GetID());
+
+		return res;
+	}
+	void SetPackage(const Package::InventoryP& pac)
+	{
+		currentArmor.LoadAtID(pac.armor);
+		currentWeapon.LoadAtID(pac.weapon);
+
+		items.clear();
+		for (const auto& i : pac.items)
+			items.push_back(i);
+
 	}
 
 private:

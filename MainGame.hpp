@@ -15,9 +15,21 @@ public:
 	{
 		render.Zoom(0.25f);
 
-		map.LoadFromFile(room);
+		auto playerP = SaveWriter::LoadPlayer("inventory.xml");
+		silant.SetPackage(playerP);
+		map.LoadFromFile(playerP.room);
+		
+		
+		/*map.LoadFromFile(room);
 		silant.SetFootCenterPosition(7 * PIXELS_IN_BLOCK, 7 * PIXELS_IN_BLOCK);
-		silant.StopRun();
+		silant.StopRun();*/
+	}
+
+	~MainGame()
+	{
+		auto playerP = silant.GetPackage();
+		playerP.room = map.GetRoom();
+		SaveWriter::SavePlayer("inventory.xml", playerP);
 	}
 
 	void Run()

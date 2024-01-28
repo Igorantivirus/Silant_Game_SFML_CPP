@@ -30,6 +30,7 @@ struct PersonInfo
 		inventory = other.inventory;
 		return *this;
 	}
+
 };
 
 class Player
@@ -40,7 +41,7 @@ public:
 		sprite.setTexture(meneger.GetPlayerTexture());
 		sprite.setTextureRect({ 0, 0, 16, 34 });
 
-		Item itm;
+		/*Item itm;
 		itm.LoadAtID(1);
 		info.inventory.Add(itm);
 
@@ -54,9 +55,29 @@ public:
 		info.inventory.Add(itm);
 
 		itm.LoadAtID(5);
-		info.inventory.Add(itm);
+		info.inventory.Add(itm);*/
 
 	}
+
+	Package::PlayerP GetPackage() const
+	{
+		Package::PlayerP res;
+
+		res.HP = info.hp;
+		res.boroda = info.boroda;
+		res.pos = sprite.getPosition();
+		res.invent = info.inventory.GetPackage();
+
+		return res;
+	}
+	void SetPackage(const Package::PlayerP& pac)
+	{
+		info.hp = pac.HP;
+		info.boroda = pac.boroda;
+		info.inventory.SetPackage(pac.invent);
+		sprite.setPosition(pac.pos);
+	}
+
 
 	#pragma region Inventory
 

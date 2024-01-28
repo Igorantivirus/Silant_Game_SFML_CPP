@@ -25,6 +25,7 @@ public:
 		auto pac = RoomReader::Read(num);
 		SetPackage(pac);
 		waitItemIndex = -1;
+		IDRoom = num;
 	}
 
 	#pragma region bool methods
@@ -108,6 +109,11 @@ public:
 		waitItemIndex = -1;
 	}
 
+	TypeID GetRoom() const
+	{
+		return IDRoom;
+	}
+
 	void SetPackage(const Package::MapP& pac)
 	{
 		if (pac.backgroundFile.empty())
@@ -142,6 +148,7 @@ private:
 	CollisionMap cols;
 
 	sf::Sprite sprite;
+	TypeID IDRoom{};
 
 	int waitItemIndex = -1;
 
