@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<gameSave>
+	<player>
+	
+		<HP>100</HP>
+		<boroda>20</boroda>
+		
+		<room>1</room>
+		<position x="" y="" />
+		
+		<inventory>
+			<armor ID="1" />
+			<weapon ID="2" />
+		
+			<item ID="1"/>
+			<item ID="2"/>
+			<item ID="3"/>
+		</inventory>
+	
+	</player>
+
+	<rooms>
+
+		<room6>
+			
+			<itemObjects>
+				<element itemID="4"	x="7"	y="10"	text="Это синий зонтик, возьмeте ли вы это?"/>
+			</itemObjects>
+		
+		</room6>
+
+	</rooms>
+
+</gameSave>
+
+<!--<?xml version="1.0" encoding="windows-1251"?>-->
+<player>
+	<HP>10000</HP>
+	<boroda>1000</boroda>
+	<room>55</room>
+	<position x="150" y="100" />
+	<inventory>
+		<armor ID="10" />
+		<weapon ID="20" />
+		<item ID="10" />
+		<item ID="20" />
+		<item ID="30" />
+	</inventory>
+</player>

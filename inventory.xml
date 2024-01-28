@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<gameSave>
+	<player>
+		<HP>100</HP>
+		<boroda>10</boroda>
+		<room>5</room>
+		<position x="15" y="10" />
+		<inventory>
+			<armor ID="1" />
+			<weapon ID="2" />
+			<item ID="1" />
+			<item ID="2" />
+			<item ID="3" />
+		</inventory>
+	</player>
+</gameSave>

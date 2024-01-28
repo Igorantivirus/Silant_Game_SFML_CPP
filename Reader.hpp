@@ -20,8 +20,12 @@
 
 #define ITEMS_INFO_FILE "InfoFiles/items.xml"
 
+#define SAVES_PATH "Saves"
+
 namespace Package
 {
+	#pragma region
+
 	struct ObjP
 	{
 		TypeID ID{};
@@ -63,6 +67,10 @@ namespace Package
 		std::vector<ObjectItemP> objectsItemP;
 	};
 
+	#pragma endregion
+
+	#pragma region Player
+
 	struct ItemP
 	{
 		TypeID ID{};
@@ -76,6 +84,29 @@ namespace Package
 		sf::String useInfo;
 		sf::String breakInfo;
 	};
+
+	struct InventoryP
+	{
+		TypeID armor;
+		TypeID weapon;
+
+		std::vector<TypeID> items;
+	};
+
+	struct PlayerP
+	{
+		int HP;
+		int boroda;
+
+		InventoryP invent;
+
+		TypeID room;
+		sf::Vector2f pos;
+		
+	};
+
+	#pragma endregion
+
 }
 
 class ReadWrite
@@ -437,4 +468,60 @@ public:
 
 		return res;
 	}
+};
+
+class SaveWriter
+{
+public:
+	
+	static void Save(const std::string& saveName, const Package::PlayerP& pPac)
+	{
+		pugi::xml_document playerDoc;
+		pugi::xml_node playerNode = playerDoc.append_child("player");
+		WritePlayer(playerNode, pPac);
+
+		pugi::xml_document doc;
+		pugi::xml_parse_result openRes = doc.load_file(saveName.c_str());
+		if (!openRes)
+			std::ofstream(saveName);
+		pugi::xml_node gameSaveNode = doc.child("gameSave");
+		if (!gameSaveNode)
+			gameSaveNode = doc.append_child("gameSave");
+
+		gameSaveNode.remove_child("player");
+
+		gameSaveNode.append_copy(playerNode);
+
+		doc.save_file(saveName.c_str());
+	}
+
+
+private:
+	static void WriteInventory(pugi::xml_node& node, const Package::InventoryP& inventory) {
+		pugi::xml_node armorNode = node.append_child("armor");
+		armorNode.append_attribute("ID").set_value(inventory.armor);
+		pugi::xml_node weaponNode = node.append_child("weapon");
+		weaponNode.append_attribute("ID").set_value(inventory.weapon);
+		pugi::xml_node itemNode;
+		for (const TypeID& item : inventory.items)
+		{
+			itemNode = node.append_child("item");
+			itemNode.append_attribute("ID").set_value(item);
+		}
+	}
+	static void WritePlayer(pugi::xml_node& node, const Package::PlayerP& pac)
+	{
+		pugi::xml_node hpNode = node.append_child("HP");
+		hpNode.text().set(pac.HP);
+		pugi::xml_node borodaNode = node.append_child("boroda");
+		borodaNode.text().set(pac.boroda);
+		pugi::xml_node roomNode = node.append_child("room");
+		roomNode.text().set(pac.room);
+		pugi::xml_node positionNode = node.append_child("position");
+		positionNode.append_attribute("x").set_value(pac.pos.x);
+		positionNode.append_attribute("y").set_value(pac.pos.y);
+		pugi::xml_node inventoryNode = node.append_child("inventory");
+		WriteInventory(inventoryNode, pac.invent);
+	}
+
 };
