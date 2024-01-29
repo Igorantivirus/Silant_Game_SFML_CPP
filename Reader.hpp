@@ -33,13 +33,6 @@ namespace Package
 		sf::FloatRect barierBox;
 	};
 
-	struct ObjP
-	{
-		TypeID ID{};
-		sf::IntRect spriteRect;
-		sf::FloatRect barierBox;
-	};
-
 	struct ObjectP
 	{
 		TypeID ID{};
@@ -264,37 +257,6 @@ public:
 		return val;
 	}
 
-	static Package::ObjP ReadObjectInfo(const TypeID ID)
-	{
-		Package::ObjP res;
-
-		pugi::xml_document doc;
-		pugi::xml_parse_result openRes = doc.load_file(OBJECTTEXTURS_INFO);
-		if (!openRes)
-		{
-			std::cout << "Object info file is not open. Error: " << openRes.description() << '\n';
-			return res;
-		}
-
-		std::string elementName = "object" + std::to_string(ID);
-		pugi::xml_node itemNode = doc.child("objects").child(elementName.c_str());
-
-		if (itemNode.empty()) {
-			std::cout << "Object with ID " << ID << " not found.\n";
-			return res;
-		}
-
-		res.ID = ID;
-		res.barierBox = ReadRectFromXMLNode(itemNode.child("hitbox"));
-		auto pr = ReadRectFromXMLNode(itemNode.child("texture"));
-		res.spriteRect.left = toInt(pr.left);
-		res.spriteRect.top = toInt(pr.top);
-		res.spriteRect.width = toInt(pr.width);
-		res.spriteRect.height = toInt(pr.height);
-
-		return res;
-	}
-	
 	static Package::BaseObjP ReadObjectBaseInfo(const TypeID ID, const bool item)
 	{
 		Package::BaseObjP res;
@@ -310,13 +272,13 @@ public:
 		pugi::xml_node itemNode;
 		if (item)
 		{
-			elementName = "object" + std::to_string(ID);
-			itemNode = doc.child("objects").child(elementName.c_str());
+			elementName = "item" + std::to_string(ID);
+			itemNode = doc.child("items").child(elementName.c_str());
 		}
 		else
 		{
-			elementName = "item" + std::to_string(ID);
-			itemNode = doc.child("items").child(elementName.c_str());
+			elementName = "object" + std::to_string(ID);
+			itemNode = doc.child("objects").child(elementName.c_str());
 		}
 
 		if (itemNode.empty()) {
@@ -325,6 +287,7 @@ public:
 		}
 
 		FillBaseObject(itemNode, res);
+		res.ID = ID;
 
 		return res;
 	}
@@ -341,7 +304,6 @@ private:
 
 		return res;
 	}
-
 	static void FillBaseObject(const pugi::xml_node& node, Package::BaseObjP& pac)
 	{
 		pac.barierBox = ReadRectFromXMLNode(node.child("hitbox"));
@@ -430,7 +392,7 @@ private:
 			}
 			else
 			{
-				auto pr = ReadWrite::ReadObjectInfo(element.ID);
+				auto pr = ReadWrite::ReadObjectBaseInfo(element.ID, false);
 				element.spriteRect = pr.spriteRect;
 				element.rectBlock.width = pr.barierBox.width;
 				element.rectBlock.height = pr.barierBox.height;
@@ -466,7 +428,7 @@ private:
 			}
 			else
 			{
-				auto pr = ReadWrite::ReadObjectInfo(element.ID);
+				auto pr = ReadWrite::ReadObjectBaseInfo(element.ID, true);
 				element.spriteRect = pr.spriteRect;
 				element.rectBlock.width = pr.barierBox.width;
 				element.rectBlock.height = pr.barierBox.height;

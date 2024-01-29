@@ -26,6 +26,6 @@
 
 	<!-- Объекты предметов -->
     <itemObjects>
-		<element gameDataLine="1"	objectID="7"	itemID="4"	x="7"	y="10"	text="Это синий зонтик, возьмeте ли вы это?"/>
+		<element gameDataLine="1"	objectID="4"	itemID="4"	x="7"	y="10"	text="Это синий зонтик, возьмeте ли вы это?"/>
 	</itemObjects>
 </room>
