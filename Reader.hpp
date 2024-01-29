@@ -26,6 +26,13 @@ namespace Package
 {
 	#pragma region
 
+	struct BaseObjP
+	{
+		TypeID ID{};
+		sf::IntRect spriteRect;
+		sf::FloatRect barierBox;
+	};
+
 	struct ObjP
 	{
 		TypeID ID{};
@@ -287,6 +294,40 @@ public:
 
 		return res;
 	}
+	
+	static Package::BaseObjP ReadObjectBaseInfo(const TypeID ID, const bool item)
+	{
+		Package::BaseObjP res;
+
+		pugi::xml_document doc;
+		pugi::xml_parse_result openRes = doc.load_file(OBJECTTEXTURS_INFO);
+		if (!openRes)
+		{
+			std::cout << "Object info file is not open. Error: " << openRes.description() << '\n';
+			return res;
+		}
+		std::string elementName;
+		pugi::xml_node itemNode;
+		if (item)
+		{
+			elementName = "object" + std::to_string(ID);
+			itemNode = doc.child("objects").child(elementName.c_str());
+		}
+		else
+		{
+			elementName = "item" + std::to_string(ID);
+			itemNode = doc.child("items").child(elementName.c_str());
+		}
+
+		if (itemNode.empty()) {
+			std::cout << "Object with ID " << ID << " not found.\n";
+			return res;
+		}
+
+		FillBaseObject(itemNode, res);
+
+		return res;
+	}
 
 private:
 	static sf::FloatRect ReadRectFromXMLNode(const pugi::xml_node& nodeRect)
@@ -299,6 +340,16 @@ private:
 		res.height	= nodeRect.attribute("height").as_int();
 
 		return res;
+	}
+
+	static void FillBaseObject(const pugi::xml_node& node, Package::BaseObjP& pac)
+	{
+		pac.barierBox = ReadRectFromXMLNode(node.child("hitbox"));
+		auto pr = ReadRectFromXMLNode(node.child("texture"));
+		pac.spriteRect.left = toInt(pr.left);
+		pac.spriteRect.top = toInt(pr.top);
+		pac.spriteRect.width = toInt(pr.width);
+		pac.spriteRect.height = toInt(pr.height);
 	}
 };
 
