@@ -18,11 +18,6 @@ public:
 		auto playerP = SaveWriter::LoadPlayer("inventory.xml");
 		silant.SetPackage(playerP);
 		map.LoadFromFile(playerP.room);
-		
-		
-		/*map.LoadFromFile(room);
-		silant.SetFootCenterPosition(7 * PIXELS_IN_BLOCK, 7 * PIXELS_IN_BLOCK);
-		silant.StopRun();*/
 	}
 
 	~MainGame()

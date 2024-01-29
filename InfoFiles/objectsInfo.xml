@@ -7,7 +7,7 @@
 	
     <object2>
         <texture x="21" y="0" width="28" height="22" />
-        <hitbox width="15" height="0" x="7" y="28" />
+        <hitbox width="28" height="7" x="0" y="15" />
     </object2>
 	
     <object3>
