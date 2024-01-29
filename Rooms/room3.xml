@@ -21,9 +21,4 @@
 		<element gameDataLine="0"	objectID="0"	x="5"		y="2"	width="4"	height="1"	text="В расписании только спектакли Серова"/>
 	</objects>
 
-	<!-- Объекты предметов -->
-    <itemObjects>
-        <!-- <element gameDataLine="0" objectID="5" itemID="1" x="1" y="1" text="" /> -->
-    </itemObjects>
-	
 </room>

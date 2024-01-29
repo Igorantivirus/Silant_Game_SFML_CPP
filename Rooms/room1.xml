@@ -30,10 +30,5 @@
     <objects>
 		<element gameDataLine="0" objectID="3" x="1" y="3" text="Пожилая сидушка." />
     </objects>
-
-	<!-- Объекты предметов -->
-    <itemObjects>
-        <!-- <element gameDataLine="0" objectID="5" itemID="1" x="1" y="1" text="" /> -->
-    </itemObjects>
 	
 </room>

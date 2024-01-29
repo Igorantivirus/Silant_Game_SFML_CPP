@@ -31,9 +31,4 @@
 		<element gameDataLine="0"	objectID="0"	x="20"	y="2.3"	width="1"	height="1"	text="Галя?! Только не она!!! НЕЕЕТ!"/>
 	</objects>
 
-	<!-- Объекты предметов -->
-    <itemObjects>
-        <!-- <element gameDataLine="0" objectID="5" itemID="1" x="1" y="1" text="" /> -->
-    </itemObjects>
-	
 </room>

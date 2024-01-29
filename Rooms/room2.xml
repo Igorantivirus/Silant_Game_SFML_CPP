@@ -37,10 +37,5 @@
 		<element gameDataLine="0"	objectID="0"	x="13"		y="2"	width="1"	height="1"	text="Мой дружище Одинцов! Рад его видеть, где же он сейчас?..."/>
 		<element gameDataLine="0"	objectID="0"	x="15"		y="2"	width="1"	height="1"	text="Эх, какой я молодой был..."/>
 	</objects>
-
-	<!-- Объекты предметов -->
-    <itemObjects>
-        <!-- <element gameDataLine="0" objectID="5" itemID="1" x="1" y="1" text="" /> -->
-    </itemObjects>
 	
 </room>
