@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <objects>
-	<object1><!-- Ваза -->
+	<object1><!-- Ваза-->
         <texture x="0" y="0" width="20" height="37" />
         <hitbox width="19" height="10" x="0" y="29" />
     </object1>
 	
-    <object2><!-- Столик -->
+    <object2><!-- Столик-->
         <texture x="21" y="0" width="28" height="22" />
         <hitbox width="28" height="7" x="0" y="15" />
     </object2>
@@ -59,7 +59,7 @@
 	
 	<item5><!-- Плащь -->
 		<texture x="64" y="82" width="34" height="29" />
-        <hitbox x="0" y="19" width="34" height="9" />
+        <hitbox x="0" y="19" width="34" height="10" />
 	</item5>
 
 </items>

@@ -3,20 +3,21 @@
 	<rooms>
 		<room6>
 			<itemObjects>
-				<element itemID="4" x="7" y="10" text="Ð­Ñ‚Ð¾ ÑÐ¸Ð½Ð¸Ð¹ Ð·Ð¾Ð½Ñ‚Ð¸Ðº, Ð²Ð¾Ð·ÑŒÐ¼eÑ‚Ðµ Ð»Ð¸ Ð²Ñ‹ ÑÑ‚Ð¾?" />
+				<element itemID="4" x="7" y="10" text="Ýòî ñèíèé çîíòèê, âîçüìeòå ëè âû ýòî?" />
 			</itemObjects>
 		</room6>
 	</rooms>
 	<player>
 		<HP>110</HP>
 		<boroda>8</boroda>
-		<room>1</room>
-		<position x="26.7998943" y="30.6900024" />
+		<room>6</room>
+		<position x="11.8865108" y="-37.7803154" />
 		<inventory>
 			<armor ID="5" />
 			<weapon ID="4" />
 			<item ID="1" />
 			<item ID="2" />
+			<item ID="4" />
 			<item ID="4" />
 			<item ID="4" />
 		</inventory>

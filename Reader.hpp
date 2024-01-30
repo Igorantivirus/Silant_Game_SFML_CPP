@@ -337,7 +337,7 @@ public:
 		ReadCollisions(doc, res.collisionP);
 		ReadDoors(doc, res.doorsP);
 		ReadObjects(doc, res.objectsP);
-		ReadObjectsItem(doc, res.objectsItemP);
+		//ReadObjectsItem(doc, res.objectsItemP);
 		return res;
 	}
 private:
@@ -524,6 +524,49 @@ public:
 		ReadPlayer(playerNode, res);
 
 		return res;
+	}
+
+	static bool FillItemsOfRoomFromSave(const std::string& fName, const TypeID IDr, std::vector<Package::ObjectItemP>& items)
+	{
+		pugi::xml_document doc;
+		pugi::xml_parse_result openRes = doc.load_file(fName.c_str());
+		if (!openRes)
+		{
+			std::cout << "Save File " << fName << " is not fount. Error: " << openRes.description() << '\n';
+			return false;
+		}
+		std::string roomName = "room" + std::to_string(IDr);
+		pugi::xml_node nodeRoom = doc.child("gameSave").child("rooms").child(roomName.c_str()).child("itemObjects");
+		if (nodeRoom.empty())
+		{
+			std::cout << "Error finding of room" << IDr << " in file save " << fName << '\n';
+			return false;
+		}
+		items.clear();
+		Package::ObjectItemP pr;
+		Package::BaseObjP basPr;
+		for (auto i : nodeRoom.children("element"))
+		{
+			pr.itemID = i.attribute("itemID").as_uint();
+			pr.spritePos =
+			{
+				i.attribute("x").as_float() * PIXELS_IN_BLOCK,
+				i.attribute("y").as_float() * PIXELS_IN_BLOCK
+			};
+			pr.text = Converter::Win1251ToUnocide(i.attribute("text").as_string());
+
+			basPr = ReadWrite::ReadObjectBaseInfo(pr.itemID, true);
+			pr.spriteRect = basPr.spriteRect;
+			pr.rectBlock.width = basPr.barierBox.width;
+			pr.rectBlock.height = basPr.barierBox.height;
+			pr.spritePos = {
+				pr.rectBlock.left - basPr.barierBox.left, pr.rectBlock.top - basPr.barierBox.top
+			};
+			pr.ghostly = false;
+
+			items.push_back(pr);
+		}
+		return true;
 	}
 
 private:

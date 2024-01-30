@@ -23,6 +23,7 @@ public:
 	void LoadFromFile(const TypeID num)
 	{
 		auto pac = RoomReader::Read(num);
+		SaveWriter::FillItemsOfRoomFromSave("inventory.xml", num, pac.objectsItemP);
 		SetPackage(pac);
 		waitItemIndex = -1;
 		IDRoom = num;
