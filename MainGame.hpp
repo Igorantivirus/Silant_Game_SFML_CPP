@@ -38,7 +38,6 @@ public:
 		render.Zoom(4.f);
 	}
 
-
 private://параметры
 	Render& render;
 	KeyBoard& keyBoard;

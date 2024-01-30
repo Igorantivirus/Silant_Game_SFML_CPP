@@ -17,6 +17,9 @@
 #define toWChar(a)	static_cast<wchar_t>(a)
 #define toChar(a)	static_cast<char>(a)
 
+#define toIntRect(rect) sf::IntRect{ toInt(rect.left), toInt(rect.top), toInt(rect.width), toInt(rect.height) }
+#define toFloatRect(rect) sf::FloatRect{ toFloat(rect.left), toFloat(rect.top), toFloat(rect.width), toFloat(rect.height) }
+
 class Converter
 {
 public:

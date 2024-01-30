@@ -37,6 +37,7 @@
 	
 </objects>
 <items>
+
 	<item1><!-- Сигареты -->
 		<texture x="43" y="78" width="16" height="11" />
         <hitbox x="0" y="0" width="16" height="11" />
@@ -49,7 +50,7 @@
 	
 	<item3><!-- Детский сок -->
 		<texture x="45" y="98" width="10" height="19" />
-        <hitbox x="0" y="0" width="10" height="19" />
+        <hitbox x="0" y="13" width="10" height="6" />
 	</item3>
 	
 	<item4><!-- Зонтик -->
@@ -58,8 +59,8 @@
 	</item4>
 	
 	<item5><!-- Плащь -->
-		<texture x="64" y="82" width="34" height="29" />
-        <hitbox x="0" y="19" width="34" height="10" />
+		<texture x="64" y="82" width="34" height="30" />
+        <hitbox x="0" y="18" width="34" height="12" />
 	</item5>
 
 </items>

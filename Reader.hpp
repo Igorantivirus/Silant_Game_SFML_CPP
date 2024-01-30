@@ -44,7 +44,6 @@ namespace Package
 	};
 	struct ObjectItemP
 	{
-		TypeID ID{};
 		TypeID itemID{};
 		sf::String text;
 		sf::IntRect spriteRect;
@@ -257,6 +256,76 @@ public:
 		return val;
 	}
 
+private:
+	
+};
+
+class ItemReader
+{
+public:
+
+	static Package::ItemP ReadItem(const TypeID ID)
+	{
+		Package::ItemP res;
+		if (ID == 0)
+			return res;
+
+		pugi::xml_document doc;
+		pugi::xml_parse_result openRes = doc.load_file(ITEMS_INFO_FILE);
+		if (!openRes)
+		{
+			std::cout << "File " << ITEMS_INFO_FILE << " is not found. Error: " << openRes.description() << '\n';
+			return res;
+		}
+
+		std::string elementName = "item" + std::to_string(ID);
+		pugi::xml_node itemNode = doc.child("items").child(elementName.c_str());
+
+		if (itemNode.empty()) {
+			std::cout << "Item with ID " << ID << " not found.\n";
+			return res;
+		}
+
+		res.name = itemNode.name();
+		res.ID = ID;
+		res.type = itemNode.attribute("type").as_uint();
+
+		res.name = Converter::Win1251ToUnocide(itemNode.attribute("name").value());
+		res.info = Converter::Win1251ToUnocide(itemNode.child("info").text().get());
+		res.useInfo = Converter::Win1251ToUnocide(itemNode.child("useInfo").text().get());
+		res.breakInfo = Converter::Win1251ToUnocide(itemNode.child("breakInfo").text().get());
+		res.HP = itemNode.child("HP").text().as_int();
+		res.Boroda = itemNode.child("boroda").text().as_int();
+		res.Armor = itemNode.child("armor").text().as_int();
+		res.Damage = itemNode.child("damage").text().as_int();
+
+		return res;
+	}
+	
+	static sf::String ReadNameItem(const TypeID ID)
+	{
+		if (ID == 0)
+			return "";
+
+		pugi::xml_document doc;
+		pugi::xml_parse_result openRes = doc.load_file(ITEMS_INFO_FILE);
+		if (!openRes)
+		{
+			std::cout << "File " << ITEMS_INFO_FILE << " is not found. Error: " << openRes.description() << '\n';
+			return "";
+		}
+
+		std::string elementName = "item" + std::to_string(ID);
+		pugi::xml_node itemNode = doc.child("items").child(elementName.c_str());
+
+		if (itemNode.empty()) {
+			std::cout << "Item with ID " << ID << " not found.\n";
+			return "";
+		}
+
+		return Converter::Win1251ToUnocide(itemNode.attribute("name").value());
+	}
+
 	static Package::BaseObjP ReadObjectBaseInfo(const TypeID ID, const bool item)
 	{
 		Package::BaseObjP res;
@@ -297,10 +366,10 @@ private:
 	{
 		sf::FloatRect res;
 
-		res.left	= nodeRect.attribute("x").as_float();
-		res.top		= nodeRect.attribute("y").as_float();
-		res.width	= nodeRect.attribute("width").as_float();
-		res.height	= nodeRect.attribute("height").as_float();
+		res.left = nodeRect.attribute("x").as_float();
+		res.top = nodeRect.attribute("y").as_float();
+		res.width = nodeRect.attribute("width").as_float();
+		res.height = nodeRect.attribute("height").as_float();
 
 		return res;
 	}
@@ -308,11 +377,9 @@ private:
 	{
 		pac.barierBox = ReadRectFromXMLNode(node.child("hitbox"));
 		auto pr = ReadRectFromXMLNode(node.child("texture"));
-		pac.spriteRect.left = toInt(pr.left);
-		pac.spriteRect.top = toInt(pr.top);
-		pac.spriteRect.width = toInt(pr.width);
-		pac.spriteRect.height = toInt(pr.height);
+		pac.spriteRect = toIntRect(pr);
 	}
+
 };
 
 class RoomReader
@@ -337,7 +404,6 @@ public:
 		ReadCollisions(doc, res.collisionP);
 		ReadDoors(doc, res.doorsP);
 		ReadObjects(doc, res.objectsP);
-		//ReadObjectsItem(doc, res.objectsItemP);
 		return res;
 	}
 private:
@@ -392,7 +458,7 @@ private:
 			}
 			else
 			{
-				auto pr = ReadWrite::ReadObjectBaseInfo(element.ID, false);
+				auto pr = ItemReader::ReadObjectBaseInfo(element.ID, false);
 				element.spriteRect = pr.spriteRect;
 				element.rectBlock.width = pr.barierBox.width;
 				element.rectBlock.height = pr.barierBox.height;
@@ -404,84 +470,6 @@ private:
 			element.text = Converter::Win1251ToUnocide(elementNode.attribute("text").as_string());
 			elements.push_back(element);
 		}
-	}
-	static void ReadObjectsItem(const pugi::xml_document& doc, std::vector<Package::ObjectItemP>& elements)
-	{
-		elements.clear();
-		Package::ObjectItemP element;
-		int gameDataLine{};
-		for (auto elementNode : doc.child("room").child("itemObjects").children("element"))
-		{
-			gameDataLine = elementNode.attribute("gameDataLine").as_uint();
-			element.ID = elementNode.attribute("objectID").as_uint();
-			element.itemID = elementNode.attribute("itemID").as_uint();
-			element.rectBlock.left = elementNode.attribute("x").as_float() * PIXELS_IN_BLOCK;
-			element.rectBlock.top = elementNode.attribute("y").as_float() * PIXELS_IN_BLOCK;
-
-			if (element.ID == 0)
-			{
-				element.rectBlock.width = elementNode.attribute("width").as_float() * PIXELS_IN_BLOCK;
-				element.rectBlock.height = elementNode.attribute("height").as_float() * PIXELS_IN_BLOCK;
-				element.spriteRect = {};
-				element.spritePos = { element.rectBlock.left, element.rectBlock.top };
-				element.ghostly = true;
-			}
-			else
-			{
-				auto pr = ReadWrite::ReadObjectBaseInfo(element.ID, true);
-				element.spriteRect = pr.spriteRect;
-				element.rectBlock.width = pr.barierBox.width;
-				element.rectBlock.height = pr.barierBox.height;
-				element.spritePos = {
-					element.rectBlock.left - pr.barierBox.left, element.rectBlock.top - pr.barierBox.top
-				};
-				element.ghostly = false;
-			}
-			element.text = Converter::Win1251ToUnocide(elementNode.attribute("text").as_string());
-			elements.push_back(element);
-		}
-	}
-};
-
-class ItemReader
-{
-public:
-	static Package::ItemP ReadItem(const TypeID ID)
-	{
-		Package::ItemP res;
-		if (ID == 0)
-			return res;
-
-		pugi::xml_document doc;
-		pugi::xml_parse_result openRes = doc.load_file(ITEMS_INFO_FILE);
-		if (!openRes)
-		{
-			std::cout << "item bd is not open. Error: " << openRes.description() << '\n';
-			return res;
-		}
-
-		std::string elementName = "item" + std::to_string(ID);
-		pugi::xml_node itemNode = doc.child("items").child(elementName.c_str());
-		
-		if (itemNode.empty()) {
-			std::cout << "Item with ID " << ID << " not found.\n";
-			return res;
-		}
-
-		res.name = itemNode.name();
-		res.ID = ID;
-		res.type = itemNode.attribute("type").as_uint();
-
-		res.name		= Converter::Win1251ToUnocide(itemNode.attribute("name").value());
-		res.info		= Converter::Win1251ToUnocide(itemNode.child("info").text().get());
-		res.useInfo		= Converter::Win1251ToUnocide(itemNode.child("useInfo").text().get());
-		res.breakInfo	= Converter::Win1251ToUnocide(itemNode.child("breakInfo").text().get());
-		res.HP			= itemNode.child("HP").text().as_int();
-		res.Boroda		= itemNode.child("boroda").text().as_int();
-		res.Armor		= itemNode.child("armor").text().as_int();
-		res.Damage		= itemNode.child("damage").text().as_int();
-
-		return res;
 	}
 };
 
@@ -506,7 +494,10 @@ public:
 		gameSaveNode.remove_child("player");
 
 		gameSaveNode.append_copy(playerNode);
-
+		pugi::xml_node declaration = doc.prepend_child(pugi::node_declaration);
+		declaration.append_attribute("version") = "1.0";
+		declaration.append_attribute("encoding") = "windows-1251";
+		
 		doc.save_file(saveName.c_str());
 	}
 	static Package::PlayerP LoadPlayer(const std::string& fName)
@@ -547,9 +538,9 @@ public:
 			pr.itemID = i.attribute("itemID").as_uint();
 			pr.rectBlock.left = i.attribute("x").as_float() * PIXELS_IN_BLOCK;
 			pr.rectBlock.top = i.attribute("y").as_float() * PIXELS_IN_BLOCK;
-			pr.text = Converter::Win1251ToUnocide(i.attribute("text").as_string());
+			pr.text = L"Это " + ItemReader::ReadNameItem(pr.itemID) + L". Хотите взять?";
 
-			basPr = ReadWrite::ReadObjectBaseInfo(pr.itemID, true);
+			basPr = ItemReader::ReadObjectBaseInfo(pr.itemID, true);
 			pr.spriteRect = basPr.spriteRect;
 			pr.rectBlock.width = basPr.barierBox.width;
 			pr.rectBlock.height = basPr.barierBox.height;

@@ -117,10 +117,6 @@ public:
 	{
 		return IDItem;
 	}
-	TypeID GetId() const
-	{
-		return ID;
-	}
 
 	const sf::FloatRect& GetRect() const
 	{
@@ -151,7 +147,6 @@ public:
 
 	void SetPackage(const Package::ObjectItemP& pac)
 	{
-		ID = pac.ID;
 		IDItem = pac.itemID;
 		rectBlock = pac.rectBlock;
 		sprite.setPosition(pac.spritePos);
@@ -184,7 +179,6 @@ public:
 
 private:
 	TypeID IDItem = 0;
-	TypeID ID = 0;
 	sf::Sprite sprite;
 	sf::FloatRect rectBlock;
 
