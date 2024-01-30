@@ -87,20 +87,20 @@ namespace Package
 
 	struct InventoryP
 	{
-		TypeID armor;
-		TypeID weapon;
+		TypeID armor{};
+		TypeID weapon{};
 
 		std::vector<TypeID> items;
 	};
 
 	struct PlayerP
 	{
-		int HP;
-		int boroda;
+		int HP{};
+		int boroda{};
 
 		InventoryP invent;
 
-		TypeID room;
+		TypeID room{};
 		sf::Vector2f pos;
 		
 	};
@@ -297,10 +297,10 @@ private:
 	{
 		sf::FloatRect res;
 
-		res.left	= nodeRect.attribute("x").as_int();
-		res.top		= nodeRect.attribute("y").as_int();
-		res.width	= nodeRect.attribute("width").as_int();
-		res.height	= nodeRect.attribute("height").as_int();
+		res.left	= nodeRect.attribute("x").as_float();
+		res.top		= nodeRect.attribute("y").as_float();
+		res.width	= nodeRect.attribute("width").as_float();
+		res.height	= nodeRect.attribute("height").as_float();
 
 		return res;
 	}
@@ -538,21 +538,15 @@ public:
 		std::string roomName = "room" + std::to_string(IDr);
 		pugi::xml_node nodeRoom = doc.child("gameSave").child("rooms").child(roomName.c_str()).child("itemObjects");
 		if (nodeRoom.empty())
-		{
-			std::cout << "Error finding of room" << IDr << " in file save " << fName << '\n';
 			return false;
-		}
 		items.clear();
 		Package::ObjectItemP pr;
 		Package::BaseObjP basPr;
 		for (auto i : nodeRoom.children("element"))
 		{
 			pr.itemID = i.attribute("itemID").as_uint();
-			pr.spritePos =
-			{
-				i.attribute("x").as_float() * PIXELS_IN_BLOCK,
-				i.attribute("y").as_float() * PIXELS_IN_BLOCK
-			};
+			pr.rectBlock.left = i.attribute("x").as_float() * PIXELS_IN_BLOCK;
+			pr.rectBlock.top = i.attribute("y").as_float() * PIXELS_IN_BLOCK;
 			pr.text = Converter::Win1251ToUnocide(i.attribute("text").as_string());
 
 			basPr = ReadWrite::ReadObjectBaseInfo(pr.itemID, true);
